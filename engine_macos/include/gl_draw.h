@@ -6,19 +6,15 @@
 /*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:57:40 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:08:01 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/06 01:07:37 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GL_DRAW_H
 # define GL_DRAW_H
 
-
-# if defined (__linux__)
-#  include "../../../../mlx_linux/mlx.h"
-# elif defined (__APPLE__)
-#  include "mlx.h"
-# endif
+/* NOTE: deleted #ifndef macro, because of -I include option */
+# include "mlx.h"
 # include "gl_device.h"
 
 /* Default Coordinate system: from (Screen Width ~ Screen Height). */
