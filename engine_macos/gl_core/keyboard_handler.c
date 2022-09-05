@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keyboard_handler.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 13:40:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:16:25 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:30:29 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_input.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:44:40 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:08:25 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:31:48 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

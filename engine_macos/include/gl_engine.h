@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_engine.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:10:08 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:31:46 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ extern void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*
 /* #src/engine_core/engine.c */
 extern void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)());
 
-/* #src/engine_core/engine.c */
+    /* #src/engine_core/engine.c */
 extern void		engine_push_image(t_device *device, t_image *image, int x, int y);
 
 #endif /* ENGINE_H */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_4x4_multiply.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 21:40:02 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:18:39 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:30:41 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

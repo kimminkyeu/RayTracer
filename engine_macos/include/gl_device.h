@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_device.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/09/05 23:07:23 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:31:43 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
