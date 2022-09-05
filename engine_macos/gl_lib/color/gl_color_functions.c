@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_color_functions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:03:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:14:44 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:30:34 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

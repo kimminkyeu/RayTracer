@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_matrix.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 21:37:28 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:09:48 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:31:54 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_4x4_shear_functions.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 10:34:54 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:13:46 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:30:48 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

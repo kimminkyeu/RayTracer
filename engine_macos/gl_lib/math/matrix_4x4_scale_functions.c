@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_4x4_scale_functions.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/05 23:13:06 by parksungjun       #+#    #+#             */
-/*   Updated: 2022/09/05 23:13:16 by parksungjun      ###   ########seoul.kr  */
+/*   Created: 2022/09/05 23:13:06 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/09/05 23:31:22 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_projection_functions.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 11:36:38 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:14:12 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:30:54 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 

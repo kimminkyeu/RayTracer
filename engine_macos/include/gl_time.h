@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_time.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:58:36 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:09:50 by parksungjun      ###   ########seoul.kr  */
+/*   Updated: 2022/09/05 23:32:00 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
