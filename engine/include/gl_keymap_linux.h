@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   keymap_linux.h                                     :+:      :+:    :+:   */
+/*   gl_keymap_linux.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:52:09 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/03 14:30:10 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/09/06 16:46:00 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef KEYMAP_LINUX_H
-# define KEYMAP_LINUX_H
+#ifndef GL_KEYMAP_LINUX_H
+# define GL_KEYMAP_LINUX_H
 
 # include <X11/Xlib.h>
 # include <X11/Xutil.h>

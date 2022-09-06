@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_draw.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parksungjun <parksungjun@student.42seou    +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:57:40 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/06 01:07:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:44:17 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,18 @@
 # define GL_DRAW_H
 
 /* NOTE: deleted #ifndef macro, because of -I include option */
-# include "mlx.h"
 # include "gl_device.h"
+
+# define __LINUX__	(0)
+# define __OSX__	(1)
+
+# if defined (__linux__)
+#  define PLATFORM_NAME (__LINUX__) 
+#  include "gl_keymap_linux.h"
+# elif defined (__APPLE__)
+#  define PLATFORM_NAME (__OSX__)
+#  include "gl_keymap_macos.h"
+# endif
 
 /* Default Coordinate system: from (Screen Width ~ Screen Height). */
 extern void	gl_draw_pixel(t_image *image, int _x, int _y, int _argb);

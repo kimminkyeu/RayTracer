@@ -6,12 +6,12 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:32:03 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/06 16:46:20 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VECTOR4_H
-# define VECTOR4_H
+#ifndef GL_VECTOR4_H
+# define GL_VECTOR4_H
 
 # include <math.h>
 # include "gl_matrix.h"

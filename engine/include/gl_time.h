@@ -6,12 +6,12 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:58:36 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:32:00 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/06 16:46:10 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TIME_H
-# define TIME_H
+#ifndef GL_TIME_H
+# define GL_TIME_H
 
 # include <sys/time.h>
 # include <stddef.h>
