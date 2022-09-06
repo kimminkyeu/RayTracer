@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/06 20:23:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 22:13:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	per_pixel(t_vec2 coord)
 
 	
 	// (1) Change 
-	/** t_vec4 ray_direction = gl_vec4(coord.x, coord.y, -1.0f, 1.0f); */
+	t_vec4 ray_direction = gl_vec4(coord.x, coord.y, -1.0f, 1.0f);
+
 	// Sphere Formula
 	// (bx^2 + by^2)t^2 + (2(axbx + ayby))t + (ax^2 + ay^2 - r^2) = 0
 	// where
@@ -29,7 +30,7 @@ int	per_pixel(t_vec2 coord)
 	// r = radius
 	// t = hit distance
 	
-	/** float a = gl_vec4_get_magnitude(ray_direction); */
+	float a = gl_vec4_get_magnitude(ray_direction);
 
 
 	return (gl_color(BLACK, r, g, 0));
