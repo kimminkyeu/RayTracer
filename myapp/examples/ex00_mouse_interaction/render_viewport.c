@@ -6,23 +6,22 @@
 /*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 20:15:50 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 21:38:53 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "main.h"
 /** TODO: mouse 이동에 대한 감지를 좀 더 잘 할 수 있는 방법이 없을까... */
 
 int	render_viewport(t_device *device, t_image *viewport)
 {		
 	gl_draw_background(viewport, BLACK);
 	/** NOTE: Use Static Variable for private data member! */
-	/** static	int test = BLUE; */
 	static	t_vec2 pressed_location;
 	static	t_vec2 second_location;
 	static	int	lock = 0;
 
-	if (input_is_mouse_down(device, MOUSE_RIGHT_CLICK))
+	if (input_is_mouse_down(device, MOUSE_LEFT_CLICK))
 	{
 		if (lock == 0)
 		{
@@ -30,7 +29,7 @@ int	render_viewport(t_device *device, t_image *viewport)
 			lock = 1;
 		}
 	}
-	else if (input_is_mouse_unpressed(device, MOUSE_RIGHT_CLICK))
+	else if (input_is_mouse_unpressed(device, MOUSE_LEFT_CLICK))
 	{
 		/** test = GREEN; */
 		if (pressed_location.x == second_location.x && pressed_location.y == second_location.y)

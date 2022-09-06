@@ -6,17 +6,19 @@
 /*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:31:04 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 17:35:32 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 21:27:54 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../main.h"
+#include "main.h"
+
 
 int	render_panel(t_device *device, t_image *panel)
 {
-	(void)panel;
-	(void)device;
 	/** NOTE: Use Static Variable for private data member! */
+	(void)device;
+	(void)panel;
+
 
 
 	return (0);
