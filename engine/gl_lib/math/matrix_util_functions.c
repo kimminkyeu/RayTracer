@@ -1,32 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gl_vec2.h                                          :+:      :+:    :+:   */
+/*   matrix_util_functions.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:32:02 by sungjpar         ###   ########seoul.kr  */
+/*   Created: 2022/09/05 23:12:19 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/09/06 17:13:25 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VECTOR2
-# define VECTOR2
+#include "gl_matrix.h"
 
-# include <math.h>
-
-typedef union u_vec2 {
-	struct {
-		float	x;
-		float	y;
-	};
-	float	v[2];
-}	t_vec2;
-
-/* Create R-value vec2 and returns data */
-extern t_vec2	gl_vec2(float _x, float _y);
-extern float	gl_vec2_dot_product(t_vec2 v1, t_vec2 v2);
-extern float	gl_vec2_get_magnitude(t_vec2 v);
-extern t_vec2	gl_vec2_normalize(t_vec2 v);
-
-#endif /* VECTOR2 */
+float	gl_get_radian(float degree)
+{
+	return (degree / 180.0f * 3.141592f);
+}

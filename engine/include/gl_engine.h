@@ -6,19 +6,29 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:31:46 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/06 16:45:36 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENGINE_H
-# define ENGINE_H
+#ifndef GL_ENGINE_H
+# define GL_ENGINE_H
 
 # include <stdlib.h>					/* for Exit */
 # include <stdio.h>						/* for Perror */
 # include <stdbool.h>					/* for isError flag */
 
-#  include "mlx.h"
-#  include "gl_keymap.h"
+# define __LINUX__	(0)
+# define __OSX__	(1)
+
+# if defined (__linux__)
+#  define PLATFORM_NAME (__LINUX__) 
+#  include "mlx_linux.h"
+#  include "gl_keymap_linux.h"
+# elif defined (__APPLE__)
+#  define PLATFORM_NAME (__OSX__)
+#  include "mlx_macos.h"
+#  include "gl_keymap_macos.h"
+# endif
 
 /* Engine Header */
 # include "gl_device.h"

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   gl_color.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:54:46 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 15:49:08 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:45:42 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COLOR_H
-# define COLOR_H
+#ifndef GL_COLOR_H
+# define GL_COLOR_H
 
 /* NOTE: BASIC COLOR-PALLETE */
 # define BLACK				(0x00111111)

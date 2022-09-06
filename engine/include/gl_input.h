@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.h                                            :+:      :+:    :+:   */
+/*   gl_input.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:44:40 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 18:01:30 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:45:53 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef INPUT_H
-# define INPUT_H
+#ifndef GL_INPUT_H
+# define GL_INPUT_H
 
 # include <stdbool.h>
 # include <stddef.h>
-
 # if defined (__linux__)
-#  include "keymap_linux.h"
+#  define PLATFORM_NAME (__LINUX__) 
+#  include "gl_keymap_linux.h"
 # elif defined (__APPLE__)
-#  include "keymap_macos.h"
+#  define PLATFORM_NAME (__OSX__)
+#  include "gl_keymap_macos.h"
 # endif
-
-# include "device.h"
+# include "gl_device.h"
 
 extern t_vec2	input_get_mouse_pos(const t_device *device);
 extern int		input_mouse_get_index(int key_code);

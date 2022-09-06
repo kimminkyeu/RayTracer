@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   device.h                                           :+:      :+:    :+:   */
+/*   gl_device.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kyeu <minkyeki@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/09/05 17:48:04 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 16:45:46 by sungjpar         ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEVICE_H
-# define DEVICE_H
+#ifndef GL_DEVICE_H
+# define GL_DEVICE_H
 
 # include <stddef.h>
 # include <stdbool.h>
-# include "../gl_lib/math/gl_vec2.h"
+# include "gl_vec2.h"
 
 /* TODO: 알맞게 상태 바꿀 것. */
 typedef enum e_state {
