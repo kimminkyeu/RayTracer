@@ -6,20 +6,19 @@
 #    By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/06 17:12:19 by sungjpar         ###   ########seoul.kr   #
+#    Updated: 2022/09/06 20:29:11 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # ------------------------------------------------------#
 # NOTE: Change Directory name here
-PROJECT_DIR_NAME			= .
 # ------------------------------------------------------#
 SRC_DIR						= engine
 LIBRARY_DIR					= ./library
 LIBFT_DIR					= $(LIBRARY_DIR)/libft
 # ------------------------------------------------------#
 INC_DIR						= $(SRC_DIR)/include
-INC_FLAG					= -I$(INC_DIR) -I$(LIBFT_DIR)/include
+INC_FLAG					= -I$(INC_DIR) -I$(LIBFT_DIR)/include -I$(MYAPP_DIR)/include
 # ENGINE-DIRECTORY
 # ------------------------------------------------------ #
 ENGINE_DIR					= $(SRC_DIR)/.
@@ -65,16 +64,14 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_DRAW_DIR)/, $(ENGINE_GL_DRAW_SRC))) \
 
 # MYAPP-DIRECTORY
-MYAPP_DIR					= $(SRC_DIR)/myapp
-MYAPP_PROJECT_DIR			= $(MYAPP_DIR)/$(PROJECT_DIR_NAME)
+MYAPP_DIR					= myapp
 
 # MYAPP-SOURCE
-MYAPP_SRC					= main
-MYAPP_PROJECT_SRC			= render_viewport render_panel 
+MYAPP_SRC					= main \
+							  render_viewport render_panel 
 
 # MYAPP-SOURCE AL
 MYAPP_SRCS  = $(addsuffix .c, $(addprefix $(MYAPP_DIR)/, $(MYAPP_SRC))) \
-			  $(addsuffix .c, $(addprefix $(MYAPP_PROJECT_DIR)/, $(MYAPP_PROJECT_SRC)))
 
 SRC = $(ENGINE_SRCS) $(MYAPP_SRCS)
 
@@ -125,7 +122,7 @@ $(NAME): $(OBJ)
 	@make -C $(LIBFT_DIR)
 ifdef LINUX
 	@make -C $(LIBRARY_DIR)/mlx
-	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
+	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
 	@echo "$(BLUE)-------------------------------------------------$(DEF_COLOR)"
 	@echo "$(BLUE)|                                               |$(DEF_COLOR)"
 	@echo "$(BLUE)|   MiniRT Linux-X11 version compile finished.  |$(DEF_COLOR)"
@@ -135,7 +132,7 @@ endif
 ifdef OSX
 	@make -C $(LIBRARY_DIR)/mms
 	@cp mlx_mms/libmlx.dylib .
-	$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
+	$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
 	@echo "$(BLUE)------------------------------------------------$(DEF_COLOR)"
 	@echo "$(BLUE)|                                               |$(DEF_COLOR)"
 	@echo "$(BLUE)|   MiniRt OSX-Metal version compile finished.  |$(DEF_COLOR)"
