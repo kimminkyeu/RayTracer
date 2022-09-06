@@ -40,7 +40,8 @@ public class MlxMain {
 	}
 
 	device = MTLCreateSystemDefaultDevice()!
-	loopParam = UnsafeMutableRawPointer(&inLoop)  /// dummy addr init
+	loopParam = UnsafeMutableRawPointer(bitPattern:1)! /// set to 1-1
+	loopParam -= 1
 
 	/// Add observer anyway to flush pixels every loop. If loop_hook exists, call it.
         var ocontext = CFRunLoopObserverContext(version:0, info:_mlx_bridge(obj:self), retain:nil, release:nil, copyDescription:nil)
