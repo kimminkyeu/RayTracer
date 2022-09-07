@@ -6,7 +6,7 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 13:40:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:30:29 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/07 13:08:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "gl_engine.h"
 #include "gl_input.h"
 
+extern int	input_key_get_index(int key_code);
 
 int	handle_key_press(int key_code, void *param)
 {

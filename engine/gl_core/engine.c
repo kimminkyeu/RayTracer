@@ -6,11 +6,16 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:30:27 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/07 13:53:09 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_engine.h"
+
+extern int	handle_key_press(int key_code, void *param);
+extern int	handle_key_release(int key_code, void *param);
+extern int	handle_mouse_press(int key_code, int x, int y, void *param);
+extern int	handle_mouse_release(int key_code, int x, int y, void *param);
 
 void	engine_push_image(t_device *device, t_image *image, int x, int y)
 {
@@ -89,7 +94,6 @@ t_device	*engine_init(int _viewport_width, int _panel_width, int _win_height, ch
 	engine_set_key_event(device, handle_key_press, handle_key_release);
 	engine_set_mouse_event(device, handle_mouse_press, handle_mouse_release);
 
-
 	return (device);
 }
 
@@ -110,20 +114,22 @@ void	engine_start_loop(t_device *device, int (*render_layer)())
 /** NOTE: if handler changes, reset engine */
 void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)())
 {
-	if (device != NULL && f_key_press != NULL && f_key_release != NULL)
-	{
+	if (device == NULL)
+		return ;
+	if (f_key_press != NULL)
 		mlx_hook(device->win, ON_KEY_PRESS, KeyPressMask, f_key_press, device);
+	if (f_key_release != NULL)
 		mlx_hook(device->win, ON_KEY_RELEASE, KeyReleaseMask, f_key_release, device);
-	}
 }
 
 void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)())
 {
-	if (device != NULL && f_mouse_press != NULL && f_mouse_release != NULL)
-	{
+	if (device == NULL)
+		return ;
+	if (f_mouse_press != NULL)
 		mlx_hook(device->win, ON_MOUSE_PRESS, ButtonPressMask, f_mouse_press, device);
+	if (f_mouse_release != NULL)
 		mlx_hook(device->win, ON_MOUSE_RELEASE, ButtonReleaseMask, f_mouse_release, device);
-	}
 }
 
 

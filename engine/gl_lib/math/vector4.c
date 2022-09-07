@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:07:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 18:51:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/07 13:29:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ float	gl_vec4_get_magnitude(t_vec4 v)
 	return (sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z) + (v.w * v.w)));
 }
 
+/** FIX: check if cross-product code is valid!  */
 t_vec4	gl_vec4_cross_product(t_vec4 v1, t_vec4 v2)
 {
 	float	x;

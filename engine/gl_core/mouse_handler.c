@@ -6,13 +6,15 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 13:44:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:30:32 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/07 13:08:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "gl_engine.h"
 #include "gl_input.h"
+
+extern int	input_mouse_get_index(int key_code);
 
 int	handle_mouse_press(int key_code, int x, int y, void *param)
 {

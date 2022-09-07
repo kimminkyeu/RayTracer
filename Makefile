@@ -6,7 +6,7 @@
 #    By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/07 11:36:01 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/07 13:34:34 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 									matrix_projection_functions\
 									matrix_util_functions\
 									vector2\
+									vector3\
 									vector4\
 					
 	ENGINE_GL_DRAW_DIR			= $(ENGINE_GL_DIR)/draw
