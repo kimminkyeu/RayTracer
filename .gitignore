@@ -1,2 +1,6 @@
 *.o
 .vscode/
+*.swiftdoc
+*.swiftmodule
+*.swiftsourceinfo
+*.dylib
