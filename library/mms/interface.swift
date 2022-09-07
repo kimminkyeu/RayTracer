@@ -267,8 +267,12 @@ public func mlx_mouse_show_swift() -> Int32
 public func mlx_mouse_move_swift(_ winptr:UnsafeRawPointer, _ x:Int32, _ y:Int32) -> Int32
 {
 	let win:MlxWin = _mlx_bridge(ptr:winptr)
-	var pt = CGPoint(x:CGFloat(x), y:CGFloat(y))
-	pt = win.convertToDisplay(pt)
+	let frame = win.getWinEFrame()
+///	let sframe = win.getScreenFrame()
+	var pt = CGPoint()
+	pt.x = frame.origin.x + CGFloat(x)
+///	pt.y = sframe.size.y - frame.size.y - frame.origin.y + 1 + y
+	pt.y = frame.origin.y + frame.size.height - 1.0 - CGFloat(y)
 	CGWarpMouseCursorPosition(pt)
 	CGAssociateMouseAndMouseCursorPosition(UInt32(1))
 	return Int32(0);
@@ -280,8 +284,9 @@ public func mlx_mouse_move_swift(_ winptr:UnsafeRawPointer, _ x:Int32, _ y:Int32
 public func mlx_mouse_get_pos_swift(_ winptr:UnsafeRawPointer, _ x:UnsafeMutablePointer<Int32>, _ y:UnsafeMutablePointer<Int32>) -> Int32
 {
 	let win:MlxWin = _mlx_bridge(ptr:winptr)
+	let frame = win.getWinEFrame()
 	let point = win.getMouseLoc()
 	x.pointee = Int32(point.x)
-	y.pointee = Int32(point.y)
+	y.pointee = Int32(frame.size.height - 1.0 - point.y)
 	return Int32(0)
 }
