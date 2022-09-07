@@ -1,6 +1,10 @@
 -I
 ./library/libft/include
 -I
-./engine/include
+./library/mlx
 -I
-./myapp/include
+./library/mms
+-I
+./engine_macos/include
+-I
+./engine_linux/include
