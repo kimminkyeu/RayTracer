@@ -6,7 +6,7 @@
 #    By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/06 20:29:11 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/07 11:36:01 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -121,7 +121,7 @@ endif
 $(NAME): $(OBJ)
 	@make -C $(LIBFT_DIR)
 ifdef LINUX
-	@make -C $(LIBRARY_DIR)/mlx
+	@make -C 
 	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
 	@echo "$(BLUE)-------------------------------------------------$(DEF_COLOR)"
 	@echo "$(BLUE)|                                               |$(DEF_COLOR)"
@@ -131,7 +131,7 @@ ifdef LINUX
 endif
 ifdef OSX
 	@make -C $(LIBRARY_DIR)/mms
-	@cp mlx_mms/libmlx.dylib .
+	@cp $(LIBRARY_DIR)/mms/libmlx.dylib .
 	$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
 	@echo "$(BLUE)------------------------------------------------$(DEF_COLOR)"
 	@echo "$(BLUE)|                                               |$(DEF_COLOR)"
