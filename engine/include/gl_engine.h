@@ -6,7 +6,7 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/06 16:45:36 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/07 14:50:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # include "gl_color.h"
 # include "gl_matrix.h"
 # include "gl_vec2.h"
+# include "gl_vec3.h"
 # include "gl_vec4.h"
 # include "gl_draw.h"
 
