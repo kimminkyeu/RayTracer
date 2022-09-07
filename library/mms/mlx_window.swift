@@ -11,18 +11,23 @@ class WinEvent: NSWindow
 {
   var eventFuncts = [UnsafeMutableRawPointer?]()
   var eventParams = [UnsafeMutableRawPointer]()
+///  var eventParams = UnsafeMutableRawPointer.allocate(capacity: 32)
 
   var keyrepeat = 1
   var keyflag:UInt32 = 0
 
-  var size_y:Int
+  public var size_y:Int
 
   init(frame rect:CGRect)
   {
-    for _ in 0...31
+///      eventParams.initialize(to:nil, count:32)
+   var ptr = UnsafeMutableRawPointer(bitPattern:1)!
+   ptr -= 1
+   for _ in 0...31
     {
       eventFuncts.append(Optional.none)
-      eventParams.append(UnsafeMutableRawPointer(&keyrepeat)) /// dummy address here, null not needed
+      /// eventParams.append(UnsafeMutableRawPointer(&keyrepeat)) /// dummy address here, null not needed
+      eventParams.append(ptr)
     }
 
     let wsm = NSWindow.StyleMask(rawValue: NSWindow.StyleMask.titled.rawValue|NSWindow.StyleMask.closable.rawValue|NSWindow.StyleMask.miniaturizable.rawValue)
@@ -127,9 +132,9 @@ class WinEvent: NSWindow
 	if (eventFuncts[idx] != nil)
 	{
 	  if (t == 0)
-	   { _ = unsafeBitCast(eventFuncts[idx],to:(@convention(c)(Int32, Int32, Int32, UnsafeRawPointer)->Int32).self)(Int32(button), Int32(thepoint.x), Int32(size_y-1-Int(thepoint.y)), eventParams[idx]) }
+	   { _ = unsafeBitCast(eventFuncts[idx],to:(@convention(c)(Int32, Int32, Int32, UnsafeRawPointer)->Int32).self)(Int32(button), Int32(thepoint.x), Int32(CGFloat(size_y)-1.0-thepoint.y), eventParams[idx]) }
 	  if (t == 1)
-	   { _ = unsafeBitCast(eventFuncts[idx],to:(@convention(c)(Int32, Int32, UnsafeRawPointer)->Int32).self)(Int32(thepoint.x), Int32(size_y-1-Int(thepoint.y)), eventParams[idx]) }
+	   { _ = unsafeBitCast(eventFuncts[idx],to:(@convention(c)(Int32, Int32, UnsafeRawPointer)->Int32).self)(Int32(thepoint.x), Int32(CGFloat(size_y)-1.0-thepoint.y), eventParams[idx]) }
 	}
   }
 
@@ -284,9 +289,21 @@ public class MlxWin
 
 
 /// winEvent calls
+  public func convertToDisplay(_ pt:NSPoint) -> NSPoint  {
+  	 var pt2 = NSPoint(x:pt.x, y:pt.y)
+	 pt2.y = CGFloat(winE.size_y)-1.0-pt2.y
+	 pt2 = winE.convertPoint(toScreen: pt2)
+	 pt2.y = (winE.screen!.frame.size.height)-pt2.y
+	 return pt2
+	 }
   public func getWinEFrame() -> NSRect  { return winE.frame }
   public func getScreenFrame() -> NSRect { return winE.screen!.frame }
-  public func getMouseLoc() -> NSPoint { return winE.mouseLocationOutsideOfEventStream }
+  public func getMouseLoc() -> NSPoint {
+  	 var pt = NSPoint()
+	 pt = winE.mouseLocationOutsideOfEventStream
+	 pt.y = CGFloat(winE.size_y)-1.0-pt.y
+	 return pt
+	 }
   public func addHook(index idx:Int, fct fptr:UnsafeMutableRawPointer, param pptr:UnsafeMutableRawPointer)
   {  winE.addHook(index: idx, fct: fptr, param: pptr)  }
   public func setKeyRepeat(_ mode:Int)  { winE.setKeyRepeat(mode) }
