@@ -6,7 +6,7 @@
 /*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:30:28 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/07 11:33:31 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int input_is_mouse_unpressed(t_device *device, int key_code)
 		return (false);
 }
 
-/** NOTE: I Changed mlx_mms/mlx.h source header to support Linux. */
+/** FIX: 사용하는 버전에 따라 아래 함수 주석을 해제할 것.  */
 t_vec2	input_get_mouse_pos(const t_device *device)
 {
 	int	x;
@@ -126,11 +126,14 @@ t_vec2	input_get_mouse_pos(const t_device *device)
 
 	x = 0;
 	y = 0;
-	mlx_mouse_get_pos(device->win, &x, &y);
+
+	/* NOTE: for LINUX */
 	/** mlx_mouse_get_pos(device->mlx, device->win, &x, &y); */
+
+	/* NOTE: for OSX */
+	mlx_mouse_get_pos(device->win, &x, &y);
+	
 	pos.x = (float)x;
-	/** pos.x = (float)x / (float)device->win_width; */
 	pos.y = (float)y;
-	/** pos.y = (float)y / (float)device->win_height; */
 	return (pos);
 }
