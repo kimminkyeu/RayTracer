@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 18:34:43 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:05:50 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,25 @@ typedef union s_vec3 {
 /* Create r-value vec3 and Return. */
 extern t_vec3	gl_vec3(float _x, float _y, float _z);
 
+/* Create and Return R-value from single float argument.
+- : functions sets every value to (float _k) */
+extern t_vec3	gl_vec3_(float _k);
+
 /* returns -v1 (reversed direction) */
 extern t_vec3	gl_vec3_reverse(t_vec3 v);
 
 /* returns (v1 + v2) */
-extern t_vec3	gl_vec3_add(t_vec3 v1, t_vec3 v2);
+extern t_vec3	gl_vec3_add_vector(t_vec3 v1, t_vec3 v2);
+
+/* returns (v.x + f, v.y + f, v.z + f).
+    - add each component with the given float */
+extern t_vec3	gl_vec3_add_float(t_vec3 v, float f);
 
 /* returns (v1 - v2) */
-extern t_vec3	gl_vec3_subtract(t_vec3 v1, t_vec3 v2);
+extern t_vec3	gl_vec3_subtract_vector(t_vec3 v1, t_vec3 v2);
+
+/* returns (v1 * scalar) */
+extern t_vec3	gl_vec3_multiply_scalar(t_vec3 v, float scalar);
 
 /* Returns min(max(x, minVal), maxVal) for each component
 in x using the floating-point values minVal and maxVal. */

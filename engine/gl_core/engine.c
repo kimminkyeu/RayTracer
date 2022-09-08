@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 17:20:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:31:27 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,16 @@ t_device	*engine_init(int _viewport_width, int _panel_width, int _win_height, ch
 	if (device->win == NULL)
 		engine_exit(device, ERROR);
 
-
-	/** NOTE: Viewport */
+	/** NOTE: Viewport_content */
 	engine_new_image(&device->viewport, device->mlx, _viewport_width, _win_height);
 
 	/** NOTE: Control Panel*/
 	engine_new_image(&device->panel, device->mlx, _panel_width, _win_height);
 
 	/** initialize device input data */
-	// input_init(&device->input);
-
 	engine_set_key_event(device, handle_key_press, handle_key_release);
 	engine_set_mouse_event(device, handle_mouse_press, handle_mouse_release);
-	printf("event handler set done\n");
+	printf("Event handler set done\n");
 
 	return (device);
 }
