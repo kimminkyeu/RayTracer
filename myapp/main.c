@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 14:31:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 17:21:23 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ int render_layer(t_device *device)
 	render_start_time = get_time_ms();
 	if (device->viewport.width > 0)
 	{
-		render_viewport(device, &device->viewport); 
+		render_viewport(device, &device->viewport);
 		engine_push_image(device, &device->viewport, 0, 0);
 	}
 	render_end_time = get_time_ms();
 	device->render_time = render_end_time - render_start_time;
 	if (device->panel.width > 0)
 	{
-		render_panel(device, &device->panel); 
+		render_panel(device, &device->panel);
 		engine_push_image(device, &device->panel, device->viewport.width, 0);
 		draw_render_time(device, device->viewport.width + 15, 20, GRAY);
 	}
