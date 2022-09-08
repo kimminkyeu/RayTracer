@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render_panel.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:31:04 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 21:34:06 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/06 21:27:54 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	render_panel(t_device *device, t_image *panel)
 	/** NOTE: Use Static Variable for private data member! */
 	(void)device;
 	(void)panel;
+
+
 
 	return (0);
 }
