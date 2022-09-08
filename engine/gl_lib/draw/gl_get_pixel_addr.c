@@ -1,25 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render_panel.c                                     :+:      :+:    :+:   */
+/*   gl_get_pixel_addr.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/03 23:31:04 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/06 21:27:54 by minkyeki         ###   ########.fr       */
+/*   Created: 2022/09/08 19:29:30 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/09/08 19:33:29 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
+#include "gl_draw.h"
 
-
-int	render_panel(t_device *device, t_image *panel)
+int	*gl_get_pixel_addr(t_image *_image, const int _x, const int _y)
 {
-	/** NOTE: Use Static Variable for private data member! */
-	(void)device;
-	(void)panel;
+	char	*pixel;
 
-
-
-	return (0);
+	pixel = _image->addr + (_y * _image->line_length \
+				+ _x * (_image->bits_per_pixel / 8));
+	return ((int *)pixel);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   keyboard_handler.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 13:40:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/07 13:08:12 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 17:28:10 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	handle_key_press(int key_code, void *param)
 		printf("ESC pressed\n");
 		engine_exit(device, SUCCESS);
 	}
-	else 
+	else
 	{
 		key_index = input_key_get_index(key_code);
 		if (key_index != -1)

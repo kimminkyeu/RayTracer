@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_color_functions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:03:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:30:34 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/08 19:27:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ int	gl_color_shade(double shade_factor, int color)
 }
 
 /* NOTE : Inverts alpha and color, and return */
-int	gl_color_reverse(int trgb)
+int	gl_color_reverse(int argb)
 {
 	unsigned char	oppo[4];
 
-	oppo[3] = 0xFF - gl_color_get_alpha(trgb);
-	oppo[2] = 0xFF - gl_color_get_red(trgb);
-	oppo[1] = 0xFF - gl_color_get_green(trgb);
-	oppo[0] = 0xFF - gl_color_get_blue(trgb);
+	oppo[3] = 0xFF - gl_color_get_alpha(argb);
+	oppo[2] = 0xFF - gl_color_get_red(argb);
+	oppo[1] = 0xFF - gl_color_get_green(argb);
+	oppo[0] = 0xFF - gl_color_get_blue(argb);
 	return (*(int *)oppo);
 }

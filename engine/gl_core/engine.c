@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   engine.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/07 13:53:09 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 17:20:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_device	*engine_init(int _viewport_width, int _panel_width, int _win_height, ch
 
 	device->win_width = _viewport_width + _panel_width;
 	device->win_height = _win_height;
-		
+
 	device->win = mlx_new_window(device->mlx, device->win_width, device->win_height, title);
 	if (device->win == NULL)
 		engine_exit(device, ERROR);
@@ -89,17 +89,18 @@ t_device	*engine_init(int _viewport_width, int _panel_width, int _win_height, ch
 	engine_new_image(&device->panel, device->mlx, _panel_width, _win_height);
 
 	/** initialize device input data */
-	input_init(&device->input);
+	// input_init(&device->input);
 
 	engine_set_key_event(device, handle_key_press, handle_key_release);
 	engine_set_mouse_event(device, handle_mouse_press, handle_mouse_release);
+	printf("event handler set done\n");
 
 	return (device);
 }
 
 int		handle_exit(t_device *device)
 {
-	ft_putstr_fd("Closing Programm....\n", STDOUT);
+	ft_putstr_fd("Closing Program....\n", STDOUT);
 	engine_exit(device, SUCCESS);
 	return (0);
 }

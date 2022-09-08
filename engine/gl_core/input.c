@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/07 11:33:31 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 16:26:26 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 #include "gl_device.h"
 #include "gl_engine.h"
 
-void	input_init(t_input *input)
-{
-	int	i;
+// void	input_init(t_input *input)
+// {
+// 	int	i;
 	
-	i = 0;
-	while (i < 7)
-	{
-		input->key_state[i] = 0;
-		i++;
-	}
-	i = 0;
-	while (i < 5)
-	{
-		input->mouse_state[i] = 0;
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (i < 7)
+// 	{
+// 		input->key_state[i] = 0;
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < 5)
+// 	{
+// 		input->mouse_state[i] = 0;
+// 		i++;
+// 	}
+// }
 
 int	input_mouse_get_index(int key_code)
 {
@@ -95,6 +95,7 @@ int	input_is_mouse_down(t_device *device, int key_code)
 	key_state = device->input.mouse_state[index];
 	if (key_state == E_INPUT_IS_PRESSED)
 	{
+		printf("input_is_mouse_down() : input is pressed\n");
 		return (true);
 	}
 	else
@@ -110,6 +111,7 @@ int input_is_mouse_unpressed(t_device *device, int key_code)
 	key_state = device->input.mouse_state[index];
 	if (key_state == E_INPUT_UN_PRESSED)
 	{
+		printf("input_is_mouse_unpressed() : input is unpressed\n");
 		device->input.mouse_state[index] = E_INPUT_NO_STATE;
 		return (true);
 	}
