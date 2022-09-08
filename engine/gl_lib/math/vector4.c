@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:07:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 19:38:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:02:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,17 @@ t_vec4	gl_vec4(float _x, float _y, float _z, float _w)
 	return (pos4);
 }
 
-extern t_vec4	gl_vec4_reverse(t_vec4 v)
+t_vec4	gl_vec4_(float _k)
+{
+	return (gl_vec4(_k, _k, _k, _k));
+}
+
+t_vec4	gl_vec4_reverse(t_vec4 v)
 {
 	return (gl_vec4(-v.x, -v.y, -v.z, -v.w));
 }
 
-extern t_vec4	gl_vec4_add(t_vec4 v1, t_vec4 v2)
+t_vec4	gl_vec4_add_vector(t_vec4 v1, t_vec4 v2)
 {
 	t_vec4	o;
 
@@ -36,9 +41,19 @@ extern t_vec4	gl_vec4_add(t_vec4 v1, t_vec4 v2)
 	return (o);
 }
 
-extern t_vec4	gl_vec4_subtract(t_vec4 v1, t_vec4 v2)
+t_vec4	gl_vec4_add_float(t_vec4 v, float f)
+{
+	return (gl_vec4(v.x + f, v.y + f, v.z + f, v.w + f));
+}
+
+t_vec4	gl_vec4_subtract_vector(t_vec4 v1, t_vec4 v2)
 {
 	return (gl_vec4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w));
+}
+
+t_vec4	gl_vec4_multiply_scalar(t_vec4 v, float scalar)
+{
+	return (gl_vec4(v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar));
 }
 
 /** helper function for gl_clamp */

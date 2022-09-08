@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 18:34:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:09:07 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,29 @@ typedef union u_vec2 {
 /* Create R-value vec2 and returns data */
 extern t_vec2	gl_vec2(float _x, float _y);
 
+/* Create and Return R-value from single float argument.
+- : functions sets every value to (float _k) */
+extern t_vec2	gl_vec2_(float _k);
+
 /* returns -v1 (reversed direction) */
 extern t_vec2	gl_vec2_reverse(t_vec2 v);
 
 /* returns (v1 + v2) */
-extern t_vec2	gl_vec2_add(t_vec2 v1, t_vec2 v2);
+extern t_vec2	gl_vec2_add_vector(t_vec2 v1, t_vec2 v2);
+
+/* returns (v.x + f, v.y + f).
+    - add each component with the given float */
+extern t_vec2	gl_vec2_add_float(t_vec2 v, float f);
 
 /* returns (v1 - v2) */
-extern t_vec2	gl_vec2_subtract(t_vec2 v1, t_vec2 v2);
+extern t_vec2	gl_vec2_subtract_vector(t_vec2 v1, t_vec2 v2);
+
+/* returns (v.x + f, v.y + f).
+    - add each component with the given float */
+extern t_vec2	gl_vec2_subtract_float(t_vec2 v1, float f);
+
+/* returns (v1 * scalar) */
+extern t_vec2	gl_vec2_multiply_scalar(t_vec2 v, float scalar);
 
 /* Returns min(max(x, minVal), maxVal) for each component
 in x using the floating-point values minVal and maxVal. */

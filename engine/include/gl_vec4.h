@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 18:34:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/08 21:05:41 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,25 @@ typedef union s_vec4 {
 /* Create r-value vec4 and Return. */
 extern t_vec4	gl_vec4(float _x, float _y, float _z, float _w);
 
+/* Create and Return R-value from single float argument.
+- : functions sets every value to (float _k) */
+extern t_vec4	gl_vec4_(float _k);
+
 /* returns -v1 (reversed direction) */
 extern t_vec4	gl_vec4_reverse(t_vec4 v);
 
 /* returns (v1 + v2) */
-extern t_vec4	gl_vec4_add(t_vec4 v1, t_vec4 v2);
+extern t_vec4	gl_vec4_add_vector(t_vec4 v1, t_vec4 v2);
+
+/* returns (v.x + f, v.y + f, v.z + f, v.w + f).
+    - add each component with the given float */
+extern t_vec4	gl_vec4_add_float(t_vec4 v, float f);
 
 /* returns (v1 - v2) */
-extern t_vec4	gl_vec4_subtract(t_vec4 v1, t_vec4 v2);
+extern t_vec4	gl_vec4_subtract_vector(t_vec4 v1, t_vec4 v2);
+
+/* returns (v1 * scalar) */
+extern t_vec4	gl_vec4_multiply_scalar(t_vec4 v, float scalar);
 
 /* Returns min(max(x, minVal), maxVal) for each component
 in x using the floating-point values minVal and maxVal. */
