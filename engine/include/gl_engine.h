@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_engine.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/07 14:50:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/12 21:44:30 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@
 # endif
 
 /* Engine Header */
+# include "libft.h"
 # include "gl_device.h"
 # include "gl_input.h"
-# include "libft.h"
 # include "gl_time.h"
 # include "gl_color.h"
 # include "gl_matrix.h"
@@ -41,6 +41,7 @@
 # include "gl_vec3.h"
 # include "gl_vec4.h"
 # include "gl_draw.h"
+# include "gl_image.h"
 
 # define STDOUT				(1)
 # define ERROR				(1)
