@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:03:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 19:27:36 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 13:43:56 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,37 +23,38 @@ int	gl_color(int alpha, int r, int g, int b)
 	return (*(int *)(color));
 }
 
-/* get_shaded_color is a function that accepts a double (distance) 
- * and a int (color) as arguments, 0 will add no shading to the color, 
- * whilst 1 will make the color completely dark. 
- * 0.5 will dim it halfway, and .25 a quarter way.  */
-/* ------------------------------
+int	gl_color_(t_vec4 color)
+{
+	return (gl_color(color.a, color.r, color.g, color.b));
+}
+
+/*
+ * get_shaded_color is a function that accepts a double (distance)
+ * and a int (color) as arguments, 0 will add no shading to the color,
+ * whilst 1 will make the color completely dark.
+ * 0.5 will dim it halfway, and .25 a quarter way.
  * * Shading : RGB decreases, black if 0.
  * Gets Darker if shade_factor increases. */
-int	gl_color_shade(double shade_factor, int color)
+t_vec4	gl_color_set_brightness(t_vec4 _color, double brightness_factor)
 {
-	unsigned char	shaded_red;
-	unsigned char	shaded_green;
-	unsigned char	shaded_blue;
-	unsigned char	alpha;
+	t_vec4	color;
 
-	if (shade_factor <= 0)
-		return (color);
-	shaded_red = gl_color_get_red(color) * (1 - shade_factor);
-	shaded_green = gl_color_get_green(color) * (1 - shade_factor);
-	shaded_blue = gl_color_get_blue(color) * (1 - shade_factor);
-	alpha = gl_color_get_alpha(color);
-	return (gl_color(alpha, shaded_red, shaded_green, shaded_blue));
+	color.r = _color.r * brightness_factor;
+	color.g = _color.g * brightness_factor;
+	color.b = _color.b * brightness_factor;
+	color.a = _color.a;
+	color = gl_vec4_clamp(color, gl_vec4_(0.0f), gl_vec4_(255.0f));
+	return (color);
 }
 
 /* NOTE : Inverts alpha and color, and return */
 int	gl_color_reverse(int argb)
 {
-	unsigned char	oppo[4];
+	unsigned char	opposite[4];
 
-	oppo[3] = 0xFF - gl_color_get_alpha(argb);
-	oppo[2] = 0xFF - gl_color_get_red(argb);
-	oppo[1] = 0xFF - gl_color_get_green(argb);
-	oppo[0] = 0xFF - gl_color_get_blue(argb);
-	return (*(int *)oppo);
+	opposite[3] = 0xFF - gl_color_get_alpha(argb);
+	opposite[2] = 0xFF - gl_color_get_red(argb);
+	opposite[1] = 0xFF - gl_color_get_green(argb);
+	opposite[0] = 0xFF - gl_color_get_blue(argb);
+	return (*(int *)opposite);
 }

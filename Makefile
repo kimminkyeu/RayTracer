@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/12 21:41:50 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/13 13:31:29 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,8 +51,8 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 	ENGINE_GL_DRAW_SRC			= gl_draw_pixel gl_draw_background gl_draw_line\
 									gl_get_pixel_addr
 
-	ENGINE_GL_IMAGE_DIR	= $(ENGINE_GL_DIR)/image
-	ENGINE_GL_IMAGE_SRC	= brightness
+	ENGINE_GL_SHADER_DIR	= $(ENGINE_GL_DIR)/shader
+	ENGINE_GL_SHADER_SRC	= brightness
 
 # (3) Dev-tools Directory (etc. Performance Checker)
 # ------------------------------------------------------ #
@@ -66,7 +66,8 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_MATH_DIR)/, $(ENGINE_GL_MATH_SRC))) \
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_COLOR_DIR)/, $(ENGINE_GL_COLOR_SRC))) \
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_DRAW_DIR)/, $(ENGINE_GL_DRAW_SRC))) \
-			  $(addsuffix .c, $(addprefix $(ENGINE_GL_IMAGE_DIR)/, $(ENGINE_GL_IMAGE_SRC))) \
+			  $(addsuffix .c, $(addprefix $(ENGINE_GL_SHADER_DIR)/, $(ENGINE_GL_SHADER_SRC))) \
+
 
 # MYAPP-DIRECTORY
 MYAPP_DIR					= myapp

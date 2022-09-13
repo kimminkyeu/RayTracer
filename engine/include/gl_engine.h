@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/12 21:44:30 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 13:20:30 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 # include "gl_vec3.h"
 # include "gl_vec4.h"
 # include "gl_draw.h"
-# include "gl_image.h"
+# include "gl_shader.h"
 
 # define STDOUT				(1)
 # define ERROR				(1)

@@ -6,11 +6,11 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 21:24:15 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/12 21:58:12 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 13:07:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gl_image.h"
+#include "gl_shader.h"
 
 /** Addjust Brightness (no change in alpha) */
 void	gl_image_brightness(t_image *image, float brightness_factor)

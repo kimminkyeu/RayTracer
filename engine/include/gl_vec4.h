@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 21:05:41 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 13:29:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,9 @@ typedef union s_vec4 {
 	float	v[4];
 }	t_vec4;
 
-/* Create r-value vec4 and Return. */
-extern t_vec4	gl_vec4(float _x, float _y, float _z, float _w);
+/* Create r-value vec4 and Return.
+NOTE: you can use vec4 for color system in reversed order. (int argb)*/
+extern t_vec4	gl_vec4(float x_or_b, float y_or_g, float z_or_r, float w_or_a);
 
 /* Create and Return R-value from single float argument.
 - : functions sets every value to (float _k) */
@@ -61,7 +62,9 @@ extern t_vec4	gl_vec4_subtract_vector(t_vec4 v1, t_vec4 v2);
 extern t_vec4	gl_vec4_multiply_scalar(t_vec4 v, float scalar);
 
 /* Returns min(max(x, minVal), maxVal) for each component
-in x using the floating-point values minVal and maxVal. */
+in x using the floating-point values minVal and maxVal.
+* [clamping is used to restrict a value to a given range]
+*/
 extern t_vec4	gl_vec4_clamp(t_vec4 v, t_vec4 min, t_vec4 max);
 
 /* Create Normal Vector */

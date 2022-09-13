@@ -3,12 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   bloom.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 21:04:28 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/12 21:04:47 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 13:07:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gl_image_filter.h"
+#include "gl_shader.h"
 
