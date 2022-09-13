@@ -6,16 +6,18 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 17:29:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 17:45:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_engine.h"
 
-extern int	handle_key_press(int key_code, void *param);
-extern int	handle_key_release(int key_code, void *param);
-extern int	handle_mouse_press(int key_code, int x, int y, void *param);
-extern int	handle_mouse_release(int key_code, int x, int y, void *param);
+extern void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)());
+extern void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)());
+extern int		handle_key_press(int key_code, void *param);
+extern int		handle_key_release(int key_code, void *param);
+extern int		handle_mouse_press(int key_code, int x, int y, void *param);
+extern int		handle_mouse_release(int key_code, int x, int y, void *param);
 
 void	engine_push_image(t_device *device, t_image *image, int x, int y)
 {
@@ -38,12 +40,6 @@ void	engine_exit(t_device *device, bool is_error)
 		}
 		delete_vector(&device->images);
 	}
-		// if (device != NULL && device->viewport.img_ptr != NULL)
-		// mlx_destroy_image(device->mlx, device->viewport.img_ptr);
-
-		// if (device != NULL && device->panel.img_ptr != NULL)
-		// mlx_destroy_image(device->mlx, device->panel.img_ptr);
-
 	if (device->win != NULL)
 		mlx_destroy_window(device->mlx, device->win);
 
@@ -67,7 +63,6 @@ void	engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, in
 	t_image	*new_image;
 
 	new_image = ft_calloc(1, sizeof(*new_image));
-	// image = device->images->data[device->images->size];
 
 	if (img_size.width <= 0 || img_size.height <= 0)
 		return ;
@@ -161,6 +156,7 @@ int	engine_update_images(t_device *device)
 /* TODO: change it's name to engine_render_loop() */
 void	engine_render(t_device *device)
 {
+	// engine_update_images(device);
 	mlx_loop_hook(device->mlx, engine_update_images, device);
 	mlx_loop(device->mlx);
 }

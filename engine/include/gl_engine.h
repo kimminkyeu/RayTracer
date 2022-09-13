@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 17:03:35 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 17:43:03 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,25 +54,16 @@ extern t_device	*engine_init(int _win_width, int _win_height, char *title);
 extern void		engine_exit(t_device *device, bool is_error);
 
 /* #src/engine_core/engine.c */
-extern void		engine_start_loop(t_device *device);
-
-/* #src/engine_core/engine.c */
-extern void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)());
-
-/* #src/engine_core/engine.c */
-extern void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)());
-
-/* #src/engine_core/engine.c */
 extern void	    engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*f_update_func)());
 
-/* #src/engine_core/engine.c */
+
+/* #src/engine_core/engine.c
+저장된 이미지 배열을 순회하면서 해당 이미지들을 모두 업데이트 한뒤, window에 push한다. */
 extern int	    engine_update_images(t_device *device);
 
-/* #src/engine_core/engine.c */
+/* #src/engine_core/engine.c 
+이미지를 window에 그린다.*/
 extern void		engine_push_image(t_device *device, t_image *image, int x, int y);
-
-// /* #src/engine_core/engine.c */
-// extern void     engine_register_render_func(t_device *device, int (*render_fun)());
 
 /* #src/engine_core/engine.c */
 extern void     engine_render(t_device *device);
