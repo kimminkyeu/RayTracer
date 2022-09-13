@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_device.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/09/06 16:45:46 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/09/13 17:00:23 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stddef.h>
 # include <stdbool.h>
 # include "gl_vec2.h"
+# include "vector.h"
 
 /* TODO: 알맞게 상태 바꿀 것. */
 typedef enum e_state {
@@ -51,14 +52,22 @@ typedef struct s_input {
 	};
 }	t_input;
 
+typedef struct s_device t_device;
+typedef struct s_image t_image;
+
 typedef struct s_image {
 	void	*img_ptr;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-	int		width;
-	int		height;
+
+	t_vec2	img_location;
+	t_vec2	img_size;
+
+	// render function for each image.
+	int (*img_update_func)(t_device *device, t_image *image);
+
 }	t_image;
 
 typedef struct s_device {
@@ -67,11 +76,17 @@ typedef struct s_device {
 	int				win_width;
 	int				win_height;
 	float			aspect_ratio;
-	t_image			viewport; // for viewport
-	t_image			panel; // for ui control panel;
+
+	// t_image			viewport; // for viewport
+	// t_image			panel; // for ui control panel;
+	t_vector		*images; // image 들의 배열.
+
 	t_input			input; // mouse, keyboard input handler
 
-	long long		render_time; // times to get render.
+	// long long		render_time; // times to get render.
+
+	// this functions is called if you use engine_render() function.
+	// int (*engine_render_func)(t_device *device);
 
 	// TODO: add later... 
 }	t_device;

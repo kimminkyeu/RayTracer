@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 21:24:15 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 13:07:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 16:40:25 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ void	gl_image_brightness(t_image *image, float brightness_factor)
 	t_vec4	color;
 
 	j = 0;
-	while (j < image->height)
+	while (j < image->img_size.height)
 	{
 		i = 0;
-		while (i < image->width)
+		while (i < image->img_size.width)
 		{
 			pixel_ptr = gl_get_pixel_addr(image, i, j);
 			color.a = gl_color_get_alpha(*pixel_ptr); // keep alpha

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 13:24:06 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 16:16:53 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ typedef union u_vec2 {
 	struct {
 		float	x;
 		float	y;
+	};
+	struct
+	{
+		float	width;
+		float	height;
 	};
 	float	v[2];
 }	t_vec2;

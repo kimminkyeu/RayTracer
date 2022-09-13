@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/13 13:31:29 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/13 17:18:26 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,7 @@ MYAPP_DIR					= myapp
 
 # MYAPP-SOURCE
 MYAPP_SRC					= main \
-							  render_viewport render_panel
+							  render_viewport
 
 # MYAPP-SOURCE AL
 MYAPP_SRCS  = $(addsuffix .c, $(addprefix $(MYAPP_DIR)/, $(MYAPP_SRC))) \
