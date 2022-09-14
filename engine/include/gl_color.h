@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:54:46 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:45:10 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 21:53:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,11 @@
 /* (1) Create and Return integer r-value (int argb) color from each value */
 extern int				gl_get_color_from_4int(int alpha, int r, int g, int b);
 
-/* (2) Create and Return integer r-value (int argb) color from t_vec4 type*/
+/* (2) Convert (t_vec4) to (int argb)*/
 extern int				gl_get_color_from_vec4(t_vec4 color);
+
+/* (3) Convert (int argb) to (t_vec4)*/
+extern t_vec4			gl_get_vec4_from_color(int argb);
 
 /* NOTE: [t_vec4 type] Change color brightness and return it's value.	
 	* function automaticaly clamps color range from (0.0f to 255.0f).
@@ -54,6 +57,7 @@ extern t_vec4			gl_color_set_brightness(t_vec4 _color, double brightness_factor)
 
 /* Return Opposite color */
 extern int				gl_color_reverse(int argb);
+
 /* Return alpha */
 extern unsigned char	gl_color_get_alpha(int argb);
 /* Return red */

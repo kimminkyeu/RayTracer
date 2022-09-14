@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 21:22:48 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/15 01:07:19 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, in
 		new_image->img_update_func = f_update_func;
 	}
 	images->push_back(images, new_image);
-	printf("New image created\n");
+	printf("New image created. width:%d height:%d\n", (int)img_size.width, (int)img_size.height);
 }
 
 int		handle_exit(t_device *device)
@@ -167,7 +167,7 @@ int	engine_update_images(t_device *device)
 		i++;
 	}
 	render_end_time = get_time_ms();
-	draw_render_time(device, render_end_time - render_start_time, gl_get_vec2_from_2f(30, 30), WHITE);
+	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
 	return (0);
 }
 
@@ -209,11 +209,12 @@ int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, 
 		return (-1);
 	new_image = ft_calloc(1, sizeof(*new_image));
 
-	// int t1 = 0;
-	// int t2 = 0;
-	// new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, &t1, &t2);
-	new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, (int *)&(new_image->img_size.width), (int *)&(new_image->img_size.height));
-
+	int	width;
+	int height;
+	// new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, (int *)&(new_image->img_size.width), (int *)&(new_image->img_size.height));
+	new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, &width, &height);
+	new_image->img_size.width = width;
+	new_image->img_size.height = height;
 	if (new_image->img_ptr == NULL)
 	{
 		free(new_image);
@@ -225,5 +226,6 @@ int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, 
 	new_image->img_location = img_location;
 	new_image->img_update_func = update_func;
 	images->push_back(images, new_image);
+	printf("New image created. width:%d height:%d\n", (int)new_image->img_size.width, (int)new_image->img_size.height);
 	return (0);
 }

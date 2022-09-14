@@ -6,13 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:26:59 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:41:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 22:32:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_vec2.h"
 
-t_vec2	gl_get_vec2_from_2f(float _x, float _y)
+t_vec2	gl_vec2_2f(float _x, float _y)
 {
 	t_vec2	vec2;
 
@@ -21,34 +21,34 @@ t_vec2	gl_get_vec2_from_2f(float _x, float _y)
 	return (vec2);
 }
 
-t_vec2	gl_get_vec2_from_1f(float _k)
+t_vec2	gl_vec2_1f(float _k)
 {
-	return (gl_get_vec2_from_2f(_k, _k));
+	return (gl_vec2_2f(_k, _k));
 }
 
 t_vec2	gl_vec2_reverse(t_vec2 v)
 {
-	return (gl_get_vec2_from_2f(-v.x, -v.y));
+	return (gl_vec2_2f(-v.x, -v.y));
 }
 
 t_vec2	gl_vec2_add_vector(t_vec2 v1, t_vec2 v2)
 {
-	return (gl_get_vec2_from_2f(v1.x + v2.x, v1.y + v2.y));
+	return (gl_vec2_2f(v1.x + v2.x, v1.y + v2.y));
 }
 
 t_vec2	gl_vec2_add_float(t_vec2 v1, float f)
 {
-	return (gl_get_vec2_from_2f(v1.x + f, v1.y + f));
+	return (gl_vec2_2f(v1.x + f, v1.y + f));
 }
 
 t_vec2	gl_vec2_subtract_vector(t_vec2 v1, t_vec2 v2)
 {
-	return (gl_get_vec2_from_2f(v1.x - v2.x, v1.y - v2.y));
+	return (gl_vec2_2f(v1.x - v2.x, v1.y - v2.y));
 }
 
 t_vec2	gl_vec2_multiply_scalar(t_vec2 v, float scalar)
 {
-	return (gl_get_vec2_from_2f(v.x * scalar, v.y * scalar));
+	return (gl_vec2_2f(v.x * scalar, v.y * scalar));
 }
 
 /** helper function for gl_clamp */
@@ -69,7 +69,7 @@ t_vec2	gl_vec2_clamp(t_vec2 v, t_vec2 min, t_vec2 max)
 
 	x = compare_for_clamp(v.x, min.x, max.x);
 	y = compare_for_clamp(v.y, min.y, max.y);
-	return (gl_get_vec2_from_2f(x, y));
+	return (gl_vec2_2f(x, y));
 }
 
 
@@ -91,5 +91,5 @@ t_vec2	gl_vec2_normalize(t_vec2 v)
 	
 	len = gl_vec2_get_magnitude(v);
 	/** printf("len : %f\n", len); */
-	return (gl_get_vec2_from_2f(v.x / len, v.y / len));
+	return (gl_vec2_2f(v.x / len, v.y / len));
 }

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:37:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 22:34:30 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ typedef union u_vec2 {
 }	t_vec2;
 
 /* Create R-value vec2 and returns data */
-extern t_vec2	gl_get_vec2_from_2f(float _x, float _y);
+extern t_vec2	gl_vec2_2f(float _x, float _y);
 
 /* Create and Return R-value from single float argument.
 - : functions sets every value to (float _k) */
-extern t_vec2	gl_get_vec2_from_1f(float _k);
+extern t_vec2	gl_vec2_1f(float _k);
 
 /* returns -v1 (reversed direction) */
 extern t_vec2	gl_vec2_reverse(t_vec2 v);

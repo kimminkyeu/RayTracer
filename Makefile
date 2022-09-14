@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/14 13:38:57 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/14 22:06:47 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,7 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 
 	ENGINE_GL_DRAW_DIR			= $(ENGINE_GL_DIR)/draw
 	ENGINE_GL_DRAW_SRC			= gl_draw_pixel gl_draw_background gl_draw_line\
-									gl_get_pixel_addr
+									gl_get_pixel_addr gl_get_pixel_color\
 
 	ENGINE_GL_SHADER_DIR	= $(ENGINE_GL_DIR)/shader
 	ENGINE_GL_SHADER_SRC	= brightness

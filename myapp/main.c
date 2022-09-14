@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 17:25:12 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/15 00:58:45 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 #include "gl_vec2.h"
 #include "mlx_linux.h"
 
-/** TODO:  move this function to engine header. 
+/** TODO:  move this function to engine header.
  * on error, return -1
- * NOTE: if *update_func is NULL, then nothing gets updated.
+ *
+ *  NOTE:  if *update_func is NULL, then nothing gets updated.
 */
 
 int	main(int ac, char **av)
@@ -29,7 +30,7 @@ int	main(int ac, char **av)
 
 	/** Viewport_content */
 	// engine_new_image(device, gl_vec2(500, 500), gl_vec2(0, 0), update_func);
-	int status = engine_new_xpm_image(device, "./myapp/image/image_1.xpm", gl_get_vec2_from_2f(0, 0), update_func);
+	int status = engine_new_xpm_image(device, "./myapp/image/image_1.xpm", gl_vec2_2f(0, 0), update_func);
 	if (status == -1)
 		printf("Error while opening xpm image\n");
 
