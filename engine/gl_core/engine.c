@@ -6,11 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:18:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:37:45 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_engine.h"
+#include "gl_vec2.h"
 
 extern void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)());
 extern void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)());
@@ -155,7 +156,7 @@ int	engine_update_images(t_device *device)
 		i++;
 	}
 	render_end_time = get_time_ms();
-	draw_render_time(device, render_end_time - render_start_time, gl_vec2(30, 30), WHITE);
+	draw_render_time(device, render_end_time - render_start_time, gl_get_vec2_from_2f(30, 30), WHITE);
 	return (0);
 }
 

@@ -6,13 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:07:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 21:02:51 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:39:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_vec4.h"
 
-t_vec4	gl_vec4(float _x, float _y, float _z, float _w)
+t_vec4	gl_get_vec4_from_4f(float _x, float _y, float _z, float _w)
 {
 	t_vec4	pos4;
 
@@ -23,37 +23,37 @@ t_vec4	gl_vec4(float _x, float _y, float _z, float _w)
 	return (pos4);
 }
 
-t_vec4	gl_vec4_(float _k)
+t_vec4	gl_get_vec4_from_1f(float _k)
 {
-	return (gl_vec4(_k, _k, _k, _k));
+	return (gl_get_vec4_from_4f(_k, _k, _k, _k));
 }
 
 t_vec4	gl_vec4_reverse(t_vec4 v)
 {
-	return (gl_vec4(-v.x, -v.y, -v.z, -v.w));
+	return (gl_get_vec4_from_4f(-v.x, -v.y, -v.z, -v.w));
 }
 
 t_vec4	gl_vec4_add_vector(t_vec4 v1, t_vec4 v2)
 {
 	t_vec4	o;
 
-	o = gl_vec4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
+	o = gl_get_vec4_from_4f(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w);
 	return (o);
 }
 
 t_vec4	gl_vec4_add_float(t_vec4 v, float f)
 {
-	return (gl_vec4(v.x + f, v.y + f, v.z + f, v.w + f));
+	return (gl_get_vec4_from_4f(v.x + f, v.y + f, v.z + f, v.w + f));
 }
 
 t_vec4	gl_vec4_subtract_vector(t_vec4 v1, t_vec4 v2)
 {
-	return (gl_vec4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w));
+	return (gl_get_vec4_from_4f(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w));
 }
 
 t_vec4	gl_vec4_multiply_scalar(t_vec4 v, float scalar)
 {
-	return (gl_vec4(v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar));
+	return (gl_get_vec4_from_4f(v.x * scalar, v.y * scalar, v.z * scalar, v.w * scalar));
 }
 
 /** helper function for gl_clamp */
@@ -78,7 +78,7 @@ extern t_vec4	gl_vec4_clamp(t_vec4 v, t_vec4 min, t_vec4 max)
 	y = compare_for_clamp(v.y, min.y, max.y);
 	z = compare_for_clamp(v.z, min.z, max.z);
 	w = compare_for_clamp(v.w, min.w, max.w);
-	return (gl_vec4(x, y, z, w));
+	return (gl_get_vec4_from_4f(x, y, z, w));
 }
 
 t_vec4	gl_vec4_normalize(t_vec4 v)
@@ -86,7 +86,7 @@ t_vec4	gl_vec4_normalize(t_vec4 v)
 	float	len;
 
 	len = gl_vec4_get_magnitude(v);
-	return (gl_vec4(v.x / len, v.y / len, v.z / len, v.w));
+	return (gl_get_vec4_from_4f(v.x / len, v.y / len, v.z / len, v.w));
 }
 
 float	gl_vec4_dot_product(t_vec4 dst, t_vec4 src)
@@ -109,7 +109,7 @@ t_vec4	gl_vec4_cross_product(t_vec4 v1, t_vec4 v2)
 	x = v1.y * v2.z - v1.z * v1.y;
 	y = v1.z * v2.x - v1.x * v1.z;
 	z = v1.x * v2.y - v1.y * v1.x;
-	return (gl_vec4(x, y, z, 1.0f));
+	return (gl_get_vec4_from_4f(x, y, z, 1.0f));
 }
 
 /** NOTE : because float 0.0f is not exactly 0, use epsilon. */
@@ -134,5 +134,5 @@ t_vec4	gl_vec4_multiply_matrix(t_mat4x4 m, t_vec4 v)
 		o.y /= o.w;
 		o.z /= o.w;
 	}
-	return (gl_vec4(o.x, o.y, o.z, 1.0f));
+	return (gl_get_vec4_from_4f(o.x, o.y, o.z, 1.0f));
 }

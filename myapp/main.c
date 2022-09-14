@@ -6,12 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:24:41 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:46:55 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include "gl_device.h"
+#include "gl_vec2.h"
 #include "mlx_linux.h"
 
 /** TODO:  move this function to engine header. 
@@ -55,7 +56,7 @@ int	main(int ac, char **av)
 
 	/** Viewport_content */
 	// engine_new_image(device, gl_vec2(500, 500), gl_vec2(0, 0), update_func);
-	int status = engine_new_xpm_image(device, "./myapp/image/image_1.xpm", gl_vec2(0, 0), update_func);
+	int status = engine_new_xpm_image(device, "./myapp/image/image_1.xpm", gl_get_vec2_from_2f(0, 0), update_func);
 	if (status == -1)
 		printf("Error while opening xpm image\n");
 
@@ -66,8 +67,9 @@ int	main(int ac, char **av)
 
 
 	// (3) FIX: 이 부분도 구조 어떻게 바꾸는게 좋을지 토의할 것.
+	// (3-1  FIX:  --> 매 프레임마다 새롭게 그리는 함수가 호출된다면, 이미지가 계속해서 처음부터 그려지다 보니 깜빡임 현상이 발생하는 것 아닐지.
 	engine_render(device);
-	// (3) FIX: --> mlx_loop을 여기로 뺐는데, 그 이유는 매초 새로 렌더링하는걸 방지하려고... ---> 추후 토의 필요.
+	// (3-2) FIX: --> mlx_loop을 여기로 뺐는데, 그 이유는 매초 새로 렌더링하는걸 방지하려고... ---> 추후 토의 필요.
 	mlx_loop(device->mlx);
 	return (0);
 }

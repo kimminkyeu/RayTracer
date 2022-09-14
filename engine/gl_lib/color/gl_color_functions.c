@@ -6,13 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:03:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 13:43:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:46:15 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_color.h"
 
-int	gl_color(int alpha, int r, int g, int b)
+int	gl_get_color_from_4int(int alpha, int r, int g, int b)
 {
 	unsigned char	color[4];
 
@@ -23,9 +23,9 @@ int	gl_color(int alpha, int r, int g, int b)
 	return (*(int *)(color));
 }
 
-int	gl_color_(t_vec4 color)
+int	gl_get_color_from_vec4(t_vec4 color)
 {
-	return (gl_color(color.a, color.r, color.g, color.b));
+	return (gl_get_color_from_4int(color.a, color.r, color.g, color.b));
 }
 
 /*
@@ -43,7 +43,7 @@ t_vec4	gl_color_set_brightness(t_vec4 _color, double brightness_factor)
 	color.g = _color.g * brightness_factor;
 	color.b = _color.b * brightness_factor;
 	color.a = _color.a;
-	color = gl_vec4_clamp(color, gl_vec4_(0.0f), gl_vec4_(255.0f));
+	color = gl_vec4_clamp(color, gl_get_vec4_from_1f(0.0f), gl_get_vec4_from_1f(255.0f));
 	return (color);
 }
 
