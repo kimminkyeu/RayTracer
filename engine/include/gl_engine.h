@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 17:24:46 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 21:17:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ extern void	    engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_l
 
 /** #src/engine_core/engine.c.
  * Load and convert xpm-format file to t_image.
+ * Returns (-1) on file-open error. / return (0) on Success.
  * NOTE: function adds image instance to t_vector images (= array of images). --> inside t_device.
  * @ img_size : width and height of the image.
  * @ img_location : x and y coordinate of where the image will be located (image's top left corner).
@@ -94,7 +95,7 @@ extern int	    engine_update_images(t_device *device);
  *
  * engine_update_images() 함수 내부에서 사용됨.
  * 인자로 넘긴 이미지를 스크린 (x, y) 지점에 그린다.*/
-extern void		engine_push_image(t_device *device, t_image *image, int x, int y);
+extern void		engine_push_image_to_window(t_device *device, t_image *image, int x, int y);
 
 
 /** #src/engine_core/engine.c.

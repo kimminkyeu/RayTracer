@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 17:19:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 21:22:48 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,44 +20,55 @@ extern int		handle_key_release(int key_code, void *param);
 extern int		handle_mouse_press(int key_code, int x, int y, void *param);
 extern int		handle_mouse_release(int key_code, int x, int y, void *param);
 
-void	engine_push_image(t_device *device, t_image *image, int x, int y)
+static bool	is_inside_window(t_device *device, int _x, int _y)
 {
-	// if (x y) is inside window.
-	if (x <= device->win_width && x >= 0 && y <= device->win_height && y >= 0)
-		if (device != NULL && image != NULL && image->img_ptr != NULL)
-			mlx_put_image_to_window(device->mlx, device->win, image->img_ptr, x, y);
-}
-
-void	engine_exit(t_device *device, bool is_error)
-{
-
-	if (device != NULL && device->images != NULL)
+	if (_x <= device->win_width && _x >= 0 && \
+			_y <= device->win_height && _y >= 0)
 	{
-		size_t i = 0;
-		while (i < device->images->size)
-		{
-			printf("destroying image %zd\n", i);
-			mlx_destroy_image(device->mlx, ((t_image *)device->images->data[i])->img_ptr);
-			i++;
-		}
-		delete_vector(&device->images);
+		return (true);
 	}
-	if (device->win != NULL)
-		mlx_destroy_window(device->mlx, device->win);
-
-	if (device != NULL && device->mlx != NULL)
-		free(device->mlx);
-
-	if (device != NULL)
-		free(device);
-
-	if (is_error == ERROR)
-		exit(EXIT_FAILURE);
 	else
-		exit(EXIT_SUCCESS);
+		return (false);
 }
 
+void	engine_push_image_to_window(t_device *device, t_image *image, int x, int y)
+{
+    if (is_inside_window(device, x, y))
+	{
+        if (device != NULL && image != NULL && image->img_ptr != NULL)
+		{
+            mlx_put_image_to_window(device->mlx, device->win, image->img_ptr, x, y);
+		}
+    }
+}
 
+void engine_exit(t_device *device, bool is_error) {
+
+  if (device != NULL && device->images != NULL) {
+    size_t i = 0;
+    while (i < device->images->size)
+	{
+      printf("destroying image %zd\n", i);
+      mlx_destroy_image(device->mlx,
+                        ((t_image *)device->images->data[i])->img_ptr);
+      i++;
+    }
+    delete_vector(&device->images);
+  }
+  if (device->win != NULL)
+    mlx_destroy_window(device->mlx, device->win);
+
+  if (device != NULL && device->mlx != NULL)
+    free(device->mlx);
+
+  if (device != NULL)
+    free(device);
+
+  if (is_error == ERROR)
+    exit(EXIT_FAILURE);
+  else
+    exit(EXIT_SUCCESS);
+}
 
 void	engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*f_update_func)())
 {
@@ -152,7 +163,7 @@ int	engine_update_images(t_device *device)
 		img_ptr = device->images->data[i];
 		if (img_ptr->img_update_func != NULL) // FIX:  이 부분 수정됨.
 			img_ptr->img_update_func(device, img_ptr);
-		engine_push_image(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
+		engine_push_image_to_window(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
 		i++;
 	}
 	render_end_time = get_time_ms();
