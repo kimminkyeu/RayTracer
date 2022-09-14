@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 17:43:03 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 14:58:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # define __OSX__	(1)
 
 # if defined (__linux__)
-#  define PLATFORM_NAME (__LINUX__) 
+#  define PLATFORM_NAME (__LINUX__)
 #  include "mlx_linux.h"
 #  include "gl_keymap_linux.h"
 # elif defined (__APPLE__)
@@ -61,7 +61,7 @@ extern void	    engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_l
 저장된 이미지 배열을 순회하면서 해당 이미지들을 모두 업데이트 한뒤, window에 push한다. */
 extern int	    engine_update_images(t_device *device);
 
-/* #src/engine_core/engine.c 
+/* #src/engine_core/engine.c
 이미지를 window에 그린다.*/
 extern void		engine_push_image(t_device *device, t_image *image, int x, int y);
 

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 17:45:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:18:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ extern int		handle_mouse_release(int key_code, int x, int y, void *param);
 
 void	engine_push_image(t_device *device, t_image *image, int x, int y)
 {
+	// if (x y) is inside window.
 	if (x <= device->win_width && x >= 0 && y <= device->win_height && y >= 0)
 		if (device != NULL && image != NULL && image->img_ptr != NULL)
 			mlx_put_image_to_window(device->mlx, device->win, image->img_ptr, x, y);
@@ -86,6 +87,7 @@ int		handle_exit(t_device *device)
 	engine_exit(device, SUCCESS);
 	return (0);
 }
+
 t_device	*engine_init(int _win_width, int _win_height, char *title)
 {
 	t_device	*device;
@@ -131,7 +133,9 @@ static void draw_render_time(t_device *device, long long time, t_vec2 location, 
 	free(str);
 }
 
-/** FIXME: Need function testing! (한번만 렌더하는 함수) */
+/** FIX: Need function testing! (한번만 렌더하는 함수) 
+ *  * 고친 부분 : update function pointer가 null일 경우를 에러처리 해야 한다!
+*/
 int	engine_update_images(t_device *device)
 {
 	t_image	*img_ptr;
@@ -140,11 +144,13 @@ int	engine_update_images(t_device *device)
 	long long render_end_time;
 
 	i = 0;
+	// NOTE: images 배열을 순회하면서, 각각 이미지마다 멤버로서 연결된 함수 포인터를 호출한다. (ex.update_func)
 	render_start_time = get_time_ms();
 	while (i < device->images->size)
 	{
 		img_ptr = device->images->data[i];
-		img_ptr->img_update_func(device, img_ptr);
+		if (img_ptr->img_update_func != NULL) // FIX:  이 부분 수정됨.
+			img_ptr->img_update_func(device, img_ptr);
 		engine_push_image(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
 		i++;
 	}
@@ -156,9 +162,9 @@ int	engine_update_images(t_device *device)
 /* TODO: change it's name to engine_render_loop() */
 void	engine_render(t_device *device)
 {
-	// engine_update_images(device);
-	mlx_loop_hook(device->mlx, engine_update_images, device);
-	mlx_loop(device->mlx);
+	engine_update_images(device);
+	// mlx_loop_hook(device->mlx, engine_update_images, device);
+	// mlx_loop(device->mlx);
 }
 
 /** NOTE: if handler changes, reset engine */
