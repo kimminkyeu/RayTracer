@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:46:55 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:54:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 /** TODO:  move this function to engine header. 
  * on error, return -1
+ * NOTE: if *update_func is NULL, then nothing gets updated.
 */
 int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, int (*update_func)())
 {
@@ -66,6 +67,8 @@ int	main(int ac, char **av)
 
 
 
+	// 이미지를 배열을 통해 여러개 만드는 것이 괜찮은 방식인지 잘 모르겠음 고민이 됨..
+	// (고민사항... 구조를 어떻게 하는게 좋을지... 그냥 쌩 mlx를 쓰는게 더 효율적일까..? 왠지 사서 고생하는 것 같다)
 	// (3) FIX: 이 부분도 구조 어떻게 바꾸는게 좋을지 토의할 것.
 	// (3-1  FIX:  --> 매 프레임마다 새롭게 그리는 함수가 호출된다면, 이미지가 계속해서 처음부터 그려지다 보니 깜빡임 현상이 발생하는 것 아닐지.
 	engine_render(device);
