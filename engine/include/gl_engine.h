@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 17:14:48 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 17:24:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,33 +51,41 @@
  * Create and return Engine-instance.
  * @ _win_width : Width of X11 window.
  * @ _win_height : Height of X11 window.
- * @ title : Title of X11, window which will be displayed at top-bar.
- */
+ * @ title : Title of X11, window which will be displayed at top-bar.*/
 extern t_device	*engine_init(int _win_width, int _win_height, char *title);
+
 
 /** #src/engine_core/engine.c.
  * Close Engine. (Shut down X-window)
- * function deletes every allocated memory from Engine-instance.
+ * NOTE: function deletes every allocated memory inside Engine-instance. (Memory-leak-Safe)
  * if [is_error] is true, then exit_code will be 1 (FAIL).
- * else if [is_error] is false, then exit_code will be 0 (SUCCESS).
- */
+ * else if [is_error] is false, then exit_code will be 0 (SUCCESS). */
 extern void		engine_exit(t_device *device, bool is_error);
+
 
 /** #src/engine_core/engine.c.
  * Creates new image.
+ * NOTE: function adds image instance to t_vector images (= array of images). --> inside t_device.
  * @ img_size : width and height of the image.
  * @ img_location : x and y coordinate of where the image will be located (image's top left corner).
- * NOTE: if *update_func is NULL, then nothing gets updated.
-*/
-extern void	    engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*f_update_func)());
+ * NOTE: if *update_func is NULL, then nothing gets updated. */
+extern void	    engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*update_func)());
+
+
+/** #src/engine_core/engine.c.
+ * Load and convert xpm-format file to t_image.
+ * NOTE: function adds image instance to t_vector images (= array of images). --> inside t_device.
+ * @ img_size : width and height of the image.
+ * @ img_location : x and y coordinate of where the image will be located (image's top left corner).
+ * NOTE: if *update_func is NULL, then nothing gets updated. */
+extern int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, int (*update_func)());
 
 
 
 /** #src/engine_core/engine.c.
  * 저장된 이미지 배열을 순회하면서 해당 이미지들을 모두 업데이트 한뒤, window에 push한다.
  * !  FIX:   t_vector images 배열을 순회하면서 순차적으로 screen에 그리기 때문에, 배열의 뒤쪽에 있는 이미지가 다른 이미지들의 위에 그려질 것이다.
- * !  FIX:  이 부분은 어떻게 개선하는게 좋을 지 토의가 필요하다.
- */
+ * !  FIX:  이 부분은 어떻게 개선하는게 좋을 지 토의가 필요하다. */
 extern int	    engine_update_images(t_device *device);
 
 

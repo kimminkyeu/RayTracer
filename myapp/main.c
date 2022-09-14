@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 16:54:36 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 17:25:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,34 +19,6 @@
  * on error, return -1
  * NOTE: if *update_func is NULL, then nothing gets updated.
 */
-int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, int (*update_func)())
-{
-	t_vector *images = device->images;
-	t_image	*new_image;
-
-	if (device == NULL || filename == NULL)
-		return (-1);
-	new_image = ft_calloc(1, sizeof(*new_image));
-
-	// int t1 = 0;
-	// int t2 = 0;
-	// new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, &t1, &t2);
-	new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, (int *)&(new_image->img_size.width), (int *)&(new_image->img_size.height));
-
-	if (new_image->img_ptr == NULL)
-	{
-		free(new_image);
-		return (-1);
-	}
-	new_image->addr = mlx_get_data_addr(new_image->img_ptr, \
-				&(new_image->bits_per_pixel), \
-				&(new_image->line_length), &(new_image->endian));
-	new_image->img_location = img_location;
-	new_image->img_update_func = update_func;
-	images->push_back(images, new_image);
-	return (0);
-}
-
 
 int	main(int ac, char **av)
 {
