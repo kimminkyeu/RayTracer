@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/15 01:45:52 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/15 02:13:47 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,12 @@ int	update_func(t_device *device, t_image *img)
 	(void)device;
 	(void)img;
 
+
+/**
+	 * ------------------------------
+	 *  Implementation of Gaussian Blur. (Box-Blur 너무 구림 + Bloom 필터에서 가우시안 블러 활용됨.)
+	 * ------------------------------
+	 */
 	/** [Separable Convolution]
 	 *  한 번에 2차원 Kernel을 적용하는 대신에 1차원 Kernel(가로, 세로)를 두번 적용.
 	 *  이해하기 쉽고 효율적이다. */
@@ -72,20 +78,28 @@ int	update_func(t_device *device, t_image *img)
 		}
 		y++;
 	}
+
+
+
+
+	/**
+	 * ------------------------------
+	 *  Copy to Image memory
+	 * ------------------------------
+	 */
+
 	// (void)pixel_color_buffer;
 	// copy pixel_color_buffer's memory to image.
 	// ft_memcpy(img->addr, (char *)pixel_color_buffer, (int)img->img_size.width * (int)img->img_size.height);
 	// ft_memmove(img->addr, pixel_color_buffer, (int)img->img_size.width * (int)img->img_size.height);
 	// ft_memmove(img->addr, pixel_color_buffer, (int)img->img_size.width * 100);
-
-
 	// FIX:  문제는 memcpy도 아니고, 그냥 pixel_color_buffer문제임. 값이 이상함.
-	if (pixel_color_buffer[0 + (0 * ((int)img->img_size.width))] == pixel_color_buffer[0 + (20 * ((int)img->img_size.width))])
-	{
-		printf("Something is wrong\n");
-	}
 
-	// FIX:  왜 1차원 배열처럼 memcpy쓰면 이상해지는겨>?
+	// if (pixel_color_buffer[0 + (0 * ((int)img->img_size.width))] == pixel_color_buffer[0 + (20 * ((int)img->img_size.width))])
+		// printf("Something is wrong\n");
+
+	// FIX:  왜 1차원 배열처럼 memcpy쓰면 이상해지는가? 한번 더 검토.
+	/*
 	int i = 0;
 	int j = 0;
 	while (i < (int)img->img_size.height)
@@ -99,8 +113,7 @@ int	update_func(t_device *device, t_image *img)
 		}
 		i++;
 	}
-
-
+	*/
 
 
 	return (0);
