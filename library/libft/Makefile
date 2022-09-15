@@ -81,7 +81,7 @@ CYAN            = \033[0;96m
 WHITE           = \033[0;97m
 
 
-# Rules 
+# Rules
 all: $(NAME)
 
 $(NAME): $(OBJ)
