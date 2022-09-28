@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+         #
+#    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/16 15:31:26 by minkyeki          #+#    #+#              #
-#    Updated: 2022/08/16 23:01:56 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/12 14:05:02 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,14 @@ AR              = ar rcs
 # NOTE : Add Source directory here
 # ------------------------------------------------------ #
 SRC_DIR         = src
-LIBC_DIR        = $(SRC_DIR)/LibC/
-GNL_DIR         = $(SRC_DIR)/Get_next_line/
-PRINF_DIR       = $(SRC_DIR)/Printf/
-STRING_DIR      = $(SRC_DIR)/String/
-VECTOR_DIR      = $(SRC_DIR)/Vector/
+LIBC_DIR        = $(SRC_DIR)/LibC
+GNL_DIR         = $(SRC_DIR)/Get_next_line
+PRINF_DIR       = $(SRC_DIR)/Printf
+STRING_DIR      = $(SRC_DIR)/String
+
+VECTOR_DIR      = $(SRC_DIR)/Vector
+VECTOR_VOID_DIR      = $(VECTOR_DIR)/vector_void
+VECTOR_UCHAR_DIR     = $(VECTOR_DIR)/vector_unsigned_char
 
 # NOTE : Add Source files here
 # ------------------------------------------------------ #
@@ -49,15 +52,18 @@ PRINTF_SRC      = ft_printf ft_printf_hex ft_printf_info ft_printf_parse \
 
 STRING_SRC      = string_create string_modify string_modify2 string_utils
 
-VECTOR_SRC      = vector_create vector_modify vector_iterate vector
+# VECTOR_SRC      = vector_create vector_modify vector_iterate vector
+VECTOR_VOID_SRC      = vector_create vector_modify vector_iterate vector_func_ptr
+VECTOR_UCHAR_SRC     = vector_create vector_modify vector_iterate vector_func_ptr
 
 # NOTE : Add to SRC here
 # ------------------------------------------------------ #
-SRC = $(addsuffix .c, $(addprefix $(LIBC_DIR),   $(LIBC_SRC)))        \
-	  $(addsuffix .c, $(addprefix $(GNL_DIR),    $(GNL_SRC)))         \
-	  $(addsuffix .c, $(addprefix $(PRINF_DIR),  $(PRINTF_SRC)))      \
-	  $(addsuffix .c, $(addprefix $(STRING_DIR), $(STRING_SRC)))      \
-	  $(addsuffix .c, $(addprefix $(VECTOR_DIR), $(VECTOR_SRC)))      \
+SRC = $(addsuffix .c, $(addprefix $(LIBC_DIR)/,   $(LIBC_SRC)))        \
+	  $(addsuffix .c, $(addprefix $(GNL_DIR)/,    $(GNL_SRC)))         \
+	  $(addsuffix .c, $(addprefix $(PRINF_DIR)/,  $(PRINTF_SRC)))      \
+	  $(addsuffix .c, $(addprefix $(STRING_DIR)/, $(STRING_SRC)))      \
+	  $(addsuffix .c, $(addprefix $(VECTOR_VOID_DIR)/, $(VECTOR_VOID_SRC))) \
+	  $(addsuffix .c, $(addprefix $(VECTOR_UCHAR_DIR)/, $(VECTOR_UCHAR_SRC))) \
 # ------------------------------------------------------ #
 
 OBJ = $(SRC:c=o)

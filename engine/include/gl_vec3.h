@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 21:05:50 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 13:23:56 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ extern t_vec3	gl_vec3_subtract_vector(t_vec3 v1, t_vec3 v2);
 extern t_vec3	gl_vec3_multiply_scalar(t_vec3 v, float scalar);
 
 /* Returns min(max(x, minVal), maxVal) for each component
-in x using the floating-point values minVal and maxVal. */
+in x using the floating-point values minVal and maxVal.
+* [clamping is used to restrict a value to a given range]
+*/
 extern t_vec3	gl_vec3_clamp(t_vec3 v, t_vec3 min, t_vec3 max);
 
 /* Create Normal Vector */

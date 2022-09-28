@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_draw_background.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:42:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/04 21:44:00 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 16:40:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	gl_draw_background(t_image *image, int argb)
 	int	y;
 
 	y = 0;
-	while (y < (int)image->height)
+	while (y < (int)image->img_size.height)
 	{
 		x = 0;
-		while (x < (int)image->width)
+		while (x < (int)image->img_size.width)
 		{
 			gl_draw_pixel(image, x, y, argb);
 			x += 1;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gl_engine.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/07 14:50:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 17:43:03 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@
 # endif
 
 /* Engine Header */
+# include "libft.h"
 # include "gl_device.h"
 # include "gl_input.h"
-# include "libft.h"
 # include "gl_time.h"
 # include "gl_color.h"
 # include "gl_matrix.h"
@@ -41,27 +41,31 @@
 # include "gl_vec3.h"
 # include "gl_vec4.h"
 # include "gl_draw.h"
+# include "gl_shader.h"
 
 # define STDOUT				(1)
 # define ERROR				(1)
 # define SUCCESS			(0)
 
 /* #src/engine_core/engine.c */
-extern t_device	*engine_init(int _viewport_width, int _panel_width, int _win_height, char *title);
+extern t_device	*engine_init(int _win_width, int _win_height, char *title);
 
 /* #src/engine_core/engine.c */
 extern void		engine_exit(t_device *device, bool is_error);
 
 /* #src/engine_core/engine.c */
-extern void		engine_start_loop(t_device *device, int (*render_layer)());
+extern void	    engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*f_update_func)());
 
-/* #src/engine_core/engine.c */
-extern void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)());
 
-/* #src/engine_core/engine.c */
-extern void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)());
+/* #src/engine_core/engine.c
+저장된 이미지 배열을 순회하면서 해당 이미지들을 모두 업데이트 한뒤, window에 push한다. */
+extern int	    engine_update_images(t_device *device);
 
-    /* #src/engine_core/engine.c */
+/* #src/engine_core/engine.c 
+이미지를 window에 그린다.*/
 extern void		engine_push_image(t_device *device, t_image *image, int x, int y);
+
+/* #src/engine_core/engine.c */
+extern void     engine_render(t_device *device);
 
 #endif /* ENGINE_H */

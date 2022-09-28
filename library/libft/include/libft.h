@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@42SEOUL.KR>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:45:16 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/08/31 18:13:50 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/08/16 22:53:55 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_list
 extern t_list	*ft_lstnew(void *content);
 
 /* Adds the element ’new’ at the beginning of the list. */
-extern void		ft_lstadd_front(t_list **lst, t_list *new_node);
+extern void		ft_lstadd_front(t_list **lst, t_list *new);
 
 /* Counts the number of elements in a list. */
 extern int		ft_lstsize(t_list *lst);
@@ -69,7 +69,7 @@ extern int		ft_lstsize(t_list *lst);
 extern t_list	*ft_lstlast(t_list *lst);
 
 /* Adds the element ’new’ at the end of the list. */
-extern void		ft_lstadd_back(t_list **lst, t_list *new_node);
+extern void		ft_lstadd_back(t_list **lst, t_list *new);
 
 /* Delete one element pointed by 'lst' using the function 'del',
  * then free the element. */

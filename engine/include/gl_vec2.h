@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 21:09:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/13 16:16:53 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ typedef union u_vec2 {
 	struct {
 		float	x;
 		float	y;
+	};
+	struct
+	{
+		float	width;
+		float	height;
 	};
 	float	v[2];
 }	t_vec2;
@@ -51,7 +56,9 @@ extern t_vec2	gl_vec2_subtract_float(t_vec2 v1, float f);
 extern t_vec2	gl_vec2_multiply_scalar(t_vec2 v, float scalar);
 
 /* Returns min(max(x, minVal), maxVal) for each component
-in x using the floating-point values minVal and maxVal. */
+in x using the floating-point values minVal and maxVal.
+* [clamping is used to restrict a value to a given range]
+*/
 extern t_vec2	gl_vec2_clamp(t_vec2 v, t_vec2 min, t_vec2 max);
 
 extern float	gl_vec2_dot_product(t_vec2 v1, t_vec2 v2);
