@@ -6,31 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/08 16:26:26 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/15 02:14:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /** #include "input.h" */
 #include "gl_device.h"
 #include "gl_engine.h"
-
-// void	input_init(t_input *input)
-// {
-// 	int	i;
-	
-// 	i = 0;
-// 	while (i < 7)
-// 	{
-// 		input->key_state[i] = 0;
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < 5)
-// 	{
-// 		input->mouse_state[i] = 0;
-// 		i++;
-// 	}
-// }
 
 int	input_mouse_get_index(int key_code)
 {
@@ -130,11 +112,11 @@ t_vec2	input_get_mouse_pos(const t_device *device)
 	y = 0;
 
 	/* NOTE: for LINUX */
-	/** mlx_mouse_get_pos(device->mlx, device->win, &x, &y); */
+	// mlx_mouse_get_pos(device->mlx, device->win, &x, &y);
 
 	/* NOTE: for OSX */
 	mlx_mouse_get_pos(device->win, &x, &y);
-	
+
 	pos.x = (float)x;
 	pos.y = (float)y;
 	return (pos);

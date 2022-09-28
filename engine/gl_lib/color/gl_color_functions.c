@@ -6,27 +6,11 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:03:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 13:43:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 22:35:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_color.h"
-
-int	gl_color(int alpha, int r, int g, int b)
-{
-	unsigned char	color[4];
-
-	color[0] = b;
-	color[1] = g;
-	color[2] = r;
-	color[3] = alpha;
-	return (*(int *)(color));
-}
-
-int	gl_color_(t_vec4 color)
-{
-	return (gl_color(color.a, color.r, color.g, color.b));
-}
 
 /*
  * get_shaded_color is a function that accepts a double (distance)
@@ -43,7 +27,7 @@ t_vec4	gl_color_set_brightness(t_vec4 _color, double brightness_factor)
 	color.g = _color.g * brightness_factor;
 	color.b = _color.b * brightness_factor;
 	color.a = _color.a;
-	color = gl_vec4_clamp(color, gl_vec4_(0.0f), gl_vec4_(255.0f));
+	color = gl_vec4_clamp(color, gl_vec4_1f(0.0f), gl_vec4_1f(255.0f));
 	return (color);
 }
 

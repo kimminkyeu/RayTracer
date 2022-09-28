@@ -18,13 +18,6 @@
 
 typedef struct s_vector	t_vector;
 
-/* ---------------------------
- * @Type define for Vector.
- * . 
- * - size     : number of pointers filled in **data.
- * - capacity : total size of it's allocated memory.
- * - **data   : pointer to array of data(= void *) set. */
-
 typedef struct s_vector {
 	size_t		size;
 	size_t		capacity;

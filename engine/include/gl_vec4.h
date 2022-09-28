@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 13:29:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 22:32:03 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ typedef union s_vec4 {
 
 /* Create r-value vec4 and Return.
 NOTE: you can use vec4 for color system in reversed order. (int argb)*/
-extern t_vec4	gl_vec4(float x_or_b, float y_or_g, float z_or_r, float w_or_a);
+extern t_vec4	gl_vec4_4f(float x_or_b, float y_or_g, float z_or_r, float w_or_a);
 
 /* Create and Return R-value from single float argument.
 - : functions sets every value to (float _k) */
-extern t_vec4	gl_vec4_(float _k);
+extern t_vec4	gl_vec4_1f(float _k);
 
 /* returns -v1 (reversed direction) */
 extern t_vec4	gl_vec4_reverse(t_vec4 v);

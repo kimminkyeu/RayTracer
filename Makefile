@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/13 17:18:26 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/09/14 22:06:47 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,9 +32,11 @@ ENGINE_CORE_SRC				= engine input keyboard_handler mouse_handler
 # ------------------------------------------------------ #
 ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 
+	#  NOTE:  Color library
 	ENGINE_GL_COLOR_DIR			= $(ENGINE_GL_DIR)/color
 	ENGINE_GL_COLOR_SRC			= gl_color_functions gl_color_get_functions
 
+	#  NOTE:  Math library
 	ENGINE_GL_MATH_DIR			= $(ENGINE_GL_DIR)/math
 	ENGINE_GL_MATH_SRC			=	matrix_4x4_multiply\
 									matrix_4x4_rotate_functions\
@@ -47,12 +49,25 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 									vector3\
 									vector4\
 
+	#  NOTE:  Draw-functions library
 	ENGINE_GL_DRAW_DIR			= $(ENGINE_GL_DIR)/draw
 	ENGINE_GL_DRAW_SRC			= gl_draw_pixel gl_draw_background gl_draw_line\
-									gl_get_pixel_addr
+									gl_get_pixel_addr gl_get_pixel_color\
 
+	#  NOTE:  Shader (ex. Filter) library
 	ENGINE_GL_SHADER_DIR	= $(ENGINE_GL_DIR)/shader
 	ENGINE_GL_SHADER_SRC	= brightness
+
+	#  NOTE:  GL_STL library (ex. std::vector)
+	ENGINE_GL_DATA_STRUCTURE_DIR        = $(ENGINE_GL_DIR)/data_structure
+	# std::vector<t_vec4>
+	STD_VECTOR_VEC4_DIR       = $(ENGINE_GL_DATA_STRUCTURE_DIR)/vector_vec4
+	STD_VECTOR_VEC4_SRC       = vector_create vector_modify vector_iterate vector_func_ptr
+	# std::vector<t_image>
+	STD_VECTOR_IMAGE_DIR      = $(ENGINE_GL_DATA_STRUCTURE_DIR)/vector_image
+	STD_VECTOR_IMAGE_SRC      = vector_create vector_modify vector_iterate vector_func_ptr
+
+
 
 # (3) Dev-tools Directory (etc. Performance Checker)
 # ------------------------------------------------------ #
@@ -67,6 +82,8 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_COLOR_DIR)/, $(ENGINE_GL_COLOR_SRC))) \
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_DRAW_DIR)/, $(ENGINE_GL_DRAW_SRC))) \
 			  $(addsuffix .c, $(addprefix $(ENGINE_GL_SHADER_DIR)/, $(ENGINE_GL_SHADER_SRC))) \
+			  $(addsuffix .c, $(addprefix $(STD_VECTOR_VEC4_DIR)/, $(STD_VECTOR_VEC4_SRC))) \
+			  $(addsuffix .c, $(addprefix $(STD_VECTOR_IMAGE_DIR)/, $(STD_VECTOR_IMAGE_SRC))) \
 
 
 # MYAPP-DIRECTORY
@@ -74,7 +91,7 @@ MYAPP_DIR					= myapp
 
 # MYAPP-SOURCE
 MYAPP_SRC					= main \
-							  render_viewport
+							  update_func #simple render callback function
 
 # MYAPP-SOURCE AL
 MYAPP_SRCS  = $(addsuffix .c, $(addprefix $(MYAPP_DIR)/, $(MYAPP_SRC))) \
@@ -127,7 +144,7 @@ endif
 $(NAME): $(OBJ)
 	@make -C $(LIBFT_DIR)
 ifdef LINUX
-	@make -C 
+	@make -C $(LIBRARY_DIR)/mlx
 	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
 	@echo "$(BLUE)-------------------------------------------------$(DEF_COLOR)"
 	@echo "$(BLUE)|                                               |$(DEF_COLOR)"

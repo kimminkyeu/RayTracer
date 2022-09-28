@@ -6,13 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:41:10 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/13 16:39:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/09/14 21:18:45 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_draw.h"
 
-bool	is_inside_image(t_image *image, int _x, int _y)
+static bool	is_inside_image(t_image *image, int _x, int _y)
 {
 	if (_x < image->img_size.width && _x > 0 && \
 			_y < image->img_size.height && _y > 0)

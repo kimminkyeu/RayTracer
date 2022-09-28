@@ -11,16 +11,16 @@
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "vector_GENERIC.h"
+#include "gl_std_vector_image.h"
 
 extern void	ft_bzero(void *s, size_t n);
 extern void	*ft_calloc(size_t nmemb, size_t bytes);
-extern void	set_vector_GENERIC_func_ptr(t_vector_GENERIC *pa_vec);
-extern void	*new_GENERIC_data_malloc(size_t init_capacity);
+extern void	set_vector_image_func_ptr(t_vector_image *pa_vec);
+extern void	*new_image_data_malloc(size_t init_capacity);
 
-t_vector_GENERIC	*new_vector_GENERIC(size_t init_capacity)
+t_vector_image	*new_vector_image(size_t init_capacity)
 {
-	t_vector_GENERIC	*vec;
+	t_vector_image	*vec;
 
 	if (init_capacity == 0)
 		return (NULL);
@@ -29,42 +29,42 @@ t_vector_GENERIC	*new_vector_GENERIC(size_t init_capacity)
 	{
 		vec->size = 0;
 		vec->capacity = init_capacity;
-		vec->data = new_GENERIC_data_malloc(init_capacity);
+		vec->data = new_image_data_malloc(init_capacity);
 		if (vec->data == NULL)
 		{
 			free(vec);
 			return (NULL);
 		}
 	}
-	set_vector_GENERIC_func_ptr(vec);
+	set_vector_image_func_ptr(vec);
 	return (vec);
 }
 
-void	delete_vector_GENERIC(t_vector_GENERIC **vec)
+void	delete_vector_image(t_vector_image **vec)
 {
-	vector_GENERIC_reset(*vec);
+	vector_image_reset(*vec);
 	free((*vec)->data);
 	(*vec)->data = NULL;
 	free(*vec);
 	*vec = NULL;
 }
 
-void	vector_GENERIC_reset(t_vector_GENERIC *vec)
+void	vector_image_reset(t_vector_image *vec)
 {
 	ft_bzero(vec->data, vec->size);
 	vec->size = 0;
 }
 
-void	vector_GENERIC_set_data(t_vector_GENERIC *vec, size_t index, t_GENERIC data)
+void	vector_image_set_data(t_vector_image *vec, size_t index, t_image data)
 {
 	if (vec->data != NULL)
 		vec->data[index] = data;
 }
 
-void	*new_GENERIC_data_malloc(size_t init_capacity)
+void	*new_image_data_malloc(size_t init_capacity)
 {
 	void	*data;
 
-	data = ft_calloc(init_capacity, sizeof(t_GENERIC));
+	data = ft_calloc(init_capacity, sizeof(t_image));
 	return (data);
 }
