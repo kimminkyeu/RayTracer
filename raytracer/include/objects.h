@@ -3,6 +3,7 @@
 
 #include "libft.h"
 #include "vector.h"
+#include "gl_vec3.h"
 
 /* ---------------------------------
 		Objects type-definition
@@ -18,6 +19,9 @@ typedef struct s_light {
 
 typedef struct s_sphere {
 	//...
+	t_vec3	center;
+	float	radius;
+	t_vec3	color; // 추후 재질로 확장
 }	t_sphere;
 
 typedef struct s_plane {

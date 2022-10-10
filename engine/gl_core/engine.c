@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/15 01:07:19 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 17:15:35 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void delete_objects_vector(t_objects *objects)
 
 void engine_exit(t_device *device, bool is_error) {
 
+	printf("Engine Exit()\n");
   if (device != NULL && device->images != NULL) {
     size_t i = 0;
     while (i < device->images->size)

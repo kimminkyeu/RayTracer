@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/14 22:06:47 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/10 16:44:10 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 MYAPP_DIR					= raytracer
 
 # MYAPP-SOURCE
-MYAPP_SRC					= main \
+MYAPP_SRC					= main helper parse_rt_file_to_device\
 							  update
 
 # MYAPP-SOURCE AL
