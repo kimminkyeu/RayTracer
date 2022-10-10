@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 19:09:05 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 19:42:10 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,31 @@ void	parse_sphere(t_device *device, char **line_split)
 	}
 	new_sphere->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
 	free_split_char(each);
+
+
+	/**
+	 * *  NOTE:  퐁 쉐이딩용 테스트 코드이며, 추후에 이 값을 반드시 정리할 것.
+	 */
+	new_sphere->ambient = gl_vec3_1f(0.0f);
+	new_sphere->diffuse = gl_vec3_1f(0.0f);
+	new_sphere->specular = gl_vec3_1f(0.0f);
+	new_sphere->ks = 0.0f;
+	new_sphere->alpha = 0.0f;
+	// new_sphere->reflection = 0.0f;
+	// new_sphere->transparency = 0.0f;
+
+
 	device->objects.spheres->push_back(device->objects.spheres, new_sphere);
 }
 
 void	parse_light(t_device *device, char **line_split)
 {
+	if (device->objects.lights->size > 1)
+	{
+		// light 의 개수는 오로지 1개 이하만 가능!
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
 	// (1) check if sp has 4 char members
 	if (get_strs_count(line_split) != 4)
 	{
@@ -84,6 +104,12 @@ void	parse_light(t_device *device, char **line_split)
 
 void	parse_ambient_light(t_device *device, char **line_split)
 {
+	if (device->objects.ambient_lights->size > 1)
+	{
+		// light 의 개수는 오로지 1개 이하만 가능!
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
 	// (1) check if sp has 4 char members
 	if (get_strs_count(line_split) != 3)
 	{

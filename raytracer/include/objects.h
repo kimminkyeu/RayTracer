@@ -29,6 +29,16 @@ typedef struct s_sphere {
 	t_vec3	center;
 	float	radius;
 	t_vec3	color; // 추후 재질로 확장
+
+	// NOTE:  for Phong shading
+	t_vec3	ambient;
+	t_vec3	diffuse;
+	t_vec3	specular;
+	float	ks;
+	float	alpha;
+	// float reflection;
+	// float transparency;
+
 }	t_sphere;
 
 typedef struct s_plane {

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 19:01:43 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 20:31:34 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int		handle_exit(t_device *device)
 	return (0);
 }
 
-void	init_objects_vector(t_device *device)
+void	init_camera_and_objects_vector(t_device *device)
 {
 	device->camera.dir = gl_vec3_1f(0.0f);
 	device->camera.fov = 0;
@@ -203,6 +203,7 @@ int	engine_update_images(t_device *device)
 void	engine_render(t_device *device)
 {
 	engine_update_images(device);
+	// mlx_loop_hook(device->mlx, engine_update_images, device);
 }
 
 /** TODO: if handler changes, reset engine */

@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/10 16:44:10 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/10 19:13:10 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,7 +74,9 @@ MYAPP_DIR					= raytracer
 
 # MYAPP-SOURCE
 MYAPP_SRC					= main helper parse_rt_file_to_device\
-							  update
+							  update\
+							  ray
+
 
 # MYAPP-SOURCE AL
 MYAPP_SRCS  = $(addsuffix .c, $(addprefix $(MYAPP_DIR)/, $(MYAPP_SRC))) \
