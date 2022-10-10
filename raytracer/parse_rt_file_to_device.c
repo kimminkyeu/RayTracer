@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 17:41:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 19:09:05 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,88 @@ void	parse_sphere(t_device *device, char **line_split)
 		engine_exit(device, EXIT_FAILURE);
 	}
 	new_sphere->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
 	device->objects.spheres->push_back(device->objects.spheres, new_sphere);
+}
+
+void	parse_light(t_device *device, char **line_split)
+{
+	// (1) check if sp has 4 char members
+	if (get_strs_count(line_split) != 4)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	t_light *new_light = ft_calloc(1, sizeof(*new_light));
+
+	// TODO:  check if atof is successful, or has 3 member
+	char **each = ft_split(line_split[1], ',');
+	if (get_strs_count(each) != 3)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	new_light->pos = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
+	new_light->brightness_ratio = atof(line_split[2]);
+	each = ft_split(line_split[3], ',');
+	if (get_strs_count(each) != 3)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	new_light->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
+	device->objects.lights->push_back(device->objects.spheres, new_light);
+}
+
+void	parse_ambient_light(t_device *device, char **line_split)
+{
+	// (1) check if sp has 4 char members
+	if (get_strs_count(line_split) != 3)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	t_ambient_light *new_light = ft_calloc(1, sizeof(*new_light));
+	new_light->brightness_ratio = atof(line_split[2]);
+	char **each = ft_split(line_split[3], ',');
+	if (get_strs_count(each) != 3)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	new_light->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
+	device->objects.ambient_lights->push_back(device->objects.spheres, new_light);
+}
+
+void	parse_camera(t_device *device, char **line_split)
+{
+	// (1) check if sp has 4 char members
+	if (get_strs_count(line_split) != 4)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	// TODO:  check if atof is successful, or has 3 member
+	char **each = ft_split(line_split[1], ',');
+	if (get_strs_count(each) != 3)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	device->camera.dir = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
+	each = ft_split(line_split[2], ',');
+	if (get_strs_count(each) != 3)
+	{
+		// TODO: print message of error log.
+		engine_exit(device, EXIT_FAILURE);
+	}
+	device->camera.pos = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
+	device->camera.fov = atof(line_split[3]);
 }
 
 void	parse_each(t_device *device, char **line_split)
@@ -57,14 +138,17 @@ void	parse_each(t_device *device, char **line_split)
 	if (ft_strncmp(line_split[0], "C", ft_strlen(line_split[0])) == 0)
 	// if camera
 	{
+		parse_camera(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "A", ft_strlen(line_split[0])) == 0)
 	// if ambient light
 	{
+		parse_ambient_light(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "L", ft_strlen(line_split[0])) == 0)
 	// if light
 	{
+		parse_light(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "sp", ft_strlen(line_split[0])) == 0)
 	// if sphere
@@ -94,21 +178,19 @@ void	parse_rt_file_to_device(t_device *device, char *file)
 {
 	int	fd;
 
-	printf("file : %s\n", file);
+	printf("File Name : %s\n", file);
 	// (1) check if file is able to open.
 	// WARN:  (1-1) if file name if not with .rt, return error!
 	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
 	{
-		ft_putstr_fd("95\n", 1);
-		// ... error message
+		// ... TODO:  error message
 		engine_exit(device, EXIT_FAILURE);
 	}
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
-		ft_putstr_fd("103\n", 1);
-		// ... error message
+		// ... TODO:  error message
 		engine_exit(device, EXIT_FAILURE);
 	}
 

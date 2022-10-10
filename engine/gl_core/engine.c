@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 17:15:35 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 19:01:43 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,14 +111,18 @@ int		handle_exit(t_device *device)
 	return (0);
 }
 
-void	init_objects_vector(t_objects *objects)
+void	init_objects_vector(t_device *device)
 {
-	objects->ambient_lights = new_vector(5);
-	objects->lights = new_vector(5);
-	objects->spheres = new_vector(5);
-	objects->planes = new_vector(5);
-	objects->cylinders = new_vector(5);
-	objects->cone = new_vector(5);
+	device->camera.dir = gl_vec3_1f(0.0f);
+	device->camera.fov = 0;
+	device->camera.pos = gl_vec3_1f(0.0f);
+
+	device->objects.ambient_lights = new_vector(5);
+	device->objects.lights = new_vector(5);
+	device->objects.spheres = new_vector(5);
+	device->objects.planes = new_vector(5);
+	device->objects.cylinders = new_vector(5);
+	device->objects.cone = new_vector(5);
 }
 
 t_device	*engine_init(int _win_width, int _win_height, char *title)
@@ -143,7 +147,7 @@ t_device	*engine_init(int _win_width, int _win_height, char *title)
 	device->images = new_vector(5);
 
 	/** NOTE:  initialize object */
-	init_objects_vector(&(device->objects));
+	init_camera_and_objects_vector(device);
 
 	/** initialize device input data */
 	mlx_hook(device->win, ON_DESTROY, 0, handle_exit, device);

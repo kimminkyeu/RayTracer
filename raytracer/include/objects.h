@@ -10,11 +10,18 @@
    --------------------------------- */
 
 typedef struct s_ambient_light {
-	//...
+
+	float	brightness_ratio;
+	t_vec3	color;
+
 }	t_ambient_light;
 
 typedef struct s_light {
-	//...
+
+	t_vec3	pos; // 아주 단순화된 형태의 위치만 있는 점조명.
+	float	brightness_ratio;
+	t_vec3	color;
+
 }	t_light;
 
 typedef struct s_sphere {

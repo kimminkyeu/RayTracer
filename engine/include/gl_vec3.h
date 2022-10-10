@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 22:33:42 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 18:49:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ typedef union s_vec3 {
 		float	x;
 		float	y;
 		float	z;
+	};
+	struct {
+		float	b;
+		float	g;
+		float	r;
 	};
 	float	v[3];
 }	t_vec3;

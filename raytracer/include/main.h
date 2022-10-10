@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:21:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 17:04:31 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 18:44:08 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 # define MAIN_H
 
 # include "gl_engine.h"
+# include "ray.h"
+# include "objects.h"
+# include "hit.h"
+# include "camera.h"
 
 /** helper function. check how many strs is in split */
 size_t	get_strs_count(char **split);

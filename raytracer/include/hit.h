@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   camera.h                                           :+:      :+:    :+:   */
+/*   hit.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/10 18:44:22 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 18:56:42 by minkyeki         ###   ########.fr       */
+/*   Created: 2022/10/10 18:32:46 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/10/10 18:34:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CAMERA_H
-# define CAMERA_H
+#ifndef HIT_H
+# define HIT_H
 
 #include "gl_vec3.h"
 
-typedef struct s_camera {
+typedef struct s_hit {
 
-	t_vec3	pos; // position of camera (x, y, z)
-	t_vec3	dir; // orientation of camera (normalized vector)
-	float	fov; // FOV (range from 0 to 180)
+	float	distance; // hit distance;
+	t_vec3	point; // 충돌 위치
+	t_vec3	normal; // 충돌 위치의 표면의 수직 벡터.
 
-}	t_camera;
+}	t_hit;
 
-#endif /** camera.h */
+#endif /** hit.h */
