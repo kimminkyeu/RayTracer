@@ -41,9 +41,6 @@
 # include "gl_vec3.h"
 # include "gl_vec4.h"
 # include "gl_draw.h"
-# include "gl_shader.h"
-# include "gl_std_vector_vec4.h"
-# include "gl_std_vector_image.h"
 
 
 # define STDOUT				(1)

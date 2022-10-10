@@ -42,6 +42,16 @@ void	engine_push_image_to_window(t_device *device, t_image *image, int x, int y)
     }
 }
 
+void delete_objects_vector(t_objects *objects)
+{
+	delete_vector(&(objects->ambient_lights));
+	delete_vector(&(objects->lights));
+	delete_vector(&(objects->spheres));
+	delete_vector(&(objects->cylinders));
+	delete_vector(&(objects->cone));
+	delete_vector(&(objects->planes));
+}
+
 void engine_exit(t_device *device, bool is_error) {
 
   if (device != NULL && device->images != NULL) {
@@ -100,6 +110,16 @@ int		handle_exit(t_device *device)
 	return (0);
 }
 
+void	init_objects_vector(t_objects *objects)
+{
+	objects->ambient_lights = new_vector(5);
+	objects->lights = new_vector(5);
+	objects->spheres = new_vector(5);
+	objects->planes = new_vector(5);
+	objects->cylinders = new_vector(5);
+	objects->cone = new_vector(5);
+}
+
 t_device	*engine_init(int _win_width, int _win_height, char *title)
 {
 	t_device	*device;
@@ -120,6 +140,9 @@ t_device	*engine_init(int _win_width, int _win_height, char *title)
 
 	/** NOTE: New image vector (Array of images) */
 	device->images = new_vector(5);
+
+	/** NOTE:  initialize object */
+	init_objects_vector(&(device->objects));
 
 	/** initialize device input data */
 	mlx_hook(device->win, ON_DESTROY, 0, handle_exit, device);
@@ -145,7 +168,7 @@ static void draw_render_time(t_device *device, long long time, t_vec2 location, 
 	free(str);
 }
 
-/** FIX: Need function testing! (한번만 렌더하는 함수) 
+/** FIX: Need function testing! (한번만 렌더하는 함수)
  *  * 고친 부분 : update function pointer가 null일 경우를 에러처리 해야 한다!
 */
 int	engine_update_images(t_device *device)
@@ -175,8 +198,6 @@ int	engine_update_images(t_device *device)
 void	engine_render(t_device *device)
 {
 	engine_update_images(device);
-	// mlx_loop_hook(device->mlx, engine_update_images, device);
-	// mlx_loop(device->mlx);
 }
 
 /** TODO: if handler changes, reset engine */
@@ -211,7 +232,7 @@ int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, 
 
 	int	width;
 	int height;
-	// new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, (int *)&(new_image->img_size.width), (int *)&(new_image->img_size.height));
+
 	new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, &width, &height);
 	new_image->img_size.width = width;
 	new_image->img_size.height = height;

@@ -61,7 +61,7 @@ in x using the floating-point values minVal and maxVal.
 */
 extern t_vec2	gl_vec2_clamp(t_vec2 v, t_vec2 min, t_vec2 max);
 
-extern float	gl_vec2_dot_product(t_vec2 v1, t_vec2 v2);
+extern float	gl_vec2_dot(t_vec2 v1, t_vec2 v2);
 
 extern float	gl_vec2_get_magnitude(t_vec2 v);
 

@@ -73,7 +73,7 @@ t_vec2	gl_vec2_clamp(t_vec2 v, t_vec2 min, t_vec2 max)
 }
 
 
-float	gl_vec2_dot_product(t_vec2 v1, t_vec2 v2)
+float	gl_vec2_dot(t_vec2 v1, t_vec2 v2)
 {
 	return (v1.x * v2.x + v1.y * v2.y);
 }
@@ -88,7 +88,7 @@ float	gl_vec2_get_magnitude(t_vec2 v)
 t_vec2	gl_vec2_normalize(t_vec2 v)
 {
 	float	len;
-	
+
 	len = gl_vec2_get_magnitude(v);
 	/** printf("len : %f\n", len); */
 	return (gl_vec2_2f(v.x / len, v.y / len));

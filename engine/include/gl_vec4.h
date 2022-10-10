@@ -71,11 +71,11 @@ extern t_vec4	gl_vec4_clamp(t_vec4 v, t_vec4 min, t_vec4 max);
 extern t_vec4	gl_vec4_normalize(t_vec4 v);
 
 /* Returns dot-product result */
-extern float	gl_vec4_dot_product(t_vec4 v1, t_vec4 v2);
+extern float	gl_vec4_dot(t_vec4 v1, t_vec4 v2);
 
 /* Returns cross-product result.
  * FIX: check if cross product code is valid !!! */
-extern t_vec4	gl_vec4_cross_product(t_vec4 v1, t_vec4 v2);
+extern t_vec4	gl_vec4_cross(t_vec4 v1, t_vec4 v2);
 
 /* Returns magnitude result [v.v] */
 extern float	gl_vec4_get_magnitude(t_vec4 v);

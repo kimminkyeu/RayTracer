@@ -18,6 +18,9 @@
 # include "gl_vec2.h"
 # include "vector.h"
 
+# include "objects.h"
+# include "camera.h"
+
 /* TODO: 알맞게 상태 바꿀 것. */
 typedef enum e_state {
 	E_INPUT_NO_STATE, // while keep pressing
@@ -70,25 +73,19 @@ typedef struct s_image {
 
 }	t_image;
 
+
 typedef struct s_device {
 	void			*mlx;
 	void			*win;
 	int				win_width;
 	int				win_height;
 	float			aspect_ratio;
-
-	// t_image			viewport; // for viewport
-	// t_image			panel; // for ui control panel;
 	t_vector		*images; // image 들의 배열.
-
 	t_input			input; // mouse, keyboard input handler
 
-	// long long		render_time; // times to get render.
+	t_camera		camera;
+	t_objects		objects;
 
-	// this functions is called if you use engine_render() function.
-	// int (*engine_render_func)(t_device *device);
-
-	// TODO: add later... 
 }	t_device;
 
 # endif /* DEVICE_H */

@@ -83,7 +83,7 @@ t_vec3	gl_vec3_normalize(t_vec3 v)
 	return (gl_vec3_3f(v.x / len, v.y / len, v.z / len));
 }
 
-float	gl_vec3_dot_product(t_vec3 dst, t_vec3 src)
+float	gl_vec3_dot(t_vec3 dst, t_vec3 src)
 {
 	return (dst.x * src.x + dst.y * src.y + dst.z * src.z);
 }
@@ -94,7 +94,7 @@ float	gl_vec3_get_magnitude(t_vec3 v)
 }
 
 /** FIX: check if cross-product code is valid!  */
-t_vec3	gl_vec3_cross_product(t_vec3 v1, t_vec3 v2)
+t_vec3	gl_vec3_cross(t_vec3 v1, t_vec3 v2)
 {
 	float	x;
 	float	y;
