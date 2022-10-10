@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 19:42:10 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 21:30:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	parse_sphere(t_device *device, char **line_split)
 		// TODO: print message of error log.
 		engine_exit(device, EXIT_FAILURE);
 	}
-	new_sphere->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	new_sphere->color = gl_vec3_3f(atof(each[2]), atof(each[1]), atof(each[0]));
 	free_split_char(each);
 
 
@@ -97,7 +97,7 @@ void	parse_light(t_device *device, char **line_split)
 		// TODO: print message of error log.
 		engine_exit(device, EXIT_FAILURE);
 	}
-	new_light->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	new_light->color = gl_vec3_3f(atof(each[2]), atof(each[1]), atof(each[0]));
 	free_split_char(each);
 	device->objects.lights->push_back(device->objects.spheres, new_light);
 }
@@ -124,7 +124,7 @@ void	parse_ambient_light(t_device *device, char **line_split)
 		// TODO: print message of error log.
 		engine_exit(device, EXIT_FAILURE);
 	}
-	new_light->color = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	new_light->color = gl_vec3_3f(atof(each[2]), atof(each[1]), atof(each[0]));
 	free_split_char(each);
 	device->objects.ambient_lights->push_back(device->objects.spheres, new_light);
 }

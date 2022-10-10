@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 20:35:09 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/10 21:56:01 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "libft.h"
 #include "main.h"
 
-// screen 좌표계를 world 좌표계로 변환.
+// screen 좌표계를 world 좌표계로 변환. (-aspect ~ +aspect)
 t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 {
 	const float x_scale = 2.0f / img->img_size.width;
@@ -40,11 +40,12 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 
 	if (hit.distance < 0.0f)
 	{
-		return (gl_vec3_1f(220.0f)); // return black
+		// printf("No hit\n");
+		return (gl_vec3_3f(0.0f, 0.0f, 0.0f)); // return black
 	}
 	else
 	{
-		printf("hit: %f\n", hit.distance);
+		// printf("hit: %f\n", hit.distance);
 		return (gl_vec3_multiply_scalar(sphere->color, hit.distance));
 	}
 }
@@ -55,6 +56,8 @@ int	update(t_device *device, t_image *img)
 	int	x = 0;
 	int y = 0;
 
+	// printf("%f %f\n", img->img_size.height, img->img_size.width);
+
 	while (y < img->img_size.height)
 	{
 		x = 0;
@@ -64,14 +67,14 @@ int	update(t_device *device, t_image *img)
 
 			// ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
 			const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
-			t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
 
-			t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(1.0f));
+			t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
+			t_vec3 traced = trace_ray(device, &pixel_ray);
+			t_vec3 tmp = gl_vec3_clamp(traced, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
+
 			int final_color = gl_get_color_from_vec4(gl_vec4_4f(tmp.b, tmp.g, tmp.r, 0.0f));
-			// (void)tmp;
-			// int final_color = WHITE;
 			gl_draw_pixel(img, x, y, final_color);
-			// printf("x:%f y:%f, color:%d\n", pixel_pos_world.x, pixel_pos_world.y, final_color);
+
 			x++;
 		}
 		y++;
