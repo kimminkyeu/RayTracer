@@ -6,17 +6,34 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 16:53:50 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 18:26:03 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_color.h"
 #include "gl_draw.h"
+#include "gl_dvec3.h"
 #include "gl_vec4.h"
 #include "gl_vec3.h"
 #include "gl_vec2.h"
 #include "libft.h"
 #include "main.h"
+
+// device에 있는 모든 obj를 돌면서, 가장 가까운 충돌 지점을 계산.
+t_hit find_closet_collision(t_device *device, t_ray *ray)
+{
+	t_hit closest_hit;
+
+	closest_hit.distance = -1.0f;
+	closest_hit.normal = gl_vec3_1f(0.0f);
+	closest_hit.point = gl_vec3_1f(0.0f);
+
+	int i;
+
+
+
+
+}
 
 // screen 좌표계를 world 좌표계로 변환. (-aspect ~ +aspect)
 t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)

@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/10 19:13:10 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/11 18:21:56 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,9 +45,9 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 									matrix_4x4_translate\
 									matrix_projection_functions\
 									matrix_util_functions\
-									vector2\
-									vector3\
-									vector4\
+									vector2 dvector2\
+									vector3 dvector3\
+									vector4 dvector4\
 
 #  NOTE:  Draw-functions library
 	ENGINE_GL_DRAW_DIR			= $(ENGINE_GL_DIR)/draw

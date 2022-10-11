@@ -6,12 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 17:13:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 18:23:18 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_VECTOR2
-# define GL_VECTOR2
+#ifndef GL_DVECTOR2
+# define GL_DVECTOR2
 
 # include <math.h>
 

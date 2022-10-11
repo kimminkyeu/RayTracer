@@ -6,12 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 17:12:48 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 18:23:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_VECTOR4_H
-# define GL_VECTOR4_H
+#ifndef GL_DVECTOR4_H
+# define GL_DVECTOR4_H
 
 # include <math.h>
 # include "gl_matrix.h"
