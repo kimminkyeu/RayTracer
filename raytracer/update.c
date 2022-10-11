@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 21:56:01 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 15:26:52 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,39 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
 }
 
+/* ----------------------------------------- *
+ * |  NOTE:  Main Ray-tracing Algorithm !    |
+ ------------------------------------------- */
 t_vec3 trace_ray(t_device *device, t_ray *ray)
 {
-	// test code for ray_tracing
 	if (device->objects.spheres->size == 0)
-		gl_vec3_1f(0.0f);
+		return (gl_vec3_1f(0.0f));
 
+	// NOTE:  Test code for ray_tracing (현재는 Sphere 하나만 추적 중)
 	t_sphere *sphere = device->objects.spheres->data[0];
 	t_hit hit = sphere_intersect_ray_collision(ray, sphere);
 
-	if (hit.distance < 0.0f)
+	if (hit.distance < 0.0f) // if no hit.
 	{
-		// printf("No hit\n");
 		return (gl_vec3_3f(0.0f, 0.0f, 0.0f)); // return black
 	}
-	else
+	else // if ray hit object.
 	{
-		// printf("hit: %f\n", hit.distance);
-		return (gl_vec3_multiply_scalar(sphere->color, hit.distance));
+		// Diffuse
+		const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
+		const float _diff = maxf(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
+
+		// Specular
+		const float _spec = 1.0f;
+		(void)_spec;
+
+		// Old version
+		return (gl_vec3_multiply_scalar(sphere->color, _diff));
+
+		// const t_vec3 diffuse_final = gl_vec3_multiply_scalar(sphere->diffuse, _diff);
+		// const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(sphere->specular, _spec), sphere->ks);
+		// const t_vec3 phong_reflection = gl_vec3_add_vector(gl_vec3_add_vector(sphere->ambient, diffuse_final), specular_final);
+		// return (phong_reflection);
 	}
 }
 
@@ -55,8 +70,6 @@ int	update(t_device *device, t_image *img)
 	// ray_tracing
 	int	x = 0;
 	int y = 0;
-
-	// printf("%f %f\n", img->img_size.height, img->img_size.width);
 
 	while (y < img->img_size.height)
 	{
@@ -69,8 +82,7 @@ int	update(t_device *device, t_image *img)
 			const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
 
 			t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-			t_vec3 traced = trace_ray(device, &pixel_ray);
-			t_vec3 tmp = gl_vec3_clamp(traced, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
+			t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 
 			int final_color = gl_get_color_from_vec4(gl_vec4_4f(tmp.b, tmp.g, tmp.r, 0.0f));
 			gl_draw_pixel(img, x, y, final_color);

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:44:22 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 18:56:42 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 14:52:39 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "gl_vec3.h"
 
 typedef struct s_camera {
+
+	bool 	has_camera;
 
 	t_vec3	pos; // position of camera (x, y, z)
 	t_vec3	dir; // orientation of camera (normalized vector)

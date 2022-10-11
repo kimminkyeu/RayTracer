@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/09/13 17:00:23 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 14:57:48 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,15 @@ typedef struct s_device {
 	t_vector		*images; // image 들의 배열.
 	t_input			input; // mouse, keyboard input handler
 
-	t_camera		camera;
-	t_objects		objects;
+
+
+
+	t_objects			objects;
+
+	t_camera			*camera;
+	t_ambient_light	 	*ambient_light;
+	t_light				*light;
+
 
 }	t_device;
 

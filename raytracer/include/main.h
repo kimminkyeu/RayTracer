@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:21:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 18:44:08 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 14:42:34 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 # include "objects.h"
 # include "hit.h"
 # include "camera.h"
+
+
+// helper for min max
+float minf(float f1, float f2);
+float maxf(float f1, float f2);
 
 /** helper function. check how many strs is in split */
 size_t	get_strs_count(char **split);

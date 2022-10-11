@@ -10,6 +10,7 @@
    --------------------------------- */
 
 typedef struct s_ambient_light {
+	bool 	has_ambient_light;
 
 	float	brightness_ratio;
 	t_vec3	color;
@@ -17,6 +18,7 @@ typedef struct s_ambient_light {
 }	t_ambient_light;
 
 typedef struct s_light {
+	bool	has_light;
 
 	t_vec3	pos; // 아주 단순화된 형태의 위치만 있는 점조명.
 	float	brightness_ratio;
@@ -54,10 +56,6 @@ typedef struct s_cone {
 }	t_cone;
 
 typedef struct s_objects {
-
-	t_vector	*ambient_lights;
-
-	t_vector	*lights;
 
 	t_vector	*spheres;
 

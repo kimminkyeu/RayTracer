@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 20:31:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 15:20:44 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,44 +44,54 @@ void	engine_push_image_to_window(t_device *device, t_image *image, int x, int y)
 
 void delete_objects_vector(t_objects *objects)
 {
-	delete_vector(&(objects->ambient_lights));
-	delete_vector(&(objects->lights));
 	delete_vector(&(objects->spheres));
 	delete_vector(&(objects->cylinders));
 	delete_vector(&(objects->cone));
 	delete_vector(&(objects->planes));
 }
 
-void engine_exit(t_device *device, bool is_error) {
-
-	printf("Engine Exit()\n");
-  if (device != NULL && device->images != NULL) {
-    size_t i = 0;
-    while (i < device->images->size)
+void engine_exit(t_device *device, bool is_error)
+{
+	printf("Engine Exit()...\n");
+	if (device != NULL && device->images != NULL)
 	{
-      printf("destroying image %zd\n", i);
-      mlx_destroy_image(device->mlx,
-                        ((t_image *)device->images->data[i])->img_ptr);
-      i++;
-    }
-    delete_vector(&device->images);
-  }
-  if (device->win != NULL)
-    mlx_destroy_window(device->mlx, device->win);
+		size_t i = 0;
+		while (i < device->images->size)
+		{
+			printf("destroying image %zd\n", i);
+			mlx_destroy_image(device->mlx,
+							  ((t_image *)device->images->data[i])->img_ptr);
+			i++;
+		}
+		delete_vector(&device->images);
+	}
+	if (device->win != NULL)
+		mlx_destroy_window(device->mlx, device->win);
 
-  if (device != NULL && device->mlx != NULL)
-    free(device->mlx);
+	if (device != NULL && device->mlx != NULL)
+		free(device->mlx);
 
-  if (device != NULL)
-    free(device);
+	if (device != NULL)
+		delete_objects_vector(&device->objects);
 
-  if (is_error == ERROR)
-    exit(EXIT_FAILURE);
-  else
-    exit(EXIT_SUCCESS);
+	if (device != NULL && device->camera != NULL)
+		free(device->camera);
+	if (device != NULL && device->ambient_light != NULL)
+		free(device->ambient_light);
+	if (device != NULL && device->light != NULL)
+		free(device->light);
+
+
+	if (device != NULL)
+		free(device);
+
+	if (is_error == ERROR)
+		exit(EXIT_FAILURE);
+	else
+		exit(EXIT_SUCCESS);
 }
 
-void	engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*f_update_func)())
+void engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, int (*f_update_func)())
 {
 	t_vector *images = device->images;
 	t_image	*new_image;
@@ -113,12 +123,13 @@ int		handle_exit(t_device *device)
 
 void	init_camera_and_objects_vector(t_device *device)
 {
-	device->camera.dir = gl_vec3_1f(0.0f);
-	device->camera.fov = 0;
-	device->camera.pos = gl_vec3_1f(0.0f);
+	device->camera = ft_calloc(1, sizeof(*device->camera));
+	device->camera->has_camera = false;
+	device->ambient_light = ft_calloc(1, sizeof(*device->ambient_light));
+	device->ambient_light->has_ambient_light = false;
+	device->light = ft_calloc(1, sizeof(*device->light));
+	device->light->has_light = false;
 
-	device->objects.ambient_lights = new_vector(5);
-	device->objects.lights = new_vector(5);
 	device->objects.spheres = new_vector(5);
 	device->objects.planes = new_vector(5);
 	device->objects.cylinders = new_vector(5);
@@ -202,7 +213,9 @@ int	engine_update_images(t_device *device)
 /* TODO: change it's name to engine_render_loop() */
 void	engine_render(t_device *device)
 {
+	// (1) 1장만 렌더
 	engine_update_images(device);
+	// (2) 무한 렌더 (애니메이션)
 	// mlx_loop_hook(device->mlx, engine_update_images, device);
 }
 

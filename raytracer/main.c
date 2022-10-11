@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 19:54:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 15:21:02 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,14 @@ void print_sphere_iter(void *data)
 	printf("[Sphere] : center(%f,%f,%f) . radius(%f) . color(%f,%f,%f)\n", sp->center.x, sp->center.y, sp->center.z, sp->radius, sp->color.r, sp->color.g, sp->color.b);
 }
 
-void print_ambient_light_iter(void *data)
-{
-	t_ambient_light *sp = data;
-	printf("[Ambient Light] : brightness_ratio(%f) . color(%f,%f,%f)\n", sp->brightness_ratio, sp->color.r, sp->color.g, sp->color.b);
-}
-
-void print_light_iter(void *data)
-{
-	t_light *sp = data;
-	printf("[Light] : position(%f,%f,%f) . brightness_ratio(%f) . color(%f,%f,%f)\n", sp->pos.x, sp->pos.y, sp->pos.z, sp->brightness_ratio, sp->color.r, sp->color.g, sp->color.b);
-}
-
-void print_camera_iter(void *data)
-{
-	t_camera *sp = data;
-	printf("[Camera] : position(%f,%f,%f) . direction(%f,%f,%f) . FOV(%f)\n", sp->pos.x, sp->pos.y, sp->pos.z, sp->dir.x, sp->dir.y, sp->dir.z, sp->fov);
-}
-
 void print_rt_data(t_device *device)
 {
-	print_camera_iter(&device->camera);
-	if (device->objects.ambient_lights->size != 0)
-		device->objects.ambient_lights->iterate(device->objects.ambient_lights, print_ambient_light_iter);
-	if (device->objects.lights->size != 0)
-		device->objects.lights->iterate(device->objects.lights, print_light_iter);
+	if (device->camera->has_camera == true)
+		printf("[Camera] : position(%f,%f,%f) . direction(%f,%f,%f) . FOV(%f)\n", device->camera->pos.x, device->camera->pos.y, device->camera->pos.z, device->camera->dir.x, device->camera->dir.y, device->camera->dir.z, device->camera->fov);
+	if (device->ambient_light->has_ambient_light == true)
+		printf("[Ambient Light] : brightness_ratio(%f) . color(%f,%f,%f)\n", device->ambient_light->brightness_ratio, device->ambient_light->color.r, device->ambient_light->color.g, device->ambient_light->color.b);
+	if (device->light->has_light == true)
+		printf("[Light] : position(%f,%f,%f) . brightness_ratio(%f) . color(%f,%f,%f)\n", device->light->pos.x, device->light->pos.y, device->light->pos.z, device->light->brightness_ratio, device->light->color.r, device->light->color.g, device->light->color.b);
 	if (device->objects.spheres->size != 0)
 		device->objects.spheres->iterate(device->objects.spheres, print_sphere_iter);
 	// TODO:  add more objects here!
