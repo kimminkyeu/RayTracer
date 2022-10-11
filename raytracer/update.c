@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 16:43:18 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 16:53:50 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,9 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 		return (gl_vec3_1f(0.0f));
 
 	// NOTE:  Test code for ray_tracing (현재는 Sphere 하나만 추적 중)
-	t_sphere *sphere = device->objects.spheres->data[0];
-	t_hit hit = sphere_intersect_ray_collision(ray, sphere);
+	t_hit hit = find_closet_collision(device, ray);
+	// t_sphere *sphere = device->objects.spheres->data[0];
+	// t_hit hit = sphere_intersect_ray_collision(ray, sphere);
 
 	if (hit.distance < 0.0f) // if no hit.
 	{
