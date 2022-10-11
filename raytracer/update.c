@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 21:45:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 21:51:41 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ t_hit find_closet_collision(t_device *device, t_ray *ray)
 	{
 		// ... find hit
 		(void)ray;
-
 
 
 
