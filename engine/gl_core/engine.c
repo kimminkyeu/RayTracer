@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 15:20:44 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 21:44:27 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,6 @@ void	engine_push_image_to_window(t_device *device, t_image *image, int x, int y)
     }
 }
 
-void delete_objects_vector(t_objects *objects)
-{
-	delete_vector(&(objects->spheres));
-	delete_vector(&(objects->cylinders));
-	delete_vector(&(objects->cone));
-	delete_vector(&(objects->planes));
-}
-
 void engine_exit(t_device *device, bool is_error)
 {
 	printf("Engine Exit()...\n");
@@ -71,8 +63,8 @@ void engine_exit(t_device *device, bool is_error)
 	if (device != NULL && device->mlx != NULL)
 		free(device->mlx);
 
-	if (device != NULL)
-		delete_objects_vector(&device->objects);
+	if (device != NULL && device->objects != NULL)
+		delete_vector(&device->objects);
 
 	if (device != NULL && device->camera != NULL)
 		free(device->camera);
@@ -129,11 +121,7 @@ void	init_camera_and_objects_vector(t_device *device)
 	device->ambient_light->has_ambient_light = false;
 	device->light = ft_calloc(1, sizeof(*device->light));
 	device->light->has_light = false;
-
-	device->objects.spheres = new_vector(5);
-	device->objects.planes = new_vector(5);
-	device->objects.cylinders = new_vector(5);
-	device->objects.cone = new_vector(5);
+	device->objects = new_vector(8);
 }
 
 t_device	*engine_init(int _win_width, int _win_height, char *title)

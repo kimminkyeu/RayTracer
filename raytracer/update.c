@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 18:26:03 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 21:45:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,33 @@
 #include "libft.h"
 #include "main.h"
 
+t_hit create_hit_data(float d, t_vec3 normal, t_vec3 point)
+{
+	t_hit data;
+
+	data.distance = d;
+	data.normal = normal;
+	data.point = point;
+	return (data);
+}
+
 // device에 있는 모든 obj를 돌면서, 가장 가까운 충돌 지점을 계산.
 t_hit find_closet_collision(t_device *device, t_ray *ray)
 {
-	t_hit closest_hit;
+	t_hit closest_hit = create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
-	closest_hit.distance = -1.0f;
-	closest_hit.normal = gl_vec3_1f(0.0f);
-	closest_hit.point = gl_vec3_1f(0.0f);
-
-	int i;
-
-
+	size_t i = 0;
+	while (i < device->objects->size)
+	{
+		// ... find hit
+		(void)ray;
 
 
+
+
+		i++;
+	}
+	return (closest_hit);
 }
 
 // screen 좌표계를 world 좌표계로 변환. (-aspect ~ +aspect)
@@ -51,36 +64,34 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
  ------------------------------------------- */
 t_vec3 trace_ray(t_device *device, t_ray *ray)
 {
-	if (device->objects.spheres->size == 0)
+	if (device->objects->size == 0)
 		return (gl_vec3_1f(0.0f));
 
-	// NOTE:  Test code for ray_tracing (현재는 Sphere 하나만 추적 중)
+	// NOTE:  Real-ray tracing algorithm here!
 	t_hit hit = find_closet_collision(device, ray);
-	// t_sphere *sphere = device->objects.spheres->data[0];
-	// t_hit hit = sphere_intersect_ray_collision(ray, sphere);
 
 	if (hit.distance < 0.0f) // if no hit.
 	{
 		return (gl_vec3_3f(0.0f, 0.0f, 0.0f)); // return black
 	}
-	else // if ray hit object.
+	else // if ray hit object, then calculate with Phong Shading model.
 	{
-		// NOTE:  Diffuse
+		// NOTE:  (1) Ambient
+		const t_vec3 ambient_final = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
+
+		// NOTE:  (2) Diffuse
 		const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
 		const float _diff = maxf(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
-		// (void)_diff;
-		// Test code for diffuse
-		// return (gl_vec3_multiply_scalar(sphere->diffuse, _diff));
+		const t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
 
-		// NOTE:  Specular [ 2 * (N . L)N - L ]
+		// NOTE:  (3) Specular [ 2 * (N . L)N - L ]
 		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
-		const float _spec = pow(maxf(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), sphere->alpha);
-		// return (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(sphere->specular, _spec), sphere->ks));
+		const float _spec = pow(maxf(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
+		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
 
-		// Phong Reflection Model 최종합.
-		const t_vec3 diffuse_final = gl_vec3_multiply_scalar(sphere->diffuse, _diff);
-		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(sphere->specular, _spec), sphere->ks);
-		const t_vec3 phong_reflection = gl_vec3_add_vector(gl_vec3_add_vector(sphere->ambient, diffuse_final), specular_final);
+		// NOTE:  (4) Phong Reflection Model 최종합.
+		const t_vec3 phong_reflection = gl_vec3_add_vector(gl_vec3_add_vector(ambient_final, diffuse_final), specular_final);
+
 		return (phong_reflection);
 	}
 }

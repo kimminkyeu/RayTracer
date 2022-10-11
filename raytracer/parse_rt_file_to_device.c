@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 16:46:11 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 21:48:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,152 +30,85 @@
 // 	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
 // }
 
+void	print_error_and_exit(t_device *device, char *str)
+{
+	ft_putstr_fd(str, STDERR_FILENO);
+	engine_exit(device, EXIT_FAILURE);
+}
+
+// parse and return t_vec3.
+t_vec3	parse_3float(t_device *device, char* line)
+{
+	char **each = ft_split(line, ',');
+	if (get_strs_count(each) != 3) // WARN:  Memory leak on strs..?
+		print_error_and_exit(device, ".rt file error\n");
+	t_vec3 result = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
+	free_split_char(each);
+	return (result);
+}
+
 void	parse_sphere(t_device *device, char **line_split)
 {
+	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (get_strs_count(line_split) != 4)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	t_sphere *new_sphere = ft_calloc(1, sizeof(*new_sphere));
+	if (strs_count != 4 && strs_count != 7)
+		print_error_and_exit(device, "[0] .rt file error\n");
 
-	// TODO:  check if atof is successful, or has 3 member
-	char **each = ft_split(line_split[1], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
+	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	new_obj->type = TYPE_SPHERE;
 
-	// TODO:  world좌표계 기준으로 위치와 크기를 재설정.
-
-
-	new_sphere->center = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
-	free_split_char(each);
-	new_sphere->radius = atof(line_split[2]);
-	each = ft_split(line_split[3], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	new_sphere->color = gl_vec3_3f(atof(each[2]), atof(each[1]), atof(each[0]));
-	free_split_char(each);
-
-
+	new_obj->sphere.center = parse_3float(device, line_split[1]);
+	new_obj->sphere.radius = atof(line_split[2]);
+	new_obj->material.diffuse = parse_3float(device, line_split[3]); // = Color
 	/**
-	 * *  NOTE:  퐁 쉐이딩용 테스트 코드이며, 추후에 이 값을 반드시 정리할 것.
+	 * *  NOTE:  Default Material Value setting.
 	 */
-	// ambient는 일단 없애기.
-	// new_sphere->ambient = gl_vec3_multiply_scalar(new_sphere->color, 0.0f);
-	new_sphere->ambient = gl_vec3_1f(0.0f);
+	new_obj->material.specular = gl_vec3_1f(255.0f);
+	new_obj->material.ks = 0.5f;
+	new_obj->material.alpha = 9.0f;
 
-	// new_sphere->diffuse = gl_vec3_1f(0.0f);
-	new_sphere->diffuse = new_sphere->color;
-
-	// 반사된 빛은 하얀색.
-	new_sphere->specular = gl_vec3_1f(255.0f);
-
-	new_sphere->ks = 0.5f;
-	new_sphere->alpha = 9.0f; // phong-shading에서 specular를 몇 제곱 할 것인지.
+	/** PARSE FORMAT
+	 * * sp  [center]0.5,0.0,1.5     [radius]0.5     [diff]250,0,0  [spec]255,255,255   [ks]0.5   [alpha]9.0f
+	 * */
+	if (strs_count == 7)
+	{
+		new_obj->material.specular = parse_3float(device, line_split[4]);
+		new_obj->material.ks = atof(line_split[5]);
+		new_obj->material.alpha = atof(line_split[6]);
+	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
-
-
-	device->objects.spheres->push_back(device->objects.spheres, new_sphere);
+	device->objects->push_back(device->objects, new_obj);
 }
 
 void	parse_light(t_device *device, char **line_split)
 {
-	if (device->light->has_light == true)
-	{
-		// light 의 개수는 오로지 1개 이하만 가능!
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	// (1) check if sp has 4 char members
-	if (get_strs_count(line_split) != 4)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	// TODO:  check if atof is successful, or has 3 member
-	char **each = ft_split(line_split[1], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	device->light->pos = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
-	free_split_char(each);
+	// if light is more than 1, or is in wrong format
+	if (device->light->has_light == true || get_strs_count(line_split) != 4)
+		print_error_and_exit(device, "[1] .rt file error\n");
+	device->light->pos = parse_3float(device, line_split[1]);
 	device->light->brightness_ratio = atof(line_split[2]);
-	each = ft_split(line_split[3], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	device->light->color = gl_vec3_3f(atof(each[2]), atof(each[1]), atof(each[0]));
-	free_split_char(each);
+	device->light->color = parse_3float(device, line_split[3]);
 	device->light->has_light = true;
 }
 
 void	parse_ambient_light(t_device *device, char **line_split)
 {
-	if (device->ambient_light->has_ambient_light == true)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	// (1) check if sp has 4 char members
-	if (get_strs_count(line_split) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	device->ambient_light->brightness_ratio = atof(line_split[2]);
-	char **each = ft_split(line_split[3], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	device->ambient_light->color = gl_vec3_3f(atof(each[2]), atof(each[1]), atof(each[0]));
-	free_split_char(each);
+	// if light is more than 1, or is in wrong format
+	if (device->ambient_light->has_ambient_light == true || get_strs_count(line_split) != 3)
+		print_error_and_exit(device, "[2] .rt file error\n");
+	device->ambient_light->brightness_ratio = atof(line_split[1]);
+	device->ambient_light->color = parse_3float(device, line_split[2]);
 	device->ambient_light->has_ambient_light = true;
 }
 
 void	parse_camera(t_device *device, char **line_split)
 {
-	// (1) check if sp has 4 char members
-	if (device->camera->has_camera == true)
-	{
-		// TODO:  print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	if (get_strs_count(line_split) != 4)
-	{
-		// TODO:  print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	// TODO:  check if atof is successful, or has 3 member
-	char **each = ft_split(line_split[1], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	device->camera->dir = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
-	free_split_char(each);
-	each = ft_split(line_split[2], ',');
-	if (get_strs_count(each) != 3)
-	{
-		// TODO: print message of error log.
-		engine_exit(device, EXIT_FAILURE);
-	}
-	device->camera->pos = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
-	free_split_char(each);
+	// if camera is more than 1, or is in wrong format
+	if (device->camera->has_camera == true || get_strs_count(line_split) != 4)
+		print_error_and_exit(device, "[3] .rt file error\n");
+	device->camera->dir = parse_3float(device, line_split[1]);
+	device->camera->pos = parse_3float(device, line_split[2]);
 	device->camera->fov = atof(line_split[3]);
 	device->camera->has_camera = true;
 }
@@ -230,35 +163,28 @@ void	parse_each(t_device *device, char **line_split)
 void	parse_rt_file_to_device(t_device *device, char *file)
 {
 	int	fd;
-
-	printf("File Name : %s\n", file);
-	// (1) check if file is able to open.
-	// WARN:  (1-1) if file name if not with .rt, return error!
-	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
-	{
-		// ... TODO:  error message
-		engine_exit(device, EXIT_FAILURE);
-	}
-
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-	{
-		// ... TODO:  error message
-		engine_exit(device, EXIT_FAILURE);
-	}
-
 	char	*pa_line;
 	char	**pa_line_split;
 
+	printf("File Name : %s\n", file);
+	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
+		print_error_and_exit(device, ".rt format error\n");
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		print_error_and_exit(device, ".rt format error\n");
 	pa_line = get_next_line(fd);
 	while (pa_line != NULL)
 	{
+		// Skip empty line
+		if (pa_line[0] == '#' || (ft_strlen(pa_line) == 1 && pa_line[0] == '\n'))
+		{
+			free(pa_line);
+			pa_line = get_next_line(fd);
+			continue ;
+		}
 		pa_line_split = ft_split(pa_line, ' ');
-
 		// parse each line
 		parse_each(device, pa_line_split);
-
-		// free each line
 		free_split_char(pa_line_split);
 		free(pa_line);
 		pa_line = get_next_line(fd);

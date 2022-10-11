@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:26:59 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 18:12:55 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 19:27:02 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ t_dvec2	gl_dvec2_normalize(t_dvec2 v)
 {
 	double	len;
 
-	len = gl_vec2_get_magnitude(v);
+	len = gl_dvec2_get_magnitude(v);
 	/** printf("len : %f\n", len); */
 	return (gl_dvec2_2d(v.x / len, v.y / len));
 }

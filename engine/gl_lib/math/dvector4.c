@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:07:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 18:21:10 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 19:33:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_dvec4	gl_dvec4_reverse(t_dvec4 v)
 	return (gl_dvec4_4d(-v.x, -v.y, -v.z, -v.w));
 }
 
-t_dvec4	gl_vec4_add_vector(t_dvec4 v1, t_dvec4 v2)
+t_dvec4	gl_dvec4_add_vector(t_dvec4 v1, t_dvec4 v2)
 {
 	t_dvec4	o;
 
@@ -67,7 +67,7 @@ static double	compare_for_clamp(double x, double min_val, double max_val)
 		return (x);
 }
 
-extern t_dvec4	gl_vec4_clamp(t_dvec4 v, t_dvec4 min, t_dvec4 max)
+extern t_dvec4	gl_dvec4_clamp(t_dvec4 v, t_dvec4 min, t_dvec4 max)
 {
 	double	x;
 	double	y;
@@ -81,7 +81,7 @@ extern t_dvec4	gl_vec4_clamp(t_dvec4 v, t_dvec4 min, t_dvec4 max)
 	return (gl_dvec4_4d(x, y, z, w));
 }
 
-t_dvec4	gl_vec4_normalize(t_dvec4 v)
+t_dvec4	gl_dvec4_normalize(t_dvec4 v)
 {
 	double	len;
 
