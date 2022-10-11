@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 15:26:52 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 16:43:18 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,23 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 	}
 	else // if ray hit object.
 	{
-		// Diffuse
+		// NOTE:  Diffuse
 		const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
 		const float _diff = maxf(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
+		// (void)_diff;
+		// Test code for diffuse
+		// return (gl_vec3_multiply_scalar(sphere->diffuse, _diff));
 
-		// Specular
-		const float _spec = 1.0f;
-		(void)_spec;
+		// NOTE:  Specular [ 2 * (N . L)N - L ]
+		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
+		const float _spec = pow(maxf(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), sphere->alpha);
+		// return (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(sphere->specular, _spec), sphere->ks));
 
-		// Old version
-		return (gl_vec3_multiply_scalar(sphere->color, _diff));
-
-		// const t_vec3 diffuse_final = gl_vec3_multiply_scalar(sphere->diffuse, _diff);
-		// const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(sphere->specular, _spec), sphere->ks);
-		// const t_vec3 phong_reflection = gl_vec3_add_vector(gl_vec3_add_vector(sphere->ambient, diffuse_final), specular_final);
-		// return (phong_reflection);
+		// Phong Reflection Model 최종합.
+		const t_vec3 diffuse_final = gl_vec3_multiply_scalar(sphere->diffuse, _diff);
+		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(sphere->specular, _spec), sphere->ks);
+		const t_vec3 phong_reflection = gl_vec3_add_vector(gl_vec3_add_vector(sphere->ambient, diffuse_final), specular_final);
+		return (phong_reflection);
 	}
 }
 

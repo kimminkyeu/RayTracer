@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 15:19:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 16:46:11 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,18 @@ void	parse_sphere(t_device *device, char **line_split)
 	/**
 	 * *  NOTE:  퐁 쉐이딩용 테스트 코드이며, 추후에 이 값을 반드시 정리할 것.
 	 */
+	// ambient는 일단 없애기.
+	// new_sphere->ambient = gl_vec3_multiply_scalar(new_sphere->color, 0.0f);
 	new_sphere->ambient = gl_vec3_1f(0.0f);
-	new_sphere->diffuse = gl_vec3_1f(0.0f);
-	new_sphere->specular = gl_vec3_1f(0.0f);
-	new_sphere->ks = 0.0f;
-	new_sphere->alpha = 0.0f;
+
+	// new_sphere->diffuse = gl_vec3_1f(0.0f);
+	new_sphere->diffuse = new_sphere->color;
+
+	// 반사된 빛은 하얀색.
+	new_sphere->specular = gl_vec3_1f(255.0f);
+
+	new_sphere->ks = 0.5f;
+	new_sphere->alpha = 9.0f; // phong-shading에서 specular를 몇 제곱 할 것인지.
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
 
