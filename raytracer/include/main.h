@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:21:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 14:42:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 22:25:58 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@
 // helper for min max
 float minf(float f1, float f2);
 float maxf(float f1, float f2);
+
+/** helper function. */
+void	print_error_and_exit(t_device *device, char *str);
 
 /** helper function. check how many strs is in split */
 size_t	get_strs_count(char **split);

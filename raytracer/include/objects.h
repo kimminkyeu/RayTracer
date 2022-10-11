@@ -9,7 +9,7 @@
 		Objects type-definition
    --------------------------------- */
 typedef struct s_ambient_light {
-	bool 	has_ambient_light;
+	bool 	has_ambient_light; // light 중복 체크용
 
 	float	brightness_ratio;
 	t_vec3	color;
@@ -17,7 +17,7 @@ typedef struct s_ambient_light {
 }	t_ambient_light;
 
 typedef struct s_light {
-	bool	has_light;
+	bool	has_light; // light 중복 체크용
 
 	t_vec3	pos; // 아주 단순화된 형태의 위치만 있는 점조명.
 	float	brightness_ratio;
@@ -70,8 +70,6 @@ typedef struct s_material {
 	// float transparency;
 }	t_material;
 
-
-
 typedef struct s_object {
 	t_material	material;
 	int			type;	 // type of object (ex. Sphere)
@@ -81,12 +79,5 @@ typedef struct s_object {
 	t_cylinder	cylinder;
 	t_cone		cone;
 }	t_object;
-
-// typedef struct s_objects {
-	// t_vector	*spheres;
-	// t_vector	*planes;
-	// t_vector	*cylinders;
-	// t_vector	*cone;
-// }	t_objects;
 
 #endif /* objects.h */

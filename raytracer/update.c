@@ -6,10 +6,11 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 21:51:41 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/11 22:51:41 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <float.h> // float max
 #include "gl_color.h"
 #include "gl_draw.h"
 #include "gl_dvec3.h"
@@ -29,19 +30,40 @@ t_hit create_hit_data(float d, t_vec3 normal, t_vec3 point)
 	return (data);
 }
 
+// 물체의 타입에 따라 다르게 체크.
+t_hit check_ray_collision(t_ray *ray, t_object *obj)
+{
+	if (obj->type == TYPE_SPHERE)
+		return (sphere_intersect_ray_collision(ray, &obj->sphere));
+	// else if (obj->type == TYPE_CYLINDER)
+	// {}
+	// else if (obj->type == TYPE_PLAIN)
+	// {}
+	// else if (obj->type == TYPE_CONE)
+	// {}
+	else
+		return (create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
+}
+
 // device에 있는 모든 obj를 돌면서, 가장 가까운 충돌 지점을 계산.
 t_hit find_closet_collision(t_device *device, t_ray *ray)
 {
+	float closest_distance = FLT_MAX;
 	t_hit closest_hit = create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
 	size_t i = 0;
 	while (i < device->objects->size)
 	{
 		// ... find hit
-		(void)ray;
+		t_hit hit = check_ray_collision(ray, device->objects->data[i]);
 
-
-
+		// 모든 물체에 대해서 충돌을 계산하고, 그 중에서 d값이 더 작은 경우 그 값을 hit으로 만들면 된다.
+		if (hit.distance >= 0.0f && hit.distance < closest_distance)
+		{
+			closest_distance = hit.distance;
+			closest_hit = hit;
+			closest_hit.obj = device->objects->data[i];
+		}
 		i++;
 	}
 	return (closest_hit);
@@ -108,8 +130,12 @@ int	update(t_device *device, t_image *img)
 		{
 			const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
 
-			// ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
-			const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
+			/*
+			 *  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
+			 */
+			// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
+			const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, gl_vec3_3f(0.0f, 0.0f, -5.0f)));
+
 
 			t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
 			t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
