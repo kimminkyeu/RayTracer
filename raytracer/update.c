@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 21:22:11 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 21:43:11 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 
 		// (3) Shadow
 		// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
-		if (find_closet_collision(device, &shadow_ray).distance < 0.0f)
+
+		t_hit	shadow_ray_hit = find_closet_collision(device, &shadow_ray);
+		// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다.
+		if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
 		{
 			const float _diff = maxf(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
 			const t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
