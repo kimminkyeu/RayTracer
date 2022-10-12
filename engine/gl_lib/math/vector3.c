@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:07:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/14 22:34:08 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 15:09:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,15 +93,14 @@ float	gl_vec3_get_magnitude(t_vec3 v)
 	return (sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
 }
 
-/** FIX: check if cross-product code is valid!  */
 t_vec3	gl_vec3_cross(t_vec3 v1, t_vec3 v2)
 {
 	float	x;
 	float	y;
 	float	z;
 
-	x = v1.y * v2.z - v1.z * v1.y;
-	y = v1.z * v2.x - v1.x * v1.z;
-	z = v1.x * v2.y - v1.y * v1.x;
+	x = v1.y * v2.z - v2.y * v1.z;
+	y = v1.z * v2.x - v2.z * v1.x;
+	z = v1.x * v2.y - v2.x * v1.y;
 	return (gl_vec3_3f(x, y, z));
 }

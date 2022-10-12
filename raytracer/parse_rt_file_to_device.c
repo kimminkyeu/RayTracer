@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 13:52:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 15:59:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +140,9 @@ void	parse_triangle(t_device *device, char **line_split)
 
 	if (strs_count == 8)
 	{
-		new_obj->material.specular = parse_3float(device, line_split[4], true);
-		new_obj->material.ks = atof(line_split[5]);
-		new_obj->material.alpha = atof(line_split[6]);
+		new_obj->material.specular = parse_3float(device, line_split[5], true);
+		new_obj->material.ks = atof(line_split[6]);
+		new_obj->material.alpha = atof(line_split[7]);
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;

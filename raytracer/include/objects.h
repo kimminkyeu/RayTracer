@@ -1,8 +1,8 @@
 #ifndef OBJECT_H
 # define OBJECT_H
 
-#include "libft.h"
-#include "vector.h"
+// #include "libft.h"
+// #include "vector.h"
 #include "gl_vec3.h"
 
 /* ---------------------------------

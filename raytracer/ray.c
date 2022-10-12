@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 14:17:00 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:33:15 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,15 @@ float maxf(float f1, float f2)
 		return (f1);
 	else
 		return (f2);
+}
+
+/** helper function. (abs) */
+float absf(float f)
+{
+	if (f >= 0.0f)
+		return (f);
+	else
+		return (-f);
 }
 
 t_ray create_ray(t_vec3 origin, t_vec3 direction)
@@ -53,56 +62,61 @@ t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
 // 잘 이해가 가지 않는다면 여러 자료로 교차 검증하면서 공부하시는 방법도
 // 좋습니다. 참고:
 // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/ray-triangle-intersection-geometric-solution
-bool intersect_ray_triangle(t_vec3 orig, t_vec3 dir,
+bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 							t_vec3 v0, t_vec3 v1, t_vec3 v2,
 							t_vec3 *point, t_vec3 *face_normal,
 							float *t, float *u, float *v)
 {
-	(void)orig; (void)dir; (void)v1; (void)v0; (void)v2; (void)point; (void)face_normal;
-	(void)t; (void)u; (void)v;
+	// (void)ray_origin; (void)ray_dir; (void)v1; (void)v0; (void)v2; (void)point; (void)face_normal;
+	// (void)t;
+	(void)u; (void)v;
 	/*
 	 * 기본 전략
 	 * - 삼각형이 놓여있는 평면과 광선의 교점을 찾고,
 	 * - 그 교점이 삼각형 안에 있는지 밖에 있는지를 판단한다.
 	 */
 
-	/* 1. 삼각형이 놓여 있는 평면의 수직 벡터 계산 */
-	// faceNormal = ...;
-	//주의: 삼각형의 넓이가 0일 경우에는 계산할 수 없음
+	/* 1. 삼각형이 놓여 있는 평면의 수직 벡터 계산 (glm::cross) */
+	const t_vec3 v1v0 = gl_vec3_subtract_vector(v1, v0);
+	const t_vec3 v2v0 = gl_vec3_subtract_vector(v2, v0);
+
+	*face_normal = gl_vec3_normalize(gl_vec3_cross(v1v0, v2v0));
+	//  WARN:  주의! 삼각형의 넓이가 0일 경우에는 계산할 수 없음 (normalize에서 0으로 나누는 에러 발생)
 
 	// 삼각형 뒷면을 그리고 싶지 않은 경우 (Backface culling)
-	// if (... < 0.0f) return false;
+	if (gl_vec3_dot(gl_vec3_reverse(ray_dir), *face_normal) < 0.0f) return false;
 
 	// 평면과 광선이 수평에 매우 가깝다면 충돌하지 못하는 것으로 판단
-	// if (... < 1e-2f) return false; // t 계산시 0으로 나누기 방지
+	if (absf(gl_vec3_dot(ray_dir, *face_normal)) < 1e-2f) return false; // t 계산시 0으로 나누기 방지
 
-	/* 2. 광선과 평면의 충돌 위치 계산 */
-	// t = ...
+	/* 2. 광선과 (무한히 넓은) 평면의 충돌 위치 계산 */
+	*t = (gl_vec3_dot(v0, *face_normal) - gl_vec3_dot(ray_origin, *face_normal)) / gl_vec3_dot(ray_dir, *face_normal);
 
 	// 광선의 시작점 이전에 충돌한다면 렌더링할 필요 없음
-	// if (...) return false;
+	if (*t < 0.0f) return false;
 
-	// point = orig + t * dir; // 충돌점
+	// 충돌 지점 계산
+	*point = gl_vec3_add_vector(ray_origin, gl_vec3_multiply_scalar(ray_dir, *t));
 
 	/* 3. 그 충돌 위치가 삼각형 안에 들어 있는 지 확인 */
 
-	// 작은 삼각형들 3개의 normal 계산
-	// const vec3 normal0 = ...
-	// const vec3 normal1 = ...
-	// const vec3 normal2 = ...
+	// 작은 삼각형들 3개의 normal 계산. 이때, ( WARN:  cross-product는 오른손 좌표계)
+	const t_vec3 normal0 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2)));
+	const t_vec3 normal1 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v2, v0)));
+	const t_vec3 normal2 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(*point, v0)));
 	// 방향만 확인하면 되기 때문에 normalize() 생략 가능
 	// 아래에서 cross product의 절대값으로 작은 삼각형들의 넓이 계산
 
-	// if (dot(normal0, faceNormal) < 0.0f) return false;
-	// if (dot(normal1, faceNormal) < 0.0f) return false;
-	// if (dot(normal2, faceNormal) < 0.0f) return false;
+	if (gl_vec3_dot(normal0, *face_normal) < 0.0f) return false;
+	if (gl_vec3_dot(normal1, *face_normal) < 0.0f) return false;
+	if (gl_vec3_dot(normal2, *face_normal) < 0.0f) return false;
 
 	// Barycentric coordinates 계산
 	// 텍스춰링(texturing)에서 사용
 	// u = ...
 	// v = ...
 
-	return (false);
+	return (true);
 }
 
 t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
@@ -112,6 +126,7 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 	t_vec3 point, face_normal;
 	float t, u, v;
 
+	// intersect ray_triangle 에서 point, face_normal, t, uv 값을 계산해서 대입해준다.
 	if (intersect_ray_triangle(ray->origin, ray->direction,
 								triangle->v0, triangle->v1, triangle->v2,
 								&point, &face_normal, &t, &u, &v))
