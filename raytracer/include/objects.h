@@ -25,20 +25,20 @@ typedef struct s_light {
 
 }	t_light;
 
+typedef struct s_triangle {
+	t_vec3	v0; // vertex_1
+	t_vec3	v1; // vertex_2
+	t_vec3	v2;	// vertex_3
+
+	// t_vec2 uv1; // for texture
+	// t_vec2 uv2; // for texture
+	// t_vec2 uv3; // for texture
+
+}	t_triangle;
+
 typedef struct s_sphere {
-	//...
 	t_vec3	center;
 	float	radius;
-	// t_vec3	color; // 추후 재질로 확장
-
-	// t_vec3	ambient;
-	// t_vec3	diffuse;
-	// t_vec3	specular;
-	// float	ks;
-	// float	alpha;
-	// float reflection;
-	// float transparency;
-
 }	t_sphere;
 
 typedef struct s_plane {
@@ -58,6 +58,7 @@ typedef struct s_cone {
 #define TYPE_PLAIN		(2)
 #define TYPE_CYLINDER	(3)
 #define TYPE_CONE		(4)
+#define TYPE_TRIANGLE   (5)
 
 typedef struct s_material {
 	// NOTE:  for Phong shading
@@ -71,13 +72,17 @@ typedef struct s_material {
 }	t_material;
 
 typedef struct s_object {
+
 	t_material	material;
 	int			type;	 // type of object (ex. Sphere)
+
 	// WARN:  void*로 일반화해서 다루지 않고, 그냥 통으로 저장 (4개의 타입) --> 개선 필요
 	t_sphere	sphere;
 	t_plane		plain;
 	t_cylinder	cylinder;
 	t_cone		cone;
+	t_triangle	triangle;
+
 }	t_object;
 
 #endif /* objects.h */

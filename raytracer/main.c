@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 21:50:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 13:59:17 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 // error checking for rt format
 void print_objs_iter(void *data)
 {
-	// TODO:  add more objects here!
-
 	t_object *obj = data;
 	if (obj->type == TYPE_SPHERE)
 	{
@@ -27,6 +25,18 @@ void print_objs_iter(void *data)
 		printf("ks(%f) . ", obj->material.ks);
 		printf("alpha(%f)\n", obj->material.alpha);
 	}
+	else if (obj->type == TYPE_TRIANGLE)
+	{
+		printf("[Triangle] : v0(%f,%f,%f) . ", obj->triangle.v0.x, obj->triangle.v0.y, obj->triangle.v0.z);
+		printf("v1(%f,%f,%f) . ", obj->triangle.v1.x, obj->triangle.v1.y, obj->triangle.v1.z);
+		printf("v2(%f,%f,%f) . ", obj->triangle.v2.x, obj->triangle.v2.y, obj->triangle.v2.z);
+		printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
+		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
+		printf("ks(%f) . ", obj->material.ks);
+		printf("alpha(%f)\n", obj->material.alpha);
+	}
+	// TODO:  add more objects here!
+	// ...
 }
 
 void print_rt_data(t_device *device)

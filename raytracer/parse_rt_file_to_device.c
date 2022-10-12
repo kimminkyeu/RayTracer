@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 21:56:27 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 13:52:07 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,6 @@ void	parse_sphere(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	/** PARSE FORMAT
-	 * * sp  [center]0.5,0.0,1.5     [radius]0.5     [diff]250,0,0  [spec]255,255,255   [ks]0.5   [alpha]9.0f
-	 * */
 	if (strs_count == 7)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[4], true);
@@ -118,6 +115,40 @@ void	parse_camera(t_device *device, char **line_split)
 	device->camera->has_camera = true;
 }
 
+void	parse_triangle(t_device *device, char **line_split)
+{
+	size_t	strs_count = get_strs_count(line_split);
+	// (1) check if sp has 4 char members
+	if (strs_count != 5 && strs_count != 8)
+		print_error_and_exit(device, "123: .rt file error\n");
+
+	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	new_obj->type = TYPE_TRIANGLE;
+
+	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
+	new_obj->triangle.v0 = parse_3float(device, line_split[1], false);
+	new_obj->triangle.v1 = parse_3float(device, line_split[2], false);
+	new_obj->triangle.v2 = parse_3float(device, line_split[3], false);
+	new_obj->material.diffuse = parse_3float(device, line_split[4], true);
+
+	/**
+	 * *  NOTE:  Default Material Value setting.
+	 */
+	new_obj->material.specular = gl_vec3_1f(255.0f);
+	new_obj->material.ks = 0.5f;
+	new_obj->material.alpha = 9.0f;
+
+	if (strs_count == 8)
+	{
+		new_obj->material.specular = parse_3float(device, line_split[4], true);
+		new_obj->material.ks = atof(line_split[5]);
+		new_obj->material.alpha = atof(line_split[6]);
+	}
+	// new_sphere->reflection = 0.0f;
+	// new_sphere->transparency = 0.0f;
+	device->objects->push_back(device->objects, new_obj);
+}
+
 void	parse_each(t_device *device, char **line_split)
 {
 	// TODO:  if data format is wrong while parsing, stop parsing and call engine_exit()
@@ -157,6 +188,12 @@ void	parse_each(t_device *device, char **line_split)
 	else if (ft_strncmp(line_split[0], "co", ft_strlen(line_split[0])) == 0)
 	// if cone
 	{
+	}
+	else if (ft_strncmp(line_split[0], "tr", ft_strlen(line_split[0])) == 0)
+	// if triangle
+	{
+		printf("parsing Triangle...\n");
+		parse_triangle(device, line_split);
 	}
 	else
 		print_error_and_exit(device, "162: .rt format error\n");

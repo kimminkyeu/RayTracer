@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 22:51:41 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 13:54:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ t_hit check_ray_collision(t_ray *ray, t_object *obj)
 {
 	if (obj->type == TYPE_SPHERE)
 		return (sphere_intersect_ray_collision(ray, &obj->sphere));
+	else if (obj->type == TYPE_TRIANGLE)
+		return (triangle_intersect_ray_collision(ray, &obj->triangle));
 	// else if (obj->type == TYPE_CYLINDER)
 	// {}
 	// else if (obj->type == TYPE_PLAIN)
@@ -133,9 +135,9 @@ int	update(t_device *device, t_image *img)
 			/*
 			 *  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
 			 */
+
 			// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
 			const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, gl_vec3_3f(0.0f, 0.0f, -5.0f)));
-
 
 			t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
 			t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
