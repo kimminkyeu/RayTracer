@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 17:49:59 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 19:54:55 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,50 +57,15 @@ t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
 	return (hit);
 }
 
-/** ------------------------------ *
- *  |     Square hit detection     | --> 무한 평면이 아닌 4개의 point를 입력하는 사각형.
- *  ------------------------------ */
-
-
-t_hit square_intersect_ray_collision(t_ray *ray, t_square *square)
+t_triangle create_triangle(t_vec3 v0, t_vec3 v1, t_vec3 v2)
 {
-	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+	t_triangle t;
 
-	t_vec3 point, face_normal_1, face_normal_2;
-	float t, u, v;
-
-	// intersect ray_triangle 에서 point, face_normal, t, uv 값을 계산해서 대입해준다.
-	if (intersect_ray_triangle(ray->origin, ray->direction,
-								square->v0, square->v1, square->v2,
-								&point, &face_normal_1, &t, &u, &v)
-								&&
-		intersect_ray_triangle(ray->origin, ray->direction,
-								square->v1, square->v2, square->v3,
-								&point, &face_normal_2, &t, &u, &v)
-								&&
-		(absf(gl_vec3_dot(face_normal_1, face_normal_2) - 1.0f) < 1e-2f)) // if has same direction;
-	{
-		hit.distance = t;
-		hit.point = point; // ray.start + ray.dir * t;
-		hit.normal = face_normal_1;
-
-		// 텍스춰링(texturing)에서 사용
-		// hit.uv = uv0 * u + uv1 * v + uv2 * (1.0f - u - v);
-	}
-	return (hit);
+	t.v0 = v0;
+	t.v1 = v1;
+	t.v2 = v2;
+	return (t);
 }
-
-/** ------------------------------ *
- *  |     Plain hit detection      |
- *  ------------------------------ */
-t_hit plain_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
-{
-	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
-
-
-
-}
-
 
 /** ------------------------------ *
  *  |    Triangle hit detection    |
@@ -186,6 +151,50 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 		// 텍스춰링(texturing)에서 사용
 		// hit.uv = uv0 * u + uv1 * v + uv2 * (1.0f - u - v);
 	}
+
+	return (hit);
+}
+
+
+/** ------------------------------ *
+ *  |     Square hit detection     | --> 무한 평면이 아닌 4개의 point를 입력하는 사각형.
+ *  ------------------------------ */
+t_hit square_intersect_ray_collision(t_ray *ray, t_square *square)
+{
+	// Create two triangle. check each.
+	t_triangle t1 = create_triangle(square->v0, square->v1, square->v2);
+	t_hit h1 = triangle_intersect_ray_collision(ray, &t1);
+
+	t_triangle t2 = create_triangle(square->v0, square->v2, square->v3);
+	t_hit h2 = triangle_intersect_ray_collision(ray, &t2);
+
+	if (h1.distance >= 0.0f && h2.distance >= 0.0f)
+	{
+		if (h1.distance < h2.distance)
+			return (h1);
+		else
+			return (h2);
+	}
+	else if (h1.distance >= 0.0f)
+	{
+		return (h1);
+	}
+	else
+	{
+		return (h2);
+	}
+}
+
+/** ------------------------------ *
+ *  |     Plain hit detection      |
+ *  ------------------------------ */
+t_hit plane_intersect_ray_collision(t_ray *ray, t_plane *plane)
+{
+	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+
+	(void)hit;
+	(void)ray;
+	(void)plane;
 
 	return (hit);
 }
