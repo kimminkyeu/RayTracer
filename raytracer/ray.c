@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 16:33:15 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:31:47 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,50 @@ t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
 	return (hit);
 }
 
+/** ------------------------------ *
+ *  |     Square hit detection     | --> 무한 평면이 아닌 4개의 point를 입력하는 사각형.
+ *  ------------------------------ */
+t_hit square_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
+{
+	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+/** ------------------------------ *
+ *  |     Plain hit detection      |
+ *  ------------------------------ */
+t_hit plain_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
+{
+	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+/** ------------------------------ *
+ *  |    Triangle hit detection    |
+ *  ------------------------------ */
 // 수학 프로그래밍을 좋아하시는 분들은 직접 구현해보시면 좋고,
 // 대부분은 개념만 이해해두시고 활용하는 방향으로 접근하셔도 충분합니다.
 // 잘 이해가 가지 않는다면 여러 자료로 교차 검증하면서 공부하시는 방법도
@@ -142,6 +186,9 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 	return (hit);
 }
 
+/** ------------------------------ *
+ *  |     Sphere hit detection     |
+ *  ------------------------------ */
 t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 15:59:49 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:29:25 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_vec3	parse_3float(t_device *device, char* line, int is_color)
 {
 	char **each = ft_split(line, ',');
 	if (get_strs_count(each) != 3) // WARN:  Memory leak on strs..?
-		print_error_and_exit(device, "45: .rt file error\n");
+		print_error_and_exit(device, "parse_3float(): .rt file error\n");
 	t_vec3 result;
 	if (!is_color)
 		result = gl_vec3_3f(atof(each[0]), atof(each[1]), atof(each[2]));
@@ -57,7 +57,7 @@ void	parse_sphere(t_device *device, char **line_split)
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
 	if (strs_count != 4 && strs_count != 7)
-		print_error_and_exit(device, "[0] .rt file error\n");
+		print_error_and_exit(device, "parse_sphere(): .rt file error\n");
 
 	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
 	new_obj->type = TYPE_SPHERE;
@@ -83,44 +83,12 @@ void	parse_sphere(t_device *device, char **line_split)
 	device->objects->push_back(device->objects, new_obj);
 }
 
-void	parse_light(t_device *device, char **line_split)
-{
-	// if light is more than 1, or is in wrong format
-	if (device->light->has_light == true || get_strs_count(line_split) != 4)
-		print_error_and_exit(device, "[1] .rt file error\n");
-	device->light->pos = parse_3float(device, line_split[1], false);
-	device->light->brightness_ratio = atof(line_split[2]);
-	device->light->color = parse_3float(device, line_split[3], true);
-	device->light->has_light = true;
-}
-
-void	parse_ambient_light(t_device *device, char **line_split)
-{
-	// if light is more than 1, or is in wrong format
-	if (device->ambient_light->has_ambient_light == true || get_strs_count(line_split) != 3)
-		print_error_and_exit(device, "[2] .rt file error\n");
-	device->ambient_light->brightness_ratio = atof(line_split[1]);
-	device->ambient_light->color = parse_3float(device, line_split[2], true);
-	device->ambient_light->has_ambient_light = true;
-}
-
-void	parse_camera(t_device *device, char **line_split)
-{
-	// if camera is more than 1, or is in wrong format
-	if (device->camera->has_camera == true || get_strs_count(line_split) != 4)
-		print_error_and_exit(device, "[3] .rt file error\n");
-	device->camera->dir = parse_3float(device, line_split[1], false);
-	device->camera->pos = parse_3float(device, line_split[2], false);
-	device->camera->fov = atof(line_split[3]);
-	device->camera->has_camera = true;
-}
-
 void	parse_triangle(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
 	if (strs_count != 5 && strs_count != 8)
-		print_error_and_exit(device, "123: .rt file error\n");
+		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
 	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
 	new_obj->type = TYPE_TRIANGLE;
@@ -148,6 +116,109 @@ void	parse_triangle(t_device *device, char **line_split)
 	// new_sphere->transparency = 0.0f;
 	device->objects->push_back(device->objects, new_obj);
 }
+
+void	parse_square(t_device *device, char **line_split)
+{
+	size_t	strs_count = get_strs_count(line_split);
+	// (1) check if sp has 4 char members
+	if (strs_count != 6 && strs_count != 9)
+		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
+
+	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	new_obj->type = TYPE_SQUARE;
+
+	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
+	new_obj->square.v0 = parse_3float(device, line_split[1], false);
+	new_obj->square.v1 = parse_3float(device, line_split[2], false);
+	new_obj->square.v2 = parse_3float(device, line_split[3], false);
+	new_obj->square.v3 = parse_3float(device, line_split[4], false);
+	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
+
+	/**
+	 * *  NOTE:  Default Material Value setting.
+	 */
+	new_obj->material.specular = gl_vec3_1f(255.0f);
+	new_obj->material.ks = 0.5f;
+	new_obj->material.alpha = 9.0f;
+
+	if (strs_count == 9)
+	{
+		new_obj->material.specular = parse_3float(device, line_split[6], true);
+		new_obj->material.ks = atof(line_split[7]);
+		new_obj->material.alpha = atof(line_split[8]);
+	}
+	// new_sphere->reflection = 0.0f;
+	// new_sphere->transparency = 0.0f;
+	device->objects->push_back(device->objects, new_obj);
+
+}
+
+void	parse_plain(t_device *device, char **line_split)
+{
+//   x y z coordinates     orientation      diffuseColor(rgb)    specular       ks     alpha
+	size_t	strs_count = get_strs_count(line_split);
+	// (1) check if sp has 4 char members
+	if (strs_count != 4 && strs_count != 7)
+		print_error_and_exit(device, "parse_plain(): .rt file error\n");
+
+	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	new_obj->type = TYPE_PLAIN;
+
+	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
+	new_obj->plain.pos = parse_3float(device, line_split[1], false);
+	new_obj->plain.normal = parse_3float(device, line_split[2], false);
+	new_obj->material.diffuse = parse_3float(device, line_split[3], true);
+
+	/**
+	 * *  NOTE:  Default Material Value setting.
+	 */
+	new_obj->material.specular = gl_vec3_1f(255.0f);
+	new_obj->material.ks = 0.5f;
+	new_obj->material.alpha = 9.0f;
+
+	if (strs_count == 8)
+	{
+		new_obj->material.specular = parse_3float(device, line_split[4], true);
+		new_obj->material.ks = atof(line_split[5]);
+		new_obj->material.alpha = atof(line_split[6]);
+	}
+	// new_sphere->reflection = 0.0f;
+	// new_sphere->transparency = 0.0f;
+	device->objects->push_back(device->objects, new_obj);
+}
+
+void	parse_light(t_device *device, char **line_split)
+{
+	// if light is more than 1, or is in wrong format
+	if (device->light->has_light == true || get_strs_count(line_split) != 4)
+		print_error_and_exit(device, "parse_light(): .rt file error\n");
+	device->light->pos = parse_3float(device, line_split[1], false);
+	device->light->brightness_ratio = atof(line_split[2]);
+	device->light->color = parse_3float(device, line_split[3], true);
+	device->light->has_light = true;
+}
+
+void	parse_ambient_light(t_device *device, char **line_split)
+{
+	// if light is more than 1, or is in wrong format
+	if (device->ambient_light->has_ambient_light == true || get_strs_count(line_split) != 3)
+		print_error_and_exit(device, "parse_ambient_light(): .rt file error\n");
+	device->ambient_light->brightness_ratio = atof(line_split[1]);
+	device->ambient_light->color = parse_3float(device, line_split[2], true);
+	device->ambient_light->has_ambient_light = true;
+}
+
+void	parse_camera(t_device *device, char **line_split)
+{
+	// if camera is more than 1, or is in wrong format
+	if (device->camera->has_camera == true || get_strs_count(line_split) != 4)
+		print_error_and_exit(device, "parse_camera(): .rt file error\n");
+	device->camera->dir = parse_3float(device, line_split[1], false);
+	device->camera->pos = parse_3float(device, line_split[2], false);
+	device->camera->fov = atof(line_split[3]);
+	device->camera->has_camera = true;
+}
+
 
 void	parse_each(t_device *device, char **line_split)
 {
@@ -180,6 +251,8 @@ void	parse_each(t_device *device, char **line_split)
 	else if (ft_strncmp(line_split[0], "pl", ft_strlen(line_split[0])) == 0)
 	// if plane
 	{
+		printf("parsing Plain...\n");
+		parse_plain(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "cy", ft_strlen(line_split[0])) == 0)
 	// if cylinder
@@ -195,8 +268,14 @@ void	parse_each(t_device *device, char **line_split)
 		printf("parsing Triangle...\n");
 		parse_triangle(device, line_split);
 	}
+	else if (ft_strncmp(line_split[0], "sq", ft_strlen(line_split[0])) == 0)
+	// if triangle
+	{
+		printf("parsing Square...\n");
+		parse_square(device, line_split);
+	}
 	else
-		print_error_and_exit(device, "162: .rt format error\n");
+		print_error_and_exit(device, "parse_each(): .rt format error\n");
 }
 
 /** return (-1) on parse failure. */
@@ -208,10 +287,10 @@ void	parse_rt_file_to_device(t_device *device, char *file)
 
 	printf("File Name : %s\n", file);
 	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
-		print_error_and_exit(device, "174: .rt format error\n");
+		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		print_error_and_exit(device, "177: .rt format error\n");
+		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
 	pa_line = get_next_line(fd);
 	while (pa_line != NULL)
 	{

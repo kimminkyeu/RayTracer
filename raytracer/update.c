@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 15:59:08 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:31:42 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ t_hit check_ray_collision(t_ray *ray, t_object *obj)
 		return (sphere_intersect_ray_collision(ray, &obj->sphere));
 	else if (obj->type == TYPE_TRIANGLE)
 		return (triangle_intersect_ray_collision(ray, &obj->triangle));
+	else if (obj->type == TYPE_PLAIN)
+		return (plain_intersect_ray_collision(ray, &obj->plain));
+	else if (obj->type == TYPE_SQUARE)
+		return (square_intersect_ray_collision(ray, &obj->square));
 	// else if (obj->type == TYPE_CYLINDER)
-	// {}
-	// else if (obj->type == TYPE_PLAIN)
 	// {}
 	// else if (obj->type == TYPE_CONE)
 	// {}

@@ -25,6 +25,11 @@ typedef struct s_light {
 
 }	t_light;
 
+typedef struct s_sphere {
+	t_vec3	center;
+	float	radius;
+}	t_sphere;
+
 typedef struct s_triangle {
 	t_vec3	v0; // vertex_1
 	t_vec3	v1; // vertex_2
@@ -36,13 +41,17 @@ typedef struct s_triangle {
 
 }	t_triangle;
 
-typedef struct s_sphere {
-	t_vec3	center;
-	float	radius;
-}	t_sphere;
+// NOTE:  추가로 구현한 사각형. (for plain)
+typedef struct s_square {
+	t_vec3 v0;
+	t_vec3 v1;
+	t_vec3 v2;
+	t_vec3 v3;
+}	t_square;
 
 typedef struct s_plane {
-	//...
+	t_vec3 pos; // position
+	t_vec3 normal; // surface-normal
 }	t_plane;
 
 typedef struct s_cylinder {
@@ -59,6 +68,7 @@ typedef struct s_cone {
 #define TYPE_CYLINDER	(3)
 #define TYPE_CONE		(4)
 #define TYPE_TRIANGLE   (5)
+#define TYPE_SQUARE   	(6)
 
 typedef struct s_material {
 	// NOTE:  for Phong shading
@@ -82,6 +92,7 @@ typedef struct s_object {
 	t_cylinder	cylinder;
 	t_cone		cone;
 	t_triangle	triangle;
+	t_square	square;
 
 }	t_object;
 

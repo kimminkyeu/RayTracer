@@ -4,14 +4,24 @@ A   0.08            255,255,255
 
 #   [ Light ]
 #   pos             intensity     color
-L   0.0,0.0,0.0     0.5           10,0,255
+L   5.0,10.0,0.0     0.5           10,0,255
 
 #   [ Sphere ]
 #   center          radius    diffuseColor(rgb)        specular      ks    alpha
-sp  0.7,0.0,5.0     0.5       250,0,0                 255,255,255   0.5   10.0
+sp  0.7,0.0,4.0     0.5       250,0,0                 255,255,255   0.5   10.0
 # sp  0.0,0.0,4.0     0.5       0,250,0                 255,255,255   0.5   10.0
 # sp  -0.7,0.0,3.0    0.5       0,0,250                 255,255,255   0.5   10.0
 
 #   [ Triangle ]
 #   vertex1            vertex2           vertex3          diffuseColor(rgb)      specular        ks     alpha
-tr  -2.0,-2.0,10.0     -2.0,2.0,10.0     2.0,2.0,10.0     30,30,30            255,255,255     0.5    10.0
+# tr  -2.0,-1.0,0.0     -2.0,-1.0,20.0     2.0,-1.0,20.0     128,128,128            255,255,255     0.5    50.0
+# tr  -2.0,-1.0,0.0      2.0,-1.0,20.0     2.0,-1.0,0.0      128,128,128            255,255,255     0.5    50.0
+
+#   [ Square ]
+#   vertex1            vertex2           vertex3          vertex4            diffuseColor(rgb)      specular        ks     alpha
+sq  -2.0,-1.0,0.0      2.0,-1.0,20.0     2.0,-1.0,0.0     -2.0,-1.0,20.0     128,128,128            255,255,255     0.5    50.0
+
+#   [ Plain ]
+#   x y z coordinates     orientation      diffuseColor(rgb)    specular       ks     alpha
+# pl   0.0,0.0,10.0         0.0,0.0,1.0      128,128,128
+
