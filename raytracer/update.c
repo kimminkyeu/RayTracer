@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 19:42:29 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 21:22:11 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,29 +89,23 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
  ------------------------------------------- */
 t_vec3 trace_ray(t_device *device, t_ray *ray)
 {
-	if (device->objects->size == 0)
-		return (gl_vec3_1f(0.0f));
-
-	// NOTE:  Real-ray tracing algorithm here!
+	// (0) Render first hit
 	t_hit hit = find_closet_collision(device, ray);
 
-	if (hit.distance < 0.0f) // if no hit.
+	if (hit.distance >= 0.0f) // if no hit.
+	// if ray hit object, then calculate with Phong Shading model.
 	{
-		return (gl_vec3_3f(0.0f, 0.0f, 0.0f)); // return black
-	}
-	else // if ray hit object, then calculate with Phong Shading model.
-	{
-		// NOTE:  (1) Start with Ambient Color.
-		t_vec3 color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
+		// (1) Start with Ambient Color.
+		t_vec3 point_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
 
-		// NOTE:  (2) Diffuse
-
+		// (2) Diffuse
 		// 그림자 처리. 아주 작은 값만큼 광원을 향해 이동시켜야 hit_point로 부터 충돌처리를 피할 수 있다.
 		const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
 
 		// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
 		t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
 
+		// (3) Shadow
 		// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
 		if (find_closet_collision(device, &shadow_ray).distance < 0.0f)
 		{
@@ -119,17 +113,18 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 			const t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
 			// return (diffuse_final);
 
-			// NOTE:  (3) 그림자가 아니라면, Specular [ 2 * (N . L)N - L ]
+			// (3) 그림자가 아니라면, Specular [ 2 * (N . L)N - L ]
 			const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
 			const float _spec = pow(maxf(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
 			const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
 			// return (specular_final);
 
-			// NOTE:  (4) 그림자가 아니라면, Phong Reflection Model 최종합.
-			color = gl_vec3_add_vector(gl_vec3_add_vector(color, diffuse_final), specular_final);
+			// (4) 그림자가 아니라면, Phong Reflection Model 최종합.
+			point_color = gl_vec3_add_vector(gl_vec3_add_vector(point_color, diffuse_final), specular_final);
 		}
-		return (color);
+		return (point_color);
 	}
+	return (gl_vec3_1f(0.0f)); // return black
 }
 
 int	update(t_device *device, t_image *img)
