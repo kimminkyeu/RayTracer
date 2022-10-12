@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 17:31:47 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/12 17:49:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,34 @@ t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
 /** ------------------------------ *
  *  |     Square hit detection     | --> 무한 평면이 아닌 4개의 point를 입력하는 사각형.
  *  ------------------------------ */
-t_hit square_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
+
+
+t_hit square_intersect_ray_collision(t_ray *ray, t_square *square)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
+	t_vec3 point, face_normal_1, face_normal_2;
+	float t, u, v;
 
+	// intersect ray_triangle 에서 point, face_normal, t, uv 값을 계산해서 대입해준다.
+	if (intersect_ray_triangle(ray->origin, ray->direction,
+								square->v0, square->v1, square->v2,
+								&point, &face_normal_1, &t, &u, &v)
+								&&
+		intersect_ray_triangle(ray->origin, ray->direction,
+								square->v1, square->v2, square->v3,
+								&point, &face_normal_2, &t, &u, &v)
+								&&
+		(absf(gl_vec3_dot(face_normal_1, face_normal_2) - 1.0f) < 1e-2f)) // if has same direction;
+	{
+		hit.distance = t;
+		hit.point = point; // ray.start + ray.dir * t;
+		hit.normal = face_normal_1;
 
-
-
-
-
-
-
-
-
-
-
+		// 텍스춰링(texturing)에서 사용
+		// hit.uv = uv0 * u + uv1 * v + uv2 * (1.0f - u - v);
+	}
+	return (hit);
 }
 
 /** ------------------------------ *
@@ -84,14 +96,6 @@ t_hit square_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 t_hit plain_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
-
-
-
-
-
-
-
-
 
 
 
