@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:21:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 22:25:58 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 17:43:34 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,15 @@
 # include "camera.h"
 
 
-// helper for min max
-float minf(float f1, float f2);
-float maxf(float f1, float f2);
+// helper for min max abs
+float min_float(float f1, float f2);
+float max_float(float f1, float f2);
+float abs_float(float f);
+
+int clamp_int(int i, int min, int max);
+
+
+
 
 /** helper function. */
 void	print_error_and_exit(t_device *device, char *str);

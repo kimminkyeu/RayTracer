@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:32:46 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 15:03:53 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 17:40:15 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ typedef struct s_hit {
 	float		distance; 	// hit distance;
 	t_vec3		point;		// 충돌 위치
 	t_vec3		normal; 	// 충돌 위치의 표면의 수직 벡터.
-	t_vec2		uv; 		// 텍스쳐 좌표
-
 	t_object	*obj; // hit object pointer
+
+	t_vec2		uv; 		// 텍스쳐 좌표
 
 }	t_hit;
 

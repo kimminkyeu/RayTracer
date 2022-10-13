@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 15:54:57 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 17:39:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ void	custom_deallocator_for_object(void *data)
 	t_object *obj_ptr = data;
 	if (obj_ptr->obj_data != NULL)
 		free(obj_ptr->obj_data);
+	if (obj_ptr->ambient_texture != NULL)
+		free(obj_ptr->ambient_texture);
+	if (obj_ptr->diffuse_texture != NULL)
+		free(obj_ptr->diffuse_texture);
 }
 
 void	print_error_and_exit(t_device *device, char *str)

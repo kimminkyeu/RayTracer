@@ -4,6 +4,7 @@
 // #include "libft.h"
 // #include "vector.h"
 #include "gl_vec3.h"
+#include "texture.h"
 
 /* ---------------------------------
 		Objects type-definition
@@ -89,13 +90,9 @@ typedef struct s_object {
 	// NOTE:  오브젝트 타입을 void* 로 수정함.
 	void		*obj_data;
 
-	// WARN:  void*로 일반화해서 다루지 않고, 그냥 통으로 저장 (4개의 타입) --> 개선 필요
-	// t_sphere	sphere;
-	// t_plane		plain;
-	// t_cylinder	cylinder;
-	// t_cone		cone;
-	// t_triangle	triangle;
-	// t_square	square;
+	// Texture
+	t_texture	*ambient_texture;
+	t_texture	*diffuse_texture;
 
 }	t_object;
 
