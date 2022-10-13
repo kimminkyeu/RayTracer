@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:21:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 17:43:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 20:22:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "objects.h"
 # include "hit.h"
 # include "camera.h"
+# include "texture.h"
 
 
 // helper for min max abs

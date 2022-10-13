@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 15:53:10 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 20:46:54 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ void print_objs_iter(void *data)
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
 		printf("alpha(%f)\n", obj->material.alpha);
+
+		if (obj->ambient_texture != NULL)
+			printf("ambient texture (w%d/h%d)\n", obj->ambient_texture->width, obj->ambient_texture->height);
 	}
 	else if (obj->type == TYPE_TRIANGLE)
 	{
@@ -34,6 +37,10 @@ void print_objs_iter(void *data)
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
 		printf("alpha(%f)\n", obj->material.alpha);
+
+		if (obj->ambient_texture != NULL)
+			printf("ambient texture (w%d/h%d)\n", obj->ambient_texture->width, obj->ambient_texture->height);
+
 	}
 	else if (obj->type == TYPE_PLAIN)
 	{
@@ -43,6 +50,10 @@ void print_objs_iter(void *data)
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
 		printf("alpha(%f)\n", obj->material.alpha);
+
+		// if (obj->ambient_texture != NULL)
+			// printf("texture (w%d/h%d)\n", obj->ambient_texture->width, obj->ambient_texture->height);
+
 	}
 	else if (obj->type == TYPE_SQUARE)
 	{
@@ -54,6 +65,10 @@ void print_objs_iter(void *data)
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
 		printf("alpha(%f)\n", obj->material.alpha);
+
+		if (obj->ambient_texture != NULL)
+			printf("ambient texture (w%d/h%d)\n", obj->ambient_texture->width, obj->ambient_texture->height);
+
 	}
 	// TODO:  add more objects here!
 	// ...

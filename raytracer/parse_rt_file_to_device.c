@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 17:39:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 21:39:16 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "gl_device.h"
 #include "gl_engine.h"
 #include "main.h"
+#include "texture.h"
 
 // static t_vec3 world(t_device *device, t_vec3 pos_screen)
 // {
@@ -90,7 +91,7 @@ void	parse_sphere(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (strs_count != 4 && strs_count != 7)
+	if (strs_count != 4 && strs_count != 7 && strs_count != 8)
 		print_error_and_exit(device, "parse_sphere(): .rt file error\n");
 
 	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
@@ -107,11 +108,15 @@ void	parse_sphere(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	if (strs_count == 7)
+	if (strs_count == 7 || strs_count == 8)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[4], true);
 		new_obj->material.ks = atof(line_split[5]);
 		new_obj->material.alpha = atof(line_split[6]);
+	}
+	if (strs_count == 8)
+	{
+		new_obj->ambient_texture = new_texture(device, line_split[7]);
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
@@ -122,7 +127,7 @@ void	parse_triangle(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (strs_count != 5 && strs_count != 8)
+	if (strs_count != 5 && strs_count != 8 && strs_count != 9)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
 	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
@@ -143,11 +148,13 @@ void	parse_triangle(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	if (strs_count == 8)
+	if (strs_count == 8 || strs_count == 9)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[5], true);
 		new_obj->material.ks = atof(line_split[6]);
 		new_obj->material.alpha = atof(line_split[7]);
+		if (strs_count == 9)
+			new_obj->ambient_texture = new_texture(device, line_split[8]);
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
@@ -158,7 +165,7 @@ void	parse_square(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (strs_count != 6 && strs_count != 9)
+	if (strs_count != 6 && strs_count != 9 && strs_count != 10)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
 	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
@@ -166,10 +173,31 @@ void	parse_square(t_device *device, char **line_split)
 	t_object *new_obj = custom_allocator_for_object(TYPE_SQUARE);
 
 	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
-	((t_square *)new_obj->obj_data)->v0 = parse_3float(device, line_split[1], false);
-	((t_square *)new_obj->obj_data)->v1 = parse_3float(device, line_split[2], false);
-	((t_square *)new_obj->obj_data)->v2 = parse_3float(device, line_split[3], false);
-	((t_square *)new_obj->obj_data)->v3 = parse_3float(device, line_split[4], false);
+	// ((t_square *)new_obj->obj_data)->v0 = parse_3float(device, line_split[1], false);
+	((t_square *)new_obj->obj_data)->tri_1.v0 = parse_3float(device, line_split[1], false);
+	((t_square *)new_obj->obj_data)->tri_1.v1 = parse_3float(device, line_split[2], false);
+	((t_square *)new_obj->obj_data)->tri_1.v2 = parse_3float(device, line_split[3], false);
+
+
+	((t_square *)new_obj->obj_data)->tri_1.uv0 = gl_vec2_2f(0.0f, 0.0f);
+	((t_square *)new_obj->obj_data)->tri_1.uv1 = gl_vec2_2f(1.0f, 0.0f);
+	((t_square *)new_obj->obj_data)->tri_1.uv2 = gl_vec2_2f(1.0f, 1.0f);
+
+
+	((t_square *)new_obj->obj_data)->tri_2.v0 = parse_3float(device, line_split[1], false);
+	((t_square *)new_obj->obj_data)->tri_2.v1 = parse_3float(device, line_split[3], false);
+	((t_square *)new_obj->obj_data)->tri_2.v2 = parse_3float(device, line_split[4], false);
+
+
+	((t_square *)new_obj->obj_data)->tri_2.uv0 = gl_vec2_2f(0.0f, 0.0f);
+	((t_square *)new_obj->obj_data)->tri_2.uv1 = gl_vec2_2f(1.0f, 1.0f);
+	((t_square *)new_obj->obj_data)->tri_2.uv2 = gl_vec2_2f(0.0f, 1.0f);
+
+
+	// ((t_square *)new_obj->obj_data)->v1 = parse_3float(device, line_split[2], false);
+	// ((t_square *)new_obj->obj_data)->v2 = parse_3float(device, line_split[3], false);
+	// ((t_square *)new_obj->obj_data)->v3 = parse_3float(device, line_split[4], false);
+
 
 	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
 
@@ -180,14 +208,19 @@ void	parse_square(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	if (strs_count == 9)
+	if (strs_count == 9 || strs_count == 10)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[6], true);
 		new_obj->material.ks = atof(line_split[7]);
 		new_obj->material.alpha = atof(line_split[8]);
+		if (strs_count == 10)
+			new_obj->ambient_texture = new_texture(device, line_split[9]);
+			// 나중엔 diffTexture 까지.
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
+
+
 	device->objects->push_back(device->objects, new_obj);
 
 }

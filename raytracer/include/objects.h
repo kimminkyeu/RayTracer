@@ -4,8 +4,9 @@
 // #include "libft.h"
 // #include "vector.h"
 #include "gl_vec3.h"
-#include "texture.h"
+// #include "texture.h"
 
+typedef struct s_texture t_texture;
 /* ---------------------------------
 		Objects type-definition
    --------------------------------- */
@@ -36,18 +37,21 @@ typedef struct s_triangle {
 	t_vec3	v1; // vertex_2
 	t_vec3	v2;	// vertex_3
 
-	// t_vec2 uv1; // for texture
-	// t_vec2 uv2; // for texture
-	// t_vec2 uv3; // for texture
+	t_vec2 uv0; // for texture
+	t_vec2 uv1; // for texture
+	t_vec2 uv2; // for texture
 
 }	t_triangle;
 
 // NOTE:  추가로 구현한 사각형. (for plain)
 typedef struct s_square {
-	t_vec3 v0;
-	t_vec3 v1;
-	t_vec3 v2;
-	t_vec3 v3;
+
+	t_triangle tri_1;
+	t_triangle tri_2;
+	// t_vec3 v0;
+	// t_vec3 v1;
+	// t_vec3 v2;
+	// t_vec3 v3;
 }	t_square;
 
 typedef struct s_plane {

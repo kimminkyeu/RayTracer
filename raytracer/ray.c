@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 17:45:47 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 21:48:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ t_triangle create_triangle(t_vec3 v0, t_vec3 v1, t_vec3 v2)
 bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 							t_vec3 v0, t_vec3 v1, t_vec3 v2,
 							t_vec3 *point, t_vec3 *face_normal,
-							float *t, float *u, float *v)
+							float *t, float *w0, float *w1)
 {
 	// (void)ray_origin; (void)ray_dir; (void)v1; (void)v0; (void)v2; (void)point; (void)face_normal;
 	// (void)t;
-	(void)u; (void)v;
+	(void)w0; (void)w1;
 	/*
 	 * 기본 전략
 	 * - 삼각형이 놓여있는 평면과 광선의 교점을 찾고,
@@ -115,19 +115,22 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
 	t_vec3 point, face_normal;
-	float t, u, v;
+	float t, w0, w1;
 
 	// intersect ray_triangle 에서 point, face_normal, t, uv 값을 계산해서 대입해준다.
 	if (intersect_ray_triangle(ray->origin, ray->direction,
 								triangle->v0, triangle->v1, triangle->v2,
-								&point, &face_normal, &t, &u, &v))
+								&point, &face_normal, &t, &w0, &w1))
 	{
 		hit.distance = t;
 		hit.point = point; // ray.start + ray.dir * t;
 		hit.normal = face_normal;
 
-		// 텍스춰링(texturing)에서 사용
-		// hit.uv = uv0 * u + uv1 * v + uv2 * (1.0f - u - v);
+		// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
+		// (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
+		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);
+		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
+		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
 	}
 
 	return (hit);
@@ -140,11 +143,11 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 t_hit square_intersect_ray_collision(t_ray *ray, t_square *square)
 {
 	// Create two triangle. check each.
-	t_triangle t1 = create_triangle(square->v0, square->v1, square->v2);
-	t_hit h1 = triangle_intersect_ray_collision(ray, &t1);
+	// t_triangle t1 = create_triangle(square->v0, square->v1, square->v2);
+	t_hit h1 = triangle_intersect_ray_collision(ray, &square->tri_1);
 
-	t_triangle t2 = create_triangle(square->v0, square->v2, square->v3);
-	t_hit h2 = triangle_intersect_ray_collision(ray, &t2);
+	// t_triangle t2 = create_triangle(square->v0, square->v2, square->v3);
+	t_hit h2 = triangle_intersect_ray_collision(ray, &square->tri_2);
 
 	if (h1.distance >= 0.0f && h2.distance >= 0.0f)
 	{
