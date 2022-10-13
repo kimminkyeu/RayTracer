@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 21:30:02 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 17:02:47 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	*face_normal = gl_vec3_normalize(gl_vec3_cross(v1v0, v2v0));
 	//  WARN:  주의! 삼각형의 넓이가 0일 경우에는 계산할 수 없음 (normalize에서 0으로 나누는 에러 발생)
 
-	// 삼각형 뒷면을 그리고 싶지 않은 경우 (Backface culling)
+	// 삼각형 뒷면을 그리고 싶지 않은 경우 (Backface bulling)
 	if (gl_vec3_dot(gl_vec3_reverse(ray_dir), *face_normal) < 0.0f) return false;
 
 	// 평면과 광선이 수평에 매우 가깝다면 충돌하지 못하는 것으로 판단
@@ -197,9 +197,19 @@ t_hit plane_intersect_ray_collision(t_ray *ray, t_plane *plane)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
-	(void)hit;
-	(void)ray;
-	(void)plane;
+	// 삼각형 하듯이, 단, 내부 영역에 있는지 없는지 검사만 안하면 된다.
+	// 뒷면을 그리고 싶지 않은 경우 (Backface bulling)
+	if (gl_vec3_dot(gl_vec3_reverse(ray->direction), plane->normal) < 0.0f) return (hit);
+	// 평면과 광선이 수평에 매우 가깝다면 충돌하지 못하는 것으로 판단
+	if (absf(gl_vec3_dot(ray->direction, plane->normal)) < 1e-2f) return (hit); // t 계산시 0으로 나누기 방지
+	/* 2. 광선과 (무한히 넓은) 평면의 충돌 위치 계산 */
+	const float t = (gl_vec3_dot(plane->pos, plane->normal) - gl_vec3_dot(ray->origin, plane->normal)) / gl_vec3_dot(ray->direction, plane->normal);
+	// 광선의 시작점 이전에 충돌한다면 렌더링할 필요 없음
+	if (t < 0.0f) return (hit);
+	// 충돌 지점 계산
+	hit.point = gl_vec3_add_vector(ray->origin, gl_vec3_multiply_scalar(ray->direction, t));
+	hit.distance = t;
+	hit.normal = plane->normal;
 
 	return (hit);
 }

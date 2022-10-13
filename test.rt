@@ -20,9 +20,9 @@ sp  0.0,0.0,4.0     0.5       250,0,0                 255,255,255   0.5   10.0
 
 #   [ Square ]
 #   vertex1            vertex2           vertex3          vertex4            diffuseColor(rgb)      specular        ks     alpha
-sq  -4.0,-1.0,0.0      -4.0,-1.0,10.0     4.0,-1.0,10.0  4.0,-1.0,0.0      128,128,128            255,255,255     0.5    50.0
+# sq  -4.0,-1.0,0.0      -4.0,-1.0,10.0     4.0,-1.0,10.0  4.0,-1.0,0.0      128,128,128            255,255,255     0.5    50.0
 
 #   [ Plain ]
-#   x y z coordinates     orientation      diffuseColor(rgb)    specular       ks     alpha
-# pl   0.0,0.0,10.0         0.0,0.0,1.0      128,128,128
+#   x y z coordinates     Face Normal      diffuseColor(rgb)    specular       ks     alpha
+pl   0.0,-1.0,0.0         0.0,1.0,0.0      128,128,128
 

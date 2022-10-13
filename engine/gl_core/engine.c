@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 21:44:27 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 16:41:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ int		handle_exit(t_device *device)
 	return (0);
 }
 
+extern void	custom_deallocator_for_object(void *data);
+
 void	init_camera_and_objects_vector(t_device *device)
 {
 	device->camera = ft_calloc(1, sizeof(*device->camera));
@@ -121,7 +123,7 @@ void	init_camera_and_objects_vector(t_device *device)
 	device->ambient_light->has_ambient_light = false;
 	device->light = ft_calloc(1, sizeof(*device->light));
 	device->light->has_light = false;
-	device->objects = new_vector(8);
+	device->objects = new_vector_with_custom_deallocator(8, custom_deallocator_for_object);
 }
 
 t_device	*engine_init(int _win_width, int _win_height, char *title)
