@@ -86,9 +86,10 @@ typedef struct s_object {
 	t_material	material;
 	int			type;	 // type of object (ex. Sphere)
 
-	// WARN:  void*로 일반화해서 다루지 않고, 그냥 통으로 저장 (4개의 타입) --> 개선 필요
+	// NOTE:  오브젝트 타입을 void* 로 수정함.
 	void		*obj_data;
 
+	// WARN:  void*로 일반화해서 다루지 않고, 그냥 통으로 저장 (4개의 타입) --> 개선 필요
 	// t_sphere	sphere;
 	// t_plane		plain;
 	// t_cylinder	cylinder;
