@@ -87,12 +87,14 @@ typedef struct s_object {
 	int			type;	 // type of object (ex. Sphere)
 
 	// WARN:  void*로 일반화해서 다루지 않고, 그냥 통으로 저장 (4개의 타입) --> 개선 필요
-	t_sphere	sphere;
-	t_plane		plain;
-	t_cylinder	cylinder;
-	t_cone		cone;
-	t_triangle	triangle;
-	t_square	square;
+	void		*obj_data;
+
+	// t_sphere	sphere;
+	// t_plane		plain;
+	// t_cylinder	cylinder;
+	// t_cone		cone;
+	// t_triangle	triangle;
+	// t_square	square;
 
 }	t_object;
 

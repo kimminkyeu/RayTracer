@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 16:18:56 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/12 15:36:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 15:28:42 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ t_vector	*new_vector(size_t init_capacity)
 	return (vec);
 }
 
+t_vector	*new_vector_with_custom_deallocator(size_t init_capacity, void (*custom_deallocator)(void* data))
+{
+	t_vector	*vec;
+
+	vec = new_vector(init_capacity);
+	vec->_deallocator_func = custom_deallocator;
+	return (vec);
+}
+
 void	delete_vector(t_vector **vec)
 {
 	vector_reset(*vec);
@@ -59,10 +68,16 @@ void	vector_reset(t_vector *vec)
 	vec->size = 0;
 }
 
+/** WARN:  if there is malloc-allocated data,
+ * then use _deallocator() to free each data component.  */
 void	vector_set_data(t_vector *vec, size_t index, void *data)
 {
 	if (vec->data[index] != NULL)
+	{
+		if (vec->_deallocator_func != NULL)
+			vec->_deallocator_func(vec->data[index]);
 		free(vec->data[index]);
+	}
 	vec->data[index] = data;
 }
 

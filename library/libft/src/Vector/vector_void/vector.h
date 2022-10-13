@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 16:24:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/08/16 23:00:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 15:26:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_vector {
 	size_t		size;
 	size_t		capacity;
 	void		**data;
+	void		(*_deallocator_func)(void *data);
 	void		(*push_back)(t_vector *vec, void *new_elem);
 	void		(*pop_back)(t_vector *vec);
 	void		(*reset)(t_vector *vec);
@@ -34,6 +35,7 @@ typedef struct s_vector {
 }	t_vector;
 
 extern t_vector	*new_vector(size_t init_capacity);
+extern t_vector	*new_vector_with_custom_deallocator(size_t init_capacity, void (*custom_deallocator)(void *data));
 extern void		delete_vector(t_vector **vec_ptr);
 extern void		set_vector_func_ptr(t_vector *pa_vec);
 extern void		*new_data_malloc(size_t init_capacity);

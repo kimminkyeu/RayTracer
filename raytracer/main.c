@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 17:31:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 15:53:10 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,8 @@ void print_objs_iter(void *data)
 	t_object *obj = data;
 	if (obj->type == TYPE_SPHERE)
 	{
-		printf("[Sphere] : center(%f,%f,%f) . ", obj->sphere.center.x, obj->sphere.center.y, obj->sphere.center.z);
-		printf("radius(%f) . ", obj->sphere.radius);
-
+		printf("[Sphere] : center(%f,%f,%f) . ", ((t_sphere *)obj->obj_data)->center.x, ((t_sphere *)obj->obj_data)->center.y, ((t_sphere *)obj->obj_data)->center.z);
+		printf("radius(%f) . ", ((t_sphere *)obj->obj_data)->radius);
 		printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
@@ -28,20 +27,18 @@ void print_objs_iter(void *data)
 	}
 	else if (obj->type == TYPE_TRIANGLE)
 	{
-		printf("[Triangle] : v0(%f,%f,%f) . ", obj->triangle.v0.x, obj->triangle.v0.y, obj->triangle.v0.z);
-		printf("v1(%f,%f,%f) . ", obj->triangle.v1.x, obj->triangle.v1.y, obj->triangle.v1.z);
-		printf("v2(%f,%f,%f) . ", obj->triangle.v2.x, obj->triangle.v2.y, obj->triangle.v2.z);
+		printf("[Triangle] : v0(%f,%f,%f) . ", ((t_triangle *)obj->obj_data)->v0.x, ((t_triangle *)obj->obj_data)->v0.y, ((t_triangle *)obj->obj_data)->v0.z);
+		printf("v1(%f,%f,%f) . ", ((t_triangle *)obj->obj_data)->v1.x, ((t_triangle *)obj->obj_data)->v1.y, ((t_triangle *)obj->obj_data)->v1.z);
+		printf("v2(%f,%f,%f) . ", ((t_triangle *)obj->obj_data)->v2.x, ((t_triangle *)obj->obj_data)->v2.y, ((t_triangle *)obj->obj_data)->v2.z);
 
-		printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
 		printf("alpha(%f)\n", obj->material.alpha);
 	}
 	else if (obj->type == TYPE_PLAIN)
 	{
-		printf("[Plain] : pos(%f,%f,%f) . ", obj->plain.pos.x, obj->plain.pos.y, obj->plain.pos.z);
-		printf("normal(%f,%f,%f) . ", obj->plain.normal.x, obj->plain.normal.y, obj->plain.normal.z);
-
+		printf("[Plain] : pos(%f,%f,%f) . ", ((t_plane *)obj->obj_data)->pos.x, ((t_plane *)obj->obj_data)->pos.y, ((t_plane *)obj->obj_data)->pos.z);
+		printf("normal(%f,%f,%f) . ", ((t_plane *)obj->obj_data)->normal.x, ((t_plane *)obj->obj_data)->normal.y, ((t_plane *)obj->obj_data)->normal.z);
 		printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
@@ -49,11 +46,10 @@ void print_objs_iter(void *data)
 	}
 	else if (obj->type == TYPE_SQUARE)
 	{
-		printf("[Square] : v0(%f,%f,%f) . ", obj->square.v0.x, obj->square.v0.y, obj->square.v0.z);
-		printf("v1(%f,%f,%f) . ", obj->square.v1.x, obj->square.v1.y, obj->square.v1.z);
-		printf("v2(%f,%f,%f) . ", obj->square.v2.x, obj->square.v2.y, obj->square.v2.z);
-		printf("v3(%f,%f,%f) . ", obj->square.v3.x, obj->square.v3.y, obj->square.v3.z);
-
+		printf("[Square] : v0(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v0.x, ((t_square *)obj->obj_data)->v0.y, ((t_square *)obj->obj_data)->v0.z);
+		printf("v1(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v1.x, ((t_square *)obj->obj_data)->v1.y, ((t_square *)obj->obj_data)->v1.z);
+		printf("v2(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v2.x, ((t_square *)obj->obj_data)->v2.y, ((t_square *)obj->obj_data)->v2.z);
+		printf("v3(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v3.x, ((t_square *)obj->obj_data)->v3.y, ((t_square *)obj->obj_data)->v3.z);
 		printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
 		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
 		printf("ks(%f) . ", obj->material.ks);
@@ -61,6 +57,14 @@ void print_objs_iter(void *data)
 	}
 	// TODO:  add more objects here!
 	// ...
+	else if (obj->type == TYPE_PLAIN)
+	{}
+	else if (obj->type == TYPE_CYLINDER)
+	{}
+	else if (obj->type == TYPE_CONE)
+	{}
+	else
+	{}
 }
 
 void print_rt_data(t_device *device)

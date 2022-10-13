@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 21:43:11 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 15:54:06 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ t_hit create_hit_data(float d, t_vec3 normal, t_vec3 point)
 t_hit check_ray_collision(t_ray *ray, t_object *obj)
 {
 	if (obj->type == TYPE_SPHERE)
-		return (sphere_intersect_ray_collision(ray, &obj->sphere));
+		return (sphere_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_TRIANGLE)
-		return (triangle_intersect_ray_collision(ray, &obj->triangle));
+		return (triangle_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_PLAIN)
-		return (plane_intersect_ray_collision(ray, &obj->plain));
+		return (plane_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_SQUARE)
-		return (square_intersect_ray_collision(ray, &obj->square));
+		return (square_intersect_ray_collision(ray, obj->obj_data));
 	// else if (obj->type == TYPE_CYLINDER)
 	// {}
 	// else if (obj->type == TYPE_CONE)

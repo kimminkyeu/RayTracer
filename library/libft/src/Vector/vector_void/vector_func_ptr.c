@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector.c                                           :+:      :+:    :+:   */
+/*   vector_func_ptr.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: minkyeki <minkyeki@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/10 18:01:27 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/08/16 22:47:27 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 15:22:23 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 void	set_vector_func_ptr(t_vector *pa_vec)
 {
+	pa_vec->_deallocator_func = NULL;
 	pa_vec->get_last = vector_get_last;
 	pa_vec->is_empty = vector_is_empty;
 	pa_vec->iterate = vector_iterate;

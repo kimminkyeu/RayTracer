@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 17:29:25 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/13 15:54:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,36 @@
 // 	// 3차원 공간으로 확장.
 // 	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
 // }
+
+t_object *custom_allocator_for_object(int obj_type)
+{
+	t_object *new_obj;
+
+	new_obj = ft_calloc(1, sizeof(*new_obj));
+	new_obj->type = obj_type;
+	if (obj_type == TYPE_SPHERE)
+		new_obj->obj_data = ft_calloc(1, sizeof(t_sphere));
+	else if (obj_type == TYPE_TRIANGLE)
+		new_obj->obj_data = ft_calloc(1, sizeof(t_triangle));
+	else if (obj_type == TYPE_SQUARE)
+		new_obj->obj_data = ft_calloc(1, sizeof(t_square));
+	else if (obj_type == TYPE_PLAIN)
+		new_obj->obj_data = ft_calloc(1, sizeof(t_plane));
+	else if (obj_type == TYPE_CYLINDER)
+		new_obj->obj_data = ft_calloc(1, sizeof(t_cylinder));
+	else if (obj_type == TYPE_CONE)
+		new_obj->obj_data = ft_calloc(1, sizeof(t_cone));
+	else
+		new_obj->obj_data = NULL;
+	return (new_obj);
+}
+
+void	custom_deallocator_for_object(void *data)
+{
+	t_object *obj_ptr = data;
+	if (obj_ptr->obj_data != NULL)
+		free(obj_ptr->obj_data);
+}
 
 void	print_error_and_exit(t_device *device, char *str)
 {
@@ -59,11 +89,12 @@ void	parse_sphere(t_device *device, char **line_split)
 	if (strs_count != 4 && strs_count != 7)
 		print_error_and_exit(device, "parse_sphere(): .rt file error\n");
 
-	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
-	new_obj->type = TYPE_SPHERE;
+	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	// new_obj->type = TYPE_SPHERE;
+	t_object *new_obj = custom_allocator_for_object(TYPE_SPHERE);
+	((t_sphere *)new_obj->obj_data)->center = parse_3float(device, line_split[1], false);
+	((t_sphere *)new_obj->obj_data)->radius = atof(line_split[2]);
 
-	new_obj->sphere.center = parse_3float(device, line_split[1], false);
-	new_obj->sphere.radius = atof(line_split[2]);
 	new_obj->material.diffuse = parse_3float(device, line_split[3], true); // = Color
 	/**
 	 * *  NOTE:  Default Material Value setting.
@@ -90,13 +121,15 @@ void	parse_triangle(t_device *device, char **line_split)
 	if (strs_count != 5 && strs_count != 8)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
-	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
-	new_obj->type = TYPE_TRIANGLE;
+	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	// new_obj->type = TYPE_TRIANGLE;
+	t_object *new_obj = custom_allocator_for_object(TYPE_TRIANGLE);
 
 	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
-	new_obj->triangle.v0 = parse_3float(device, line_split[1], false);
-	new_obj->triangle.v1 = parse_3float(device, line_split[2], false);
-	new_obj->triangle.v2 = parse_3float(device, line_split[3], false);
+	((t_triangle *)new_obj->obj_data)->v0 = parse_3float(device, line_split[1], false);
+	((t_triangle *)new_obj->obj_data)->v1 = parse_3float(device, line_split[2], false);
+	((t_triangle *)new_obj->obj_data)->v2 = parse_3float(device, line_split[3], false);
+
 	new_obj->material.diffuse = parse_3float(device, line_split[4], true);
 
 	/**
@@ -124,14 +157,16 @@ void	parse_square(t_device *device, char **line_split)
 	if (strs_count != 6 && strs_count != 9)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
-	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
-	new_obj->type = TYPE_SQUARE;
+	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	// new_obj->type = TYPE_SQUARE;
+	t_object *new_obj = custom_allocator_for_object(TYPE_SQUARE);
 
 	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
-	new_obj->square.v0 = parse_3float(device, line_split[1], false);
-	new_obj->square.v1 = parse_3float(device, line_split[2], false);
-	new_obj->square.v2 = parse_3float(device, line_split[3], false);
-	new_obj->square.v3 = parse_3float(device, line_split[4], false);
+	((t_square *)new_obj->obj_data)->v0 = parse_3float(device, line_split[1], false);
+	((t_square *)new_obj->obj_data)->v1 = parse_3float(device, line_split[2], false);
+	((t_square *)new_obj->obj_data)->v2 = parse_3float(device, line_split[3], false);
+	((t_square *)new_obj->obj_data)->v3 = parse_3float(device, line_split[4], false);
+
 	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
 
 	/**
@@ -153,7 +188,7 @@ void	parse_square(t_device *device, char **line_split)
 
 }
 
-void	parse_plain(t_device *device, char **line_split)
+void	parse_plane(t_device *device, char **line_split)
 {
 //   x y z coordinates     orientation      diffuseColor(rgb)    specular       ks     alpha
 	size_t	strs_count = get_strs_count(line_split);
@@ -161,12 +196,13 @@ void	parse_plain(t_device *device, char **line_split)
 	if (strs_count != 4 && strs_count != 7)
 		print_error_and_exit(device, "parse_plain(): .rt file error\n");
 
-	t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
-	new_obj->type = TYPE_PLAIN;
+	t_object *new_obj = custom_allocator_for_object(TYPE_PLAIN);
+	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
+	// new_obj->type = TYPE_PLAIN;
 
 	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
-	new_obj->plain.pos = parse_3float(device, line_split[1], false);
-	new_obj->plain.normal = parse_3float(device, line_split[2], false);
+	((t_plane *)new_obj->obj_data)->pos = parse_3float(device, line_split[1], false);
+	((t_plane *)new_obj->obj_data)->normal = parse_3float(device, line_split[2], false);
 	new_obj->material.diffuse = parse_3float(device, line_split[3], true);
 
 	/**
@@ -252,7 +288,7 @@ void	parse_each(t_device *device, char **line_split)
 	// if plane
 	{
 		printf("parsing Plain...\n");
-		parse_plain(device, line_split);
+		parse_plane(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "cy", ft_strlen(line_split[0])) == 0)
 	// if cylinder
