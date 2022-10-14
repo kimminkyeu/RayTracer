@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/14 15:50:00 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/14 19:05:15 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -133,7 +133,7 @@ $(NAME): $(OBJ)
 	@make -C $(LIBFT_DIR)
 ifdef LINUX
 	@make -C $(LIBRARY_DIR)/mlx
-	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -o $(NAME)
+	@$(CC) $(CCFLAGS) $(OBJ) $(LIBFT_DIR)/libft.a -lm $(MLX_COMPILE_FLAGS) -pthread -o $(NAME)
 	@echo "$(BLUE)-------------------------------------------------$(DEF_COLOR)"
 	@echo "$(BLUE)|                                               |$(DEF_COLOR)"
 	@echo "$(BLUE)|   MiniRT Linux-X11 version compile finished.  |$(DEF_COLOR)"

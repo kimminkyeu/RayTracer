@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 17:43:43 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 19:09:17 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	main(int ac, char **av)
 	t_thread_info *info = &device->thread_info;
 	const int THREAD_NUM = 8;
 	info->thread_group = ft_calloc(1, sizeof(t_thread) * THREAD_NUM);
-	info->finished_thread_num = 0;
 	info->thread_num = THREAD_NUM;
+	info->finished_thread_num = 0;
 	if (pthread_mutex_init(&(info->finished_num_mutex), NULL) != 0)
 	{
 		print_error_and_exit(device, "error in pthread_mutex_init()\n");
