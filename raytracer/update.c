@@ -6,12 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 18:00:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 21:14:25 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <float.h> // float max
 #include <pthread.h>
+#include "gl_engine.h"
 #include "objects.h"
 #include "gl_color.h"
 #include "gl_draw.h"
@@ -111,6 +112,8 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 		t_vec3 point_color;
 
 		point_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
+		// return (point_color);
+
 
 		// Add texture to color (ambient texture)
 		if (hit.obj->ambient_texture != NULL)  // if has texture
@@ -138,6 +141,7 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 
 			// (3-1) Calculate Diffuse color
 			t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+
 			if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
 			{
 				const t_vec3 sample_linear_result = sample_linear(hit.obj->diffuse_texture, hit.uv); // texture sampling
@@ -192,11 +196,12 @@ void *thread_update(void *arg)
 	t_device *device = data->device;
 	(void)device, (void)img;
 
+
 	// ray_tracing for each thread
+
 	// int	x = 0; // TODO:  change to each val
 	// int y = 0; // TODO:  change to each val
-
-
+	// 기존 2차원 배열 접근.
 	/*
 	while (y < img->img_size.height)
 	{
@@ -210,6 +215,31 @@ void *thread_update(void *arg)
 		y++;
 	}
 	*/
+
+	// 행 우선 접근.
+	// const int width = 100;
+	const int width = img->img_size.width;
+	// const int height = 100;
+	const int height = img->img_size.height;
+	const int num_of_thread = data->info->thread_num;
+	// const int itr_cnt = height / num_of_thread;
+
+	int y = 0;
+	int x = 0;
+	while ((data->id + (y * num_of_thread)) < height)
+	{
+		x = 0;
+		while (x < width) // draw each row
+		{
+			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
+			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
+			// gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), WHITE);
+			// printf("thread %d --> [x:%d y:%d]\n", data->id, x, (data->id + (y * num_of_thread)));
+			x++;
+		}
+		y++;
+	}
+
 
 	// add mutex here.
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
@@ -235,5 +265,6 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 	t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(tmp.b, tmp.g, tmp.r, 0.0f));
+
 	return (final_color);
 }

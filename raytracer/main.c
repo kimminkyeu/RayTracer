@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 19:09:17 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 21:27:44 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	main(int ac, char **av)
 	// THREAD TEST
 	// ft_bzero(&device->thread_info, sizeof(device->thread_info));
 	t_thread_info *info = &device->thread_info;
-	const int THREAD_NUM = 8;
+	const int THREAD_NUM = 24;
 	info->thread_group = ft_calloc(1, sizeof(t_thread) * THREAD_NUM);
 	info->thread_num = THREAD_NUM;
 	info->finished_thread_num = 0;

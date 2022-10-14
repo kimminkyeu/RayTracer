@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 19:11:21 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 21:21:50 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,10 +211,10 @@ int	engine_update_images(t_device *device)
 
 		// WARN:  Thread test (쓰레드가 모두 끝날 때 까지 계속 이미지 push)
 		ft_putstr_fd("\n\nWaiting for each thread to finish...\n\n", STDOUT_FILENO);
-		printf("thread_num %d / finished_thread_num %d\n", device->thread_info.finished_thread_num, device->thread_info.thread_num);
+		// printf("thread_num %d / finished_thread_num %d\n", device->thread_info.finished_thread_num, device->thread_info.thread_num);
 		while (device->thread_info.finished_thread_num != device->thread_info.thread_num)
 		{
-			printf("while() : thread_num %d / finished_thread_num %d\n", device->thread_info.finished_thread_num, device->thread_info.thread_num);
+			// printf("while() : thread_num %d / finished_thread_num %d\n", device->thread_info.finished_thread_num, device->thread_info.thread_num);
 			engine_push_image_to_window(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
 		}
 		i++;
