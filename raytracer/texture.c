@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 22:09:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:45:10 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_texture	*new_texture(t_device *device, char* filename)
 	// 개행을 지워야 한다.
 	char *filename_without_newline = ft_strtrim(filename, "\n");
 	texture->image.img_ptr = mlx_xpm_file_to_image(device->mlx, filename_without_newline, &width, &height);
+	texture->image.mlx_ptr = device->mlx;
 	free(filename_without_newline);
 
 	if (texture->image.img_ptr == NULL)
@@ -97,7 +98,7 @@ t_vec3 interpolate_bilinear(
 
 t_vec3 sample_point(t_texture *texture, const t_vec2 uv) // Nearest sampling이라고 부르기도 함
 {
-	(void)uv;
+	(void)uv; (void)texture;
 	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]
 	// 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
 	// 배열 인덱스의 정수 범위 ij [0, width-1] x [0, height - 1]
@@ -112,7 +113,7 @@ t_vec3 sample_point(t_texture *texture, const t_vec2 uv) // Nearest sampling이�
 
 t_vec3 sample_linear(t_texture *texture, const t_vec2 uv)
 {
-	(void)uv;
+	(void)uv; (void)texture;
 	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]
 	// 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
 	// std::cout << floor(-0.3f) << " " << int(-0.3f) << std::endl; // -1 0

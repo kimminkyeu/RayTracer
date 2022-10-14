@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 16:41:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:37:09 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,18 @@ void	engine_push_image_to_window(t_device *device, t_image *image, int x, int y)
 void engine_exit(t_device *device, bool is_error)
 {
 	printf("Engine Exit()...\n");
+
+	if (device != NULL && device->objects != NULL)
+		delete_vector(&device->objects);
+
+	if (device != NULL && device->camera != NULL)
+		free(device->camera);
+	if (device != NULL && device->ambient_light != NULL)
+		free(device->ambient_light);
+	if (device != NULL && device->light != NULL)
+		free(device->light);
+
+
 	if (device != NULL && device->images != NULL)
 	{
 		size_t i = 0;
@@ -62,17 +74,6 @@ void engine_exit(t_device *device, bool is_error)
 
 	if (device != NULL && device->mlx != NULL)
 		free(device->mlx);
-
-	if (device != NULL && device->objects != NULL)
-		delete_vector(&device->objects);
-
-	if (device != NULL && device->camera != NULL)
-		free(device->camera);
-	if (device != NULL && device->ambient_light != NULL)
-		free(device->ambient_light);
-	if (device != NULL && device->light != NULL)
-		free(device->light);
-
 
 	if (device != NULL)
 		free(device);
@@ -98,6 +99,7 @@ void engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, in
 		new_image->addr = mlx_get_data_addr(new_image->img_ptr, \
 				&(new_image->bits_per_pixel), \
 				&(new_image->line_length), &(new_image->endian));
+		new_image->mlx_ptr = device->mlx;
 		new_image->img_size = img_size;
 		new_image->img_location = img_location;
 		new_image->img_update_func = f_update_func;
@@ -245,6 +247,7 @@ int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, 
 	new_image->img_ptr = mlx_xpm_file_to_image(device->mlx, filename, &width, &height);
 	new_image->img_size.width = width;
 	new_image->img_size.height = height;
+	new_image->mlx_ptr = device->mlx;
 	if (new_image->img_ptr == NULL)
 	{
 		free(new_image);

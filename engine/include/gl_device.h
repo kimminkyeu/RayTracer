@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/13 20:15:40 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:24:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_device t_device;
 typedef struct s_image t_image;
 
 typedef struct s_image {
+	void	*mlx_ptr; // for image destroy
 	void	*img_ptr;
 	char	*addr;
 	int		bits_per_pixel;

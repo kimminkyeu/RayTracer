@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 21:39:16 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:44:19 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <fcntl.h>
 
 #include "libft.h"
+#include "mlx_linux.h"
 #include "vector.h"
 #include "gl_device.h"
 #include "gl_engine.h"
@@ -54,15 +55,23 @@ t_object *custom_allocator_for_object(int obj_type)
 	return (new_obj);
 }
 
+// delete texture image
 void	custom_deallocator_for_object(void *data)
 {
 	t_object *obj_ptr = data;
 	if (obj_ptr->obj_data != NULL)
 		free(obj_ptr->obj_data);
 	if (obj_ptr->ambient_texture != NULL)
+	{
+		printf("mlx_ptr addr:%p  imag_ptr addr:%p\n", obj_ptr->ambient_texture->image.mlx_ptr, obj_ptr->ambient_texture->image.img_ptr);
+		mlx_destroy_image(obj_ptr->ambient_texture->image.mlx_ptr, obj_ptr->ambient_texture->image.img_ptr);
 		free(obj_ptr->ambient_texture);
+	}
 	if (obj_ptr->diffuse_texture != NULL)
+	{
+		mlx_destroy_image(obj_ptr->diffuse_texture->image.mlx_ptr, obj_ptr->diffuse_texture->image.img_ptr);
 		free(obj_ptr->diffuse_texture);
+	}
 }
 
 void	print_error_and_exit(t_device *device, char *str)

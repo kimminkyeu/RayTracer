@@ -1,9 +1,10 @@
 #ifndef OBJECT_H
 # define OBJECT_H
 
-// #include "libft.h"
+#include "libft.h"
 // #include "vector.h"
 #include "gl_vec3.h"
+#include "gl_vec2.h"
 // #include "texture.h"
 
 typedef struct s_texture t_texture;

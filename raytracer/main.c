@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 20:46:54 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 14:21:08 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ void print_objs_iter(void *data)
 	}
 	else if (obj->type == TYPE_SQUARE)
 	{
-		printf("[Square] : v0(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v0.x, ((t_square *)obj->obj_data)->v0.y, ((t_square *)obj->obj_data)->v0.z);
-		printf("v1(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v1.x, ((t_square *)obj->obj_data)->v1.y, ((t_square *)obj->obj_data)->v1.z);
-		printf("v2(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v2.x, ((t_square *)obj->obj_data)->v2.y, ((t_square *)obj->obj_data)->v2.z);
-		printf("v3(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v3.x, ((t_square *)obj->obj_data)->v3.y, ((t_square *)obj->obj_data)->v3.z);
-		printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
-		printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
-		printf("ks(%f) . ", obj->material.ks);
-		printf("alpha(%f)\n", obj->material.alpha);
+		// printf("[Square] : v0(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v0.x, ((t_square *)obj->obj_data)->v0.y, ((t_square *)obj->obj_data)->v0.z);
+		// printf("v1(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v1.x, ((t_square *)obj->obj_data)->v1.y, ((t_square *)obj->obj_data)->v1.z);
+		// printf("v2(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v2.x, ((t_square *)obj->obj_data)->v2.y, ((t_square *)obj->obj_data)->v2.z);
+		// printf("v3(%f,%f,%f) . ", ((t_square *)obj->obj_data)->v3.x, ((t_square *)obj->obj_data)->v3.y, ((t_square *)obj->obj_data)->v3.z);
+		// printf("diffuse(%f,%f,%f) . ", obj->material.diffuse.r, obj->material.diffuse.g, obj->material.diffuse.b);
+		// printf("specular(%f,%f,%f) . ", obj->material.specular.r, obj->material.specular.g, obj->material.specular.b);
+		// printf("ks(%f) . ", obj->material.ks);
+		// printf("alpha(%f)\n", obj->material.alpha);
 
 		if (obj->ambient_texture != NULL)
 			printf("ambient texture (w%d/h%d)\n", obj->ambient_texture->width, obj->ambient_texture->height);
