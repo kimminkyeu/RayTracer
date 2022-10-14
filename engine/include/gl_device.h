@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/14 15:47:42 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 16:45:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 # include "gl_vec2.h"
 # include "vector.h"
+# include "thread.h"
 
 // # include "objects.h"
 // # include "lights.h"
@@ -85,6 +86,11 @@ typedef struct s_device {
 	int				win_width;
 	int				win_height;
 	float			aspect_ratio;
+
+	// for multi-threading
+	t_thread_info	thread_info;
+
+
 	t_vector		*images; // image 들의 배열.
 	t_input			input; // mouse, keyboard input handler
 

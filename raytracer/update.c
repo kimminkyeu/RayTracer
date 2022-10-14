@@ -6,11 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:56:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 18:00:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <float.h> // float max
+#include <pthread.h>
 #include "objects.h"
 #include "gl_color.h"
 #include "gl_draw.h"
@@ -21,6 +22,7 @@
 #include "libft.h"
 #include "main.h"
 #include "texture.h"
+#include "thread.h"
 
 t_hit create_hit_data(float d, t_vec3 normal, t_vec3 point)
 {
@@ -160,37 +162,78 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 	return (gl_vec3_1f(0.0f)); // return black
 }
 
+void *thread_update(void *arg);
+
 int	update(t_device *device, t_image *img)
 {
-	// ray_tracing
-	int	x = 0;
-	int y = 0;
+	printf("\n[THREAD TEST] --> total thread count = %d\n", device->thread_info.thread_num);
+	// THREAD TEST (구조는 나중에 개선하기.)
+	int i = 0;
+	while (i < device->thread_info.thread_num)
+	{
+		device->thread_info.thread_group[i].id = i;
+		device->thread_info.thread_group[i].device = device;
+		device->thread_info.thread_group[i].image = img;
+		device->thread_info.thread_group[i].info = &device->thread_info;
+		pthread_create(&(device->thread_info.thread_group[i].thread), NULL, thread_update, &(device->thread_info.thread_group[i]));
+		pthread_detach(device->thread_info.thread_group[i].thread);
+		i++;
+	}
+	ft_putstr_fd("\033[36m\n[Threads has been created]\033[0m\n", 0);
+	return (0);
+}
 
+int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y);
+
+void *thread_update(void *arg)
+{
+	t_thread *data = arg;
+	t_image  *img = data->image;
+	t_device *device = data->device;
+	(void)device, (void)img;
+
+	// ray_tracing for each thread
+	// int	x = 0; // TODO:  change to each val
+	// int y = 0; // TODO:  change to each val
+
+
+	/*
 	while (y < img->img_size.height)
 	{
 		x = 0;
 		while (x < img->img_size.width)
 		{
-			const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
-
-			/*
-			 *  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
-			 */
-
-			// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
-			const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, gl_vec3_3f(0.0f, 0.0f, -5.0f)));
-
-			t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-			t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
-
-			int final_color = gl_get_color_from_vec4(gl_vec4_4f(tmp.b, tmp.g, tmp.r, 0.0f));
+			const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
 			gl_draw_pixel(img, x, y, final_color);
-
 			x++;
 		}
 		y++;
 	}
+	*/
 
+	// add mutex here.
+	pthread_mutex_lock(&(data->info->finished_num_mutex));
+	data->info->finished_thread_num += 1;
+	// printf("[Thread %d finished]\n", data->id);
+	pthread_mutex_unlock(&(data->info->finished_num_mutex));
 
-	return (0);
+	return (NULL);
+}
+
+int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
+{
+	const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
+
+	/*
+	*  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
+	*/
+
+	// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
+	const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, gl_vec3_3f(0.0f, 0.0f, -5.0f)));
+
+	t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
+	t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
+
+	int final_color = gl_get_color_from_vec4(gl_vec4_4f(tmp.b, tmp.g, tmp.r, 0.0f));
+	return (final_color);
 }

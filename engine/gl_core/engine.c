@@ -6,14 +6,17 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:48:27 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 17:58:53 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
 #include "lights.h"
 #include "camera.h"
 #include "gl_engine.h"
 #include "gl_vec2.h"
+#include <pthread.h>
+#include <unistd.h>
 
 extern void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)());
 extern void		engine_set_mouse_event(t_device *device, int (*f_mouse_press)(), int (*f_mouse_release)());
@@ -76,6 +79,15 @@ void engine_exit(t_device *device, bool is_error)
 
 	if (device != NULL && device->mlx != NULL)
 		free(device->mlx);
+
+
+
+	pthread_mutex_destroy(&(device->thread_info.finished_num_mutex));
+	if (device->thread_info.thread_group != NULL)
+		free(device->thread_info.thread_group);
+
+
+
 
 	if (device != NULL)
 		free(device);
@@ -196,8 +208,16 @@ int	engine_update_images(t_device *device)
 		img_ptr = device->images->data[i];
 		if (img_ptr->img_update_func != NULL) // FIX:  이 부분 수정됨.
 			img_ptr->img_update_func(device, img_ptr);
-		engine_push_image_to_window(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
+
+		// WARN:  Thread test (쓰레드가 모두 끝날 때 까지 계속 이미지 push)
+
+		ft_putstr_fd("\n\nWaiting for each thread to finish...\n\n", STDOUT_FILENO);
+		while (device->thread_info.finished_thread_num == device->thread_info.thread_num)
+		{
+			engine_push_image_to_window(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
+		}
 		i++;
+		ft_putstr_fd("\033[36m\n[Every thread is finished]\033[0m\n", STDOUT_FILENO);
 	}
 	render_end_time = get_time_ms();
 	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
