@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 21:14:25 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 21:42:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,6 @@
 #include "texture.h"
 #include "thread.h"
 
-t_hit create_hit_data(float d, t_vec3 normal, t_vec3 point)
-{
-	t_hit data;
-
-	data.distance = d;
-	data.normal = normal;
-	data.point = point;
-	return (data);
-}
 
 // 물체의 타입에 따라 다르게 체크.
 t_hit check_ray_collision(t_ray *ray, t_object *obj)
@@ -50,14 +41,14 @@ t_hit check_ray_collision(t_ray *ray, t_object *obj)
 	// {}
 	// else if (obj->type == TYPE_CONE)
 	// {}
-	return (create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
+	return (create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
 }
 
 // device에 있는 모든 obj를 돌면서, 가장 가까운 충돌 지점을 계산.
 t_hit find_closet_collision(t_device *device, t_ray *ray)
 {
 	float closest_distance = FLT_MAX;
-	t_hit closest_hit = create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+	t_hit closest_hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
 	size_t i = 0;
 	while (i < device->objects->size)
@@ -170,7 +161,7 @@ void *thread_update(void *arg);
 
 int	update(t_device *device, t_image *img)
 {
-	printf("\n[THREAD TEST] --> total thread count = %d\n", device->thread_info.thread_num);
+	printf("\033[36m\n[THREAD TEST] --> total thread count = %d\033[0m\n", device->thread_info.thread_num);
 	// THREAD TEST (구조는 나중에 개선하기.)
 	int i = 0;
 	while (i < device->thread_info.thread_num)
