@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/14 14:24:51 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:47:42 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 # include "gl_vec2.h"
 # include "vector.h"
 
-# include "objects.h"
-# include "camera.h"
+// # include "objects.h"
+// # include "lights.h"
+// # include "camera.h"
 
 /* TODO: 알맞게 상태 바꿀 것. */
 typedef enum e_state {
@@ -75,7 +76,9 @@ typedef struct s_image {
 
 }	t_image;
 
-
+typedef struct s_light t_light;
+typedef struct s_ambient_light t_ambient_light;
+typedef struct s_camera t_camera;
 typedef struct s_device {
 	void			*mlx;
 	void			*win;

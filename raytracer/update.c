@@ -6,11 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 22:16:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:56:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <float.h> // float max
+#include "objects.h"
 #include "gl_color.h"
 #include "gl_draw.h"
 #include "gl_dvec3.h"
@@ -46,8 +47,7 @@ t_hit check_ray_collision(t_ray *ray, t_object *obj)
 	// {}
 	// else if (obj->type == TYPE_CONE)
 	// {}
-	else
-		return (create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
+	return (create_hit_data(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
 }
 
 // device에 있는 모든 obj를 돌면서, 가장 가까운 충돌 지점을 계산.

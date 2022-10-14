@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/13 20:07:06 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/14 15:50:00 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBRARY_DIR					= ./library
 LIBFT_DIR					= $(LIBRARY_DIR)/libft
 # ------------------------------------------------------#
 INC_DIR						= $(SRC_DIR)/include
-INC_FLAG					= -I$(INC_DIR) -I$(LIBFT_DIR)/include -I$(MYAPP_DIR)/include
+INC_FLAG					= -I$(INC_DIR) -I$(LIBFT_DIR)/include -I$(MINIRT_DIR)/include
 # ENGINE-DIRECTORY
 # ------------------------------------------------------ #
 ENGINE_DIR					= $(SRC_DIR)/.
@@ -70,19 +70,21 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 
 
 # MYAPP-DIRECTORY
-MYAPP_DIR					= raytracer
+MINIRT_DIR					= raytracer
+MINIRT_SRC					= main helper parse_rt_file_to_device update\
 
-# MYAPP-SOURCE
-MYAPP_SRC					= main helper parse_rt_file_to_device\
-							  update\
-							  ray\
-							  texture
+
+MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
+MINIRT_OBJECTS_SRC          = hit ray\
+                              texture\
+							  triangle square plane sphere cone cylinder\
 
 
 # MYAPP-SOURCE AL
-MYAPP_SRCS  = $(addsuffix .c, $(addprefix $(MYAPP_DIR)/, $(MYAPP_SRC))) \
+MINIRT_SRCS  = $(addsuffix .c, $(addprefix $(MINIRT_DIR)/, $(MINIRT_SRC))) \
+               $(addsuffix .c, $(addprefix $(MINIRT_OBJECTS_DIR)/, $(MINIRT_OBJECTS_SRC))) \
 
-SRC = $(ENGINE_SRCS) $(MYAPP_SRCS)
+SRC = $(ENGINE_SRCS) $(MINIRT_SRCS)
 
 
 # NOTE: Colors

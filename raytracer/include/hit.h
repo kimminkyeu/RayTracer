@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:32:46 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 17:40:15 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:22:37 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 # define HIT_H
 
 #include "gl_vec3.h"
-#include "objects.h"
+#include "gl_vec2.h"
+// #include "objects.h"
 
-#define TYPE_NO_HIT		(0)
-#define TYPE_SPHERE		(1)
-#define TYPE_PLAIN		(2)
-#define TYPE_CYLINDER	(3)
-#define TYPE_CONE		(4)
-
+typedef struct s_object t_object;
 typedef struct s_hit {
 
 	float		distance; 	// hit distance;
@@ -32,5 +28,7 @@ typedef struct s_hit {
 	t_vec2		uv; 		// 텍스쳐 좌표
 
 }	t_hit;
+
+extern t_hit create_hit(float distance, t_vec3 normal, t_vec3 point);
 
 #endif /** hit.h */

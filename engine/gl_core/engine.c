@@ -6,10 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 14:37:09 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 15:48:27 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "lights.h"
+#include "camera.h"
 #include "gl_engine.h"
 #include "gl_vec2.h"
 

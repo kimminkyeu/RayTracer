@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   camera.h                                           :+:      :+:    :+:   */
+/*   plane.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/10 18:44:22 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:26:02 by minkyeki         ###   ########.fr       */
+/*   Created: 2022/10/14 14:54:47 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/10/14 15:54:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CAMERA_H
-# define CAMERA_H
+#ifndef PLANE_H
+# define PLANE_H
 
-#include "gl_vec3.h"
-#include "libft.h"
+# include "gl_vec3.h"
+# include "ray.h"
 
-typedef struct s_camera {
+typedef struct s_plane {
+	t_vec3 pos; // position
+	t_vec3 normal; // surface-normal
+}	t_plane;
 
-	bool 	has_camera;
+extern t_hit plane_intersect_ray_collision(t_ray *ray, t_plane *plane);
 
-	t_vec3	pos; // position of camera (x, y, z)
-	t_vec3	dir; // orientation of camera (normalized vector)
-	float	fov; // FOV (range from 0 to 180)
-
-}	t_camera;
-
-#endif /** camera.h */
+#endif /** plane.h */

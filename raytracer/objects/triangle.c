@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray.c                                              :+:      :+:    :+:   */
+/*   triangle.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 21:48:38 by minkyeki         ###   ########.fr       */
+/*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/10/14 15:19:53 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "main.h"
-
-t_ray create_ray(t_vec3 origin, t_vec3 direction)
-{
-	t_ray ray;
-	ray.origin = origin;
-	ray.direction = direction;
-	return (ray);
-}
-
-t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
-{
-	t_hit	hit;
-
-	hit.distance = distance;
-	hit.normal = normal;
-	hit.point = point;
-	return (hit);
-}
+# include "helper.h"
+# include "objects.h"
+# include "ray.h"
 
 t_triangle create_triangle(t_vec3 v0, t_vec3 v1, t_vec3 v2)
 {
@@ -133,84 +117,5 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
 	}
 
-	return (hit);
-}
-
-
-/** ------------------------------ *
- *  |     Square hit detection     | --> 무한 평면이 아닌 4개의 point를 입력하는 사각형.
- *  ------------------------------ */
-t_hit square_intersect_ray_collision(t_ray *ray, t_square *square)
-{
-	// Create two triangle. check each.
-	// t_triangle t1 = create_triangle(square->v0, square->v1, square->v2);
-	t_hit h1 = triangle_intersect_ray_collision(ray, &square->tri_1);
-
-	// t_triangle t2 = create_triangle(square->v0, square->v2, square->v3);
-	t_hit h2 = triangle_intersect_ray_collision(ray, &square->tri_2);
-
-	if (h1.distance >= 0.0f && h2.distance >= 0.0f)
-	{
-		if (h1.distance < h2.distance)
-			return (h1);
-		else
-			return (h2);
-	}
-	else if (h1.distance >= 0.0f)
-	{
-		return (h1);
-	}
-	else
-	{
-		return (h2);
-	}
-}
-
-/** ------------------------------ *
- *  |     Plain hit detection      |
- *  ------------------------------ */
-t_hit plane_intersect_ray_collision(t_ray *ray, t_plane *plane)
-{
-	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
-
-	// 삼각형 하듯이, 단, 내부 영역에 있는지 없는지 검사만 안하면 된다.
-	// 뒷면을 그리고 싶지 않은 경우 (Backface bulling)
-	if (gl_vec3_dot(gl_vec3_reverse(ray->direction), plane->normal) < 0.0f) return (hit);
-	// 평면과 광선이 수평에 매우 가깝다면 충돌하지 못하는 것으로 판단
-	if (abs_float(gl_vec3_dot(ray->direction, plane->normal)) < 1e-2f) return (hit); // t 계산시 0으로 나누기 방지
-	/* 2. 광선과 (무한히 넓은) 평면의 충돌 위치 계산 */
-	const float t = (gl_vec3_dot(plane->pos, plane->normal) - gl_vec3_dot(ray->origin, plane->normal)) / gl_vec3_dot(ray->direction, plane->normal);
-	// 광선의 시작점 이전에 충돌한다면 렌더링할 필요 없음
-	if (t < 0.0f) return (hit);
-	// 충돌 지점 계산
-	hit.point = gl_vec3_add_vector(ray->origin, gl_vec3_multiply_scalar(ray->direction, t));
-	hit.distance = t;
-	hit.normal = plane->normal;
-
-	return (hit);
-}
-
-/** ------------------------------ *
- *  |     Sphere hit detection     |
- *  ------------------------------ */
-t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
-{
-	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
-
-	// const float a = gl_vec3_dot(ray->direction, ray->direction);
-	const t_vec3 omc = gl_vec3_subtract_vector(ray->origin, sphere->center);
-	const float b = 2.0f * gl_vec3_dot(ray->direction, omc);
-	const float c = gl_vec3_dot(omc, omc) - sphere->radius * sphere->radius;
-	const float determinant = b * b - 4.0f * c;
-
-	if (determinant >= 0.0f)
-	{
-		const float d1 = (-b - sqrtf(determinant)) / 2.0f;
-		const float d2 = (-b + sqrtf(determinant)) / 2.0f;
-
-		hit.distance = min_float(d1, d2);
-		hit.point = gl_vec3_add_vector(ray->origin, gl_vec3_multiply_scalar(ray->direction, hit.distance));
-		hit.normal = gl_vec3_normalize(gl_vec3_subtract_vector(hit.point, sphere->center));
-	}
 	return (hit);
 }

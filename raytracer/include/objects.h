@@ -7,66 +7,22 @@
 #include "gl_vec2.h"
 // #include "texture.h"
 
+#include "triangle.h"
+#include "square.h"
+#include "plane.h"
+
+#include "sphere.h"
+#include "cone.h"
+#include "cylinder.h"
+
+#include "lights.h"
+#include "camera.h"
+
+
 typedef struct s_texture t_texture;
 /* ---------------------------------
 		Objects type-definition
    --------------------------------- */
-typedef struct s_ambient_light {
-	bool 	has_ambient_light; // light 중복 체크용
-
-	float	brightness_ratio;
-	t_vec3	color;
-
-}	t_ambient_light;
-
-typedef struct s_light {
-	bool	has_light; // light 중복 체크용
-
-	t_vec3	pos; // 아주 단순화된 형태의 위치만 있는 점조명.
-	float	brightness_ratio;
-	t_vec3	color;
-
-}	t_light;
-
-typedef struct s_sphere {
-	t_vec3	center;
-	float	radius;
-}	t_sphere;
-
-typedef struct s_triangle {
-	t_vec3	v0; // vertex_1
-	t_vec3	v1; // vertex_2
-	t_vec3	v2;	// vertex_3
-
-	t_vec2 uv0; // for texture
-	t_vec2 uv1; // for texture
-	t_vec2 uv2; // for texture
-
-}	t_triangle;
-
-// NOTE:  추가로 구현한 사각형. (for plain)
-typedef struct s_square {
-
-	t_triangle tri_1;
-	t_triangle tri_2;
-	// t_vec3 v0;
-	// t_vec3 v1;
-	// t_vec3 v2;
-	// t_vec3 v3;
-}	t_square;
-
-typedef struct s_plane {
-	t_vec3 pos; // position
-	t_vec3 normal; // surface-normal
-}	t_plane;
-
-typedef struct s_cylinder {
-	//...
-}	t_cylinder;
-
-typedef struct s_cone {
-	//...
-}	t_cone;
 
 #define TYPE_NO_HIT		(0)
 #define TYPE_SPHERE		(1)
