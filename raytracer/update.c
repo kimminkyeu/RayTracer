@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 21:42:49 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/14 21:47:40 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,36 +185,10 @@ void *thread_update(void *arg)
 	t_thread *data = arg;
 	t_image  *img = data->image;
 	t_device *device = data->device;
-	(void)device, (void)img;
 
-
-	// ray_tracing for each thread
-
-	// int	x = 0; // TODO:  change to each val
-	// int y = 0; // TODO:  change to each val
-	// 기존 2차원 배열 접근.
-	/*
-	while (y < img->img_size.height)
-	{
-		x = 0;
-		while (x < img->img_size.width)
-		{
-			const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
-			gl_draw_pixel(img, x, y, final_color);
-			x++;
-		}
-		y++;
-	}
-	*/
-
-	// 행 우선 접근.
-	// const int width = 100;
 	const int width = img->img_size.width;
-	// const int height = 100;
 	const int height = img->img_size.height;
 	const int num_of_thread = data->info->thread_num;
-	// const int itr_cnt = height / num_of_thread;
-
 	int y = 0;
 	int x = 0;
 	while ((data->id + (y * num_of_thread)) < height)
@@ -224,38 +198,28 @@ void *thread_update(void *arg)
 		{
 			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
 			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
-			// gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), WHITE);
-			// printf("thread %d --> [x:%d y:%d]\n", data->id, x, (data->id + (y * num_of_thread)));
 			x++;
 		}
 		y++;
 	}
-
-
-	// add mutex here.
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
-	// printf("[Thread %d finished]\n", data->id);
 	pthread_mutex_unlock(&(data->info->finished_num_mutex));
-
 	return (NULL);
 }
 
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
 	const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
-
 	/*
 	*  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
 	*/
-
 	// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
 	const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, gl_vec3_3f(0.0f, 0.0f, -5.0f)));
 
 	t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-	t_vec3 tmp = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
+	t_vec3 trace_result = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 
-	int final_color = gl_get_color_from_vec4(gl_vec4_4f(tmp.b, tmp.g, tmp.r, 0.0f));
-
+	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
 	return (final_color);
 }
