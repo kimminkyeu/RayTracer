@@ -99,8 +99,12 @@ t_vec3	parse_3float(t_device *device, char* line, int is_color)
 void	parse_texture(t_device *device, t_object *object, char *file_name)
 {
 	// TODO:  diffuse_texture는 나중에 추가
-	if (ft_strncmp(file_name, "checker", ft_strlen(file_name) == 0))
+//	printf("Texture : [%s], strlen : %zd\n", file_name, ft_strlen(file_name));
+	if (ft_strncmp("checker", file_name, 7) == 0)
+	{
+		printf("checker texture loading...\n");
 		object->ambient_texture = new_texture_checkerboard(device, 4, 4); // 4 * 4 chcker
+	}
 	else
 		object->ambient_texture = new_texture(device, file_name);
 }
