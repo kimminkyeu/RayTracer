@@ -6,10 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 14:45:10 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/16 21:03:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h> // usleep
+#include "gl_draw.h"
 #include "texture.h"
 #include "main.h"
 
@@ -26,10 +28,7 @@ static void fill_checker_board(t_texture *texture)
 		while (x < texture->width)
 		{
 			if (x % 2 == y % 2) // (0,0) (1,1) (0,2) (0,4) (2,2)...
-			{
-//				printf("%d,%d : black\n", x, y);
 				gl_draw_pixel(&texture->image, x, y, BLACK);
-			}
 			else
 				gl_draw_pixel(&texture->image, x, y, WHITE);
 			x++;
@@ -106,18 +105,9 @@ t_vec3 get_clamped(t_texture *texture, int i, int j)
 	j = clamp_int(j, 0, texture->height - 1);
 
 	t_vec4 point = gl_get_pixel_color_vec4(&texture->image, i, j);
-	// const float r = texture->image[(i + texture->width * j) /* * channels */ + 0] / 255.0f;
-	const float r = point.r / 255.0f;
-//	const float r = point.r;
-	// const float g = texture->image[(i + texture->width * j) /* * channels */ + 1] / 255.0f;
+	const float r = point.r / 255.0f; // 기존 ambient_color에 나중에 곱해서, 그 값만큼 색을 바꿈.
 	const float g = point.g / 255.0f;
-//	const float g = point.g;
-	// const float b = texture->image[(i + texture->width * j) /* * channels */ + 2] / 255.0f;
-//	const float b = point.b;
 	const float b = point.b / 255.0f;
-//
-//	printf("texture [%d,%d]\n", i, j);
-
 	return gl_vec3_3f(r, g, b);
 }
 
@@ -129,18 +119,19 @@ t_vec3 sample_point(t_texture *texture, const t_vec2 uv)
 	// TODO: 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
 	// 배열 인덱스의 정수 범위 ij [0, width-1] x [0, height - 1]
 
-
 	// (1) uv 좌표를 그대로 width/height로 일단 변환하면...
-	t_vec2 xy = gl_vec2_2f(uv.x * texture->width, uv.y * texture->height);
-	printf("uv %f,%f\t", uv.x, uv.y);
+	t_vec2 xy = gl_vec2_2f(uv.x * (float)texture->width, uv.y * (float)texture->height);
 
-	// (2) 시작 위치 동일하게 맞추기 (-0.5f)
+	// (2) 시작 위치 동일하게 맞추기 (-0.5f) // WARN:  But why...?
 	xy = gl_vec2_add_float(xy, -0.5f);
 
 	// (3) x y로 부터 2차원 인덱스 구하기
-	int i = (int)roundf(xy.x);
-	int j = (int)roundf(xy.y);
-//	printf("(%d,%d)\t", i, j);
+	int i = (int)round(xy.x);
+	int j = (int)round(xy.y);
+	// int i = (int)xy.x;
+	// int j = (int)xy.y;
+
+
 
 	return (get_clamped(texture, i, j));
 //	return get_clamped(texture, 0, 0);

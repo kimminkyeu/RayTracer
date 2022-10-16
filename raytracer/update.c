@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 21:47:40 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/16 19:17:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,6 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 			point_color.r *= sample_point_result.r;
 			point_color.g *= sample_point_result.g;
 			point_color.b *= sample_point_result.b;
-//			point_color = sample_point_result;
-//			const t_vec4 result = gl_vec4_4f(sample_point_result.b, sample_point_result.g, sample_point_result.r, 0.0f);
-//			if (gl_get_color_from_vec4(result) == BLACK)
-//				printf("black\n");
-			// NOTE: TEST code
 		}
 
 		// (2) Diffuse
@@ -158,12 +153,6 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 			// (4-2) Add Specular color
 			point_color = gl_vec3_add_vector(point_color, specular_final);
 		}
-
-
-
-		// NOTE: for debuging
-		usleep(10000);
-
 
 		return (point_color);
 	}
@@ -207,7 +196,7 @@ void *thread_update(void *arg)
 
 	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
 
-	while (y < height)
+	while (data->id == 0 && y < height)
 	{
 		x = 0;
 		while (x < width)

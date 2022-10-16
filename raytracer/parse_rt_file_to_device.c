@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 14:44:19 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/16 21:02:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	parse_texture(t_device *device, t_object *object, char *file_name)
 	if (ft_strncmp("checker", file_name, 7) == 0)
 	{
 		printf("checker texture loading...\n");
-		object->ambient_texture = new_texture_checkerboard(device, 4, 4); // 4 * 4 chcker
+		object->ambient_texture = new_texture_checkerboard(device, 32, 32); // 4 * 4 checker
 	}
 	else
 		object->ambient_texture = new_texture(device, file_name);

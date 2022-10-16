@@ -6,10 +6,11 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:19:53 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/16 20:29:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "gl_vec3.h"
 # include "helper.h"
 # include "objects.h"
 # include "ray.h"
@@ -47,6 +48,8 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	 */
 
 	/* 1. 삼각형이 놓여 있는 평면의 수직 벡터 계산 (glm::cross) */
+
+	// WARN:  이때 cross_product의 결과 벡터 방향은 음수, 즉 나를 향해 튀어나오는 경우이다.
 	const t_vec3 v1v0 = gl_vec3_subtract_vector(v1, v0);
 	const t_vec3 v2v0 = gl_vec3_subtract_vector(v2, v0);
 
@@ -73,21 +76,32 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	// 작은 삼각형들 3개의 normal 계산. 이때, ( WARN:  cross-product는 오른손 좌표계)
 	// 이때, 방향만 알면 되기 때문에 normalize를 할 필요가 없음.
 	// const t_vec3 normal0 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2)));
-	const t_vec3 normal0 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2));
+	const t_vec3 cross0 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2));
 	// const t_vec3 normal1 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v2, v0)));
-	const t_vec3 normal1 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v2, v0));
+	const t_vec3 cross1 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v2, v0));
 	// const t_vec3 normal2 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(*point, v0)));
-	const t_vec3 normal2 = gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(*point, v0));
+	const t_vec3 cross2 = gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(*point, v0));
 
 	// 방향만 확인하면 되기 때문에 normalize() 생략 가능
 	// 아래에서 cross product의 절대값으로 작은 삼각형들의 넓이 계산
 
-	if (gl_vec3_dot(normal0, *face_normal) < 0.0f) return false;
-	if (gl_vec3_dot(normal1, *face_normal) < 0.0f) return false;
-	if (gl_vec3_dot(normal2, *face_normal) < 0.0f) return false;
+	if (gl_vec3_dot(cross0, *face_normal) < 0.0f) return false;
+	if (gl_vec3_dot(cross1, *face_normal) < 0.0f) return false;
+	if (gl_vec3_dot(cross2, *face_normal) < 0.0f) return false;
 
 	// Barycentric coordinates 계산
 	// 텍스춰링(texturing)에서 사용
+	// printf("cross0 %f/%f/%f\n", cross0.x, cross0.y, cross0.z);
+
+	const float area0 = gl_vec3_get_magnitude(cross0) * 0.5f;
+	const float area1 = gl_vec3_get_magnitude(cross1) * 0.5f;
+	const float area2 = gl_vec3_get_magnitude(cross2) * 0.5f;
+
+	const float area_sum = area0 + area1 + area2;
+	*w0 = area0 / area_sum;
+	*w1 = area1 / area_sum;
+	// *w1 = area2 / area_sum;
+
 	// u = ...
 	// v = ...
 
@@ -112,6 +126,8 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 
 		// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
 		// (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
+
+		// printf("hit_point uv's barycentric coord : w0 %f w1 %f w2 %f\n", w0, w1, 1.0f - w0 - w1);
 
 		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);

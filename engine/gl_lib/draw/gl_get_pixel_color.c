@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/14 21:29:25 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/15 14:07:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/16 20:51:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,16 @@ int		gl_get_pixel_color_int(t_image *image, int x, int y)
   return (*(gl_get_pixel_addr(image, x, y)));
 }
 
+// #include <stdio.h>
+
 t_vec4	gl_get_pixel_color_vec4(t_image *image, int x, int y)
 {
 	int	color;
 
-	x = clamp(x, 0, image->img_size.width - 1);
-	y = clamp(y, 0, image->img_size.height - 1);
+	x = clamp(x, 0, (int)image->img_size.width - 1);
+	// printf("clamp result x : %d\n", x);
+	y = clamp(y, 0, (int)image->img_size.height - 1);
 	color = gl_get_pixel_color_int(image, x, y);
+
 	return (gl_get_vec4_from_color(color));
 }
