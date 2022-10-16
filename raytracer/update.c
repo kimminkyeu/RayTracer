@@ -146,7 +146,7 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 
 			// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
 			const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
-			const float _spec = pow(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
+			const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
 			const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
 
 			// (4-2) Add Specular color
@@ -215,7 +215,8 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 	*  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
 	*/
 	// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
-	const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, gl_vec3_3f(0.0f, 0.0f, -5.0f)));
+	const t_vec3 eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
+	const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, eye_pos));
 
 	t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
 	t_vec3 trace_result = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
