@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/16 19:17:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 00:38:34 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,18 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 		point_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
 		// return (point_color);
 
-
-		// Add texture to color (ambient texture)
+		// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
+		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
 		if (hit.obj->ambient_texture != NULL)  // if has texture
 		{
-			const t_vec3 sample_point_result = sample_point(hit.obj->ambient_texture, hit.uv); // texture sampling
-			point_color.r *= sample_point_result.r;
-			point_color.g *= sample_point_result.g;
-			point_color.b *= sample_point_result.b;
+			// const t_vec3 sample_point_result = sample_point(hit.obj->ambient_texture, hit.uv); // texture sampling
+			const t_vec3 sample_point_result = sample_linear(hit.obj->ambient_texture, hit.uv); // texture sampling
+			point_color.r *= sample_point_result.b; // 홍정모
+			// point_color.r = sample_point_result.r; // 홍정모
+			point_color.g *= sample_point_result.g; // 홍정모
+			// point_color.g = sample_point_result.g; // 홍정모
+			point_color.b *= sample_point_result.r; // 홍정모
+			// point_color.b = sample_point_result.b; // 홍정모
 		}
 
 		// (2) Diffuse
@@ -134,13 +138,16 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 			// (3-1) Calculate Diffuse color
 			t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
 
-			if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
+			// *------------------------------------------------------------------
+			// if (hit.obj->diffuse_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
+			if (hit.obj->ambient_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
 			{
-				const t_vec3 sample_linear_result = sample_linear(hit.obj->diffuse_texture, hit.uv); // texture sampling
-				diffuse_final.r *= sample_linear_result.r;
-				diffuse_final.g *= sample_linear_result.g;
-				diffuse_final.b *= sample_linear_result.b;
+				const t_vec3 sample_linear_result = sample_linear_raw(hit.obj->ambient_texture, hit.uv); // texture sampling
+				diffuse_final.r = _diff * sample_linear_result.b;
+				diffuse_final.g = _diff * sample_linear_result.g;
+				diffuse_final.b = _diff * sample_linear_result.r;
 			}
+			// *------------------------------------------------------------------
 
 			// (3-2) Add Diffuse color
 			point_color = gl_vec3_add_vector(point_color, diffuse_final);
@@ -190,38 +197,35 @@ void *thread_update(void *arg)
 
 	const int width = img->img_size.width;
 	const int height = img->img_size.height;
-//	const int num_of_thread = data->info->thread_num;
 	int y = 0;
 	int x = 0;
 
 	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
+	// while (data->id == 0 && y < height)
+	// {
+	// 	x = 0;
+	// 	while (x < width)
+	// 	{
+	// 		const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
+	// 		gl_draw_pixel(img, x, y, final_color);
+	// 		x++;
+	// 	}
+	// 	y++;
+	// }
 
-	while (data->id == 0 && y < height)
+
+	const int num_of_thread = data->info->thread_num;
+	while ((data->id + (y * num_of_thread)) < height)
 	{
 		x = 0;
-		while (x < width)
+		while (x < width) // draw each row
 		{
-			const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
-			gl_draw_pixel(img, x, y, final_color);
+			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
+			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
 			x++;
 		}
 		y++;
 	}
-
-
-
-
-//	while ((data->id + (y * num_of_thread)) < height)
-//	{
-//		x = 0;
-//		while (x < width) // draw each row
-//		{
-//			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
-//			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
-//			x++;
-//		}
-//		y++;
-//	}
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
 	pthread_mutex_unlock(&(data->info->finished_num_mutex));
