@@ -13,6 +13,56 @@
 #include "texture.h"
 #include "main.h"
 
+// width and height is resolution of the checkerboard_image.
+
+static void fill_checker_board(t_texture *texture)
+{
+	int x = 0;
+	int y = 0;
+
+	while (y < texture->height)
+	{
+		x = 0;
+		while (x < texture->width)
+		{
+			if (x % 2 == y % 2) // (0,0) (1,1) (0,2) (0,4) (2,2)...
+				gl_draw_pixel(&texture->image, x, y, BLACK);
+			else
+				gl_draw_pixel(&texture->image, x, y, WHITE);
+			x++;
+		}
+		y++;
+	}
+}
+
+t_texture	*new_texture_checkerboard(t_device *device, int width, int height)
+{
+	t_texture	*texture;
+
+	texture = ft_calloc(1, sizeof(*texture));
+	if (device == NULL || texture == NULL)
+		return (NULL);
+
+	// TODO: change checkerboard resolution later!
+	texture->image.img_ptr = mlx_new_image(device->mlx, width, height);
+	texture->image.mlx_ptr = device->mlx;
+	if (texture->image.img_ptr == NULL)
+	{
+		free(texture);
+		return (NULL);
+	}
+	texture->width = width;
+	texture->image.img_size.width = width;
+	texture->height = height;
+	texture->image.img_size.height = height;
+	texture->image.addr = mlx_get_data_addr(texture->image.img_ptr, \
+				&(texture->image.bits_per_pixel), \
+				&(texture->image.line_length), &(texture->image.endian));
+
+	fill_checker_board(texture); // fill checkerboard texture to image
+	return (texture);
+}
+
 t_texture	*new_texture(t_device *device, char* filename)
 {
 	t_texture	*texture;
@@ -46,6 +96,7 @@ t_texture	*new_texture(t_device *device, char* filename)
 	return (texture);
 }
 
+/* index가 범위를 넘어서면 clamp 해줌.*/
 t_vec3 get_clamped(t_texture *texture, int i, int j)
 {
 	i = clamp_int(i, 0, texture->width - 1);
@@ -62,6 +113,7 @@ t_vec3 get_clamped(t_texture *texture, int i, int j)
 	return gl_vec3_3f(r, g, b);
 }
 
+/* index가 범위를 넘어서면 index 처음으로 돌아감.(%) */
 t_vec3 get_wrapped(t_texture *texture, int i, int j)
 {
 	i %= texture->width; // i가 width면 0으로 바뀜
@@ -96,7 +148,8 @@ t_vec3 interpolate_bilinear(
 	return gl_vec3_1f(1.0f);
 }
 
-t_vec3 sample_point(t_texture *texture, const t_vec2 uv) // Nearest sampling이라고 부르기도 함
+t_vec3 sample_point(t_texture *texture, const t_vec2 uv)
+// OpenGL에서는 Nearest sampling이라고 부르기도 함
 {
 	(void)uv; (void)texture;
 	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]

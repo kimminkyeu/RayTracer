@@ -28,6 +28,8 @@ typedef struct s_texture {
 
 // allocate new texture data
 extern t_texture	*new_texture(t_device *device, char* filename);
+// allocate new texture data with checkerboard.
+extern t_texture	*new_texture_checkerboard(t_device *device, int width, int height);
 
 extern t_vec3 get_clamped(t_texture *texture, int i, int j);
 

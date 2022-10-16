@@ -96,6 +96,15 @@ t_vec3	parse_3float(t_device *device, char* line, int is_color)
 	return (result);
 }
 
+void	parse_texture(t_device *device, t_object *object, char *file_name)
+{
+	// TODO:  diffuse_texture는 나중에 추가
+	if (ft_strncmp(file_name, "checker", ft_strlen(file_name) == 0))
+		object->ambient_texture = new_texture_checkerboard(device, 4, 4); // 4 * 4 chcker
+	else
+		object->ambient_texture = new_texture(device, file_name);
+}
+
 void	parse_sphere(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
@@ -124,9 +133,7 @@ void	parse_sphere(t_device *device, char **line_split)
 		new_obj->material.alpha = atof(line_split[6]);
 	}
 	if (strs_count == 8)
-	{
-		new_obj->ambient_texture = new_texture(device, line_split[7]);
-	}
+		parse_texture(device, new_obj, line_split[7]);
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
 	device->objects->push_back(device->objects, new_obj);
@@ -163,7 +170,8 @@ void	parse_triangle(t_device *device, char **line_split)
 		new_obj->material.ks = atof(line_split[6]);
 		new_obj->material.alpha = atof(line_split[7]);
 		if (strs_count == 9)
-			new_obj->ambient_texture = new_texture(device, line_split[8]);
+			parse_texture(device, new_obj, line_split[8]);
+//			new_obj->ambient_texture = new_texture(device, line_split[8]);
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
@@ -223,7 +231,7 @@ void	parse_square(t_device *device, char **line_split)
 		new_obj->material.ks = atof(line_split[7]);
 		new_obj->material.alpha = atof(line_split[8]);
 		if (strs_count == 10)
-			new_obj->ambient_texture = new_texture(device, line_split[9]);
+			parse_texture(device, new_obj, line_split[9]);
 			// 나중엔 diffTexture 까지.
 	}
 	// new_sphere->reflection = 0.0f;
