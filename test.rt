@@ -1,6 +1,6 @@
 #   [ Ambient Light ]
 #   intensity	    color
-A   0.1            255,255,255
+A   0.2            255,255,255
 
 #   [ Light ]
 #   pos             intensity     color

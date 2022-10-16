@@ -112,6 +112,7 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 
 		// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
 		// (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
+
 		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);

@@ -12,6 +12,7 @@
 
 #include <float.h> // float max
 #include <pthread.h>
+#include <unistd.h>
 #include "gl_engine.h"
 #include "objects.h"
 #include "gl_color.h"
@@ -113,6 +114,11 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 			point_color.r *= sample_point_result.r;
 			point_color.g *= sample_point_result.g;
 			point_color.b *= sample_point_result.b;
+//			point_color = sample_point_result;
+//			const t_vec4 result = gl_vec4_4f(sample_point_result.b, sample_point_result.g, sample_point_result.r, 0.0f);
+//			if (gl_get_color_from_vec4(result) == BLACK)
+//				printf("black\n");
+			// NOTE: TEST code
 		}
 
 		// (2) Diffuse
@@ -152,6 +158,13 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 			// (4-2) Add Specular color
 			point_color = gl_vec3_add_vector(point_color, specular_final);
 		}
+
+
+
+		// NOTE: for debuging
+		usleep(10000);
+
+
 		return (point_color);
 	}
 	return (gl_vec3_1f(0.0f)); // return black
@@ -188,20 +201,38 @@ void *thread_update(void *arg)
 
 	const int width = img->img_size.width;
 	const int height = img->img_size.height;
-	const int num_of_thread = data->info->thread_num;
+//	const int num_of_thread = data->info->thread_num;
 	int y = 0;
 	int x = 0;
-	while ((data->id + (y * num_of_thread)) < height)
+
+	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
+
+	while (y < height)
 	{
 		x = 0;
-		while (x < width) // draw each row
+		while (x < width)
 		{
-			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
-			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
+			const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
+			gl_draw_pixel(img, x, y, final_color);
 			x++;
 		}
 		y++;
 	}
+
+
+
+
+//	while ((data->id + (y * num_of_thread)) < height)
+//	{
+//		x = 0;
+//		while (x < width) // draw each row
+//		{
+//			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
+//			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
+//			x++;
+//		}
+//		y++;
+//	}
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
 	pthread_mutex_unlock(&(data->info->finished_num_mutex));
