@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 17:17:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 17:26:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,23 +292,23 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 	// *  NOTE:  Multi-Sampling Anti-aliasing --> No super_sampling if last parameter is 0.
 	// * ============================================================================
 	// (1) 먼저 ray를 쏴서 계산해서 충돌지점의 uv를 구한다.
-	t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
-	t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-	t_hit hit = find_closet_collision(device, &pixel_ray);
+	// t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
+	// t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
+	// t_hit hit = find_closet_collision(device, &pixel_ray);
 
 	// (2) 만약 hit.uv가 모서리에 가깝다면, 그때 super-sampling 하기.
-	const float edge_determinant = 0.1f;
+	// const float edge_determinant = 0.1f;
 	const int	sampling_recursive_step = 0;
 	t_vec3 trace_result = gl_vec3_1f(0.0f);
 	// if (hit.distance >= 0.0f && (hit.uv.x < edge_determinant || hit.uv.y < edge_determinant || hit.uv.x > 1.0 - edge_determinant || hit.uv.y > 1.0 - edge_determinant))
-	if (hit.distance >= 0.0f && (abs_float(hit.uv.x) + abs_float(hit.uv.y) < 1.0f + edge_determinant && abs_float(hit.uv.x) + abs_float(hit.uv.y) > 1.0f - edge_determinant))
-	{
+	// if (hit.distance >= 0.0f && (abs_float(hit.uv.x) + abs_float(hit.uv.y) < 1.0f + edge_determinant && abs_float(hit.uv.x) + abs_float(hit.uv.y) > 1.0f - edge_determinant))
+	// {
 		trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, sampling_recursive_step); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
-	}
-	else
-	{
+	// }
+	// else
+	// {
 		// trace_result = phong_shading_model(device, &pixel_ray, hit); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
-	}
+	// }
 	// * ============================================================================
 	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
