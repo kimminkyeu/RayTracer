@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 00:31:11 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:50:44 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,50 +26,50 @@ static void fill_checker_board(t_texture *texture)
 	int y = 0;
 
 	// NOTE:  Sample checker board. 나중에 복구할 것.
-	// while (y < texture->height)
-	// {
-	// 	x = 0;
-	// 	while (x < texture->width)
-	// 	{
-	// 		if (x % 2 == y % 2) // (0,0) (1,1) (0,2) (0,4) (2,2)...
-	// 			gl_draw_pixel(&texture->image, x, y, BLACK);
-	// 		else
-	// 			gl_draw_pixel(&texture->image, x, y, WHITE);
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
-
-	// NOTE:  sample_linear 테스트용.
 	while (y < texture->height)
 	{
 		x = 0;
 		while (x < texture->width)
 		{
-			if (y % 4 == 0)
-			{
-				t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(255.0f, 0.0f, 0.0f), (1.0f + x) * 0.25f);
-				gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-			}
-			else if (y % 4 == 1)
-			{
-				t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(0.0f, 255.0f, 0.0f), (1.0f + x) * 0.25f);
-				gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-			}
-			else if (y % 4 == 2)
-			{
-				t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(0.0f, 0.0f, 255.0f), (1.0f + x) * 0.25f);
-				gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-			}
+			if (x % 2 == y % 2) // (0,0) (1,1) (0,2) (0,4) (2,2)...
+				gl_draw_pixel(&texture->image, x, y, BLACK);
 			else
-			{
-				t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(255.0f, 255.0f, 255.0f), (1.0f + x) * 0.25f);
-				gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-			}
+				gl_draw_pixel(&texture->image, x, y, WHITE);
 			x++;
 		}
 		y++;
 	}
+
+	// NOTE:  sample_linear 테스트용.
+	// while (y < texture->height)
+	// {
+	// 	x = 0;
+	// 	while (x < texture->width)
+	// 	{
+	// 		if (y % 4 == 0)
+	// 		{
+	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(255.0f, 0.0f, 0.0f), (1.0f + x) * 0.25f);
+	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
+	// 		}
+	// 		else if (y % 4 == 1)
+	// 		{
+	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(0.0f, 255.0f, 0.0f), (1.0f + x) * 0.25f);
+	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
+	// 		}
+	// 		else if (y % 4 == 2)
+	// 		{
+	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(0.0f, 0.0f, 255.0f), (1.0f + x) * 0.25f);
+	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
+	// 		}
+	// 		else
+	// 		{
+	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(255.0f, 255.0f, 255.0f), (1.0f + x) * 0.25f);
+	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
+	// 		}
+	// 		x++;
+	// 	}
+	// 	y++;
+	// }
 }
 
 t_texture	*new_texture_checkerboard(t_device *device, int width, int height)

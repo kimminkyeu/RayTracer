@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 00:38:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:47:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,9 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
  --> 그림자를 처리하는 다른 방법이 있는 걸까?
 
  ---------------------------------------------------------------------------------------------- */
+
+
+
 t_vec3 trace_ray(t_device *device, t_ray *ray)
 {
 	// (0) Render first hit
@@ -108,7 +111,7 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 
 		// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
 		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
-		if (hit.obj->ambient_texture != NULL)  // if has texture
+		if (hit.obj->ambient_texture != NULL)  // if has texture + 그림자가 없을 때.
 		{
 			// const t_vec3 sample_point_result = sample_point(hit.obj->ambient_texture, hit.uv); // texture sampling
 			const t_vec3 sample_point_result = sample_linear(hit.obj->ambient_texture, hit.uv); // texture sampling
@@ -232,6 +235,37 @@ void *thread_update(void *arg)
 	return (NULL);
 }
 
+
+// NOTE:  for super-sampling
+t_vec3 trace_ray2x2_super_sampling(t_image *img, t_vec3 pixel_pos_world, const float dx, const int recursive_level)
+{
+
+	if (recursive_level == 0) // recursive_level이 0이면 하던대로 단일 Ray_tracing 진행.
+	{
+		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
+		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
+		return (trace_ray(img->device_ptr, &pixel_ray));
+	}
+
+	const float subdx = 0.5f * dx;
+
+	t_vec3 pixel_color = gl_vec3_1f(0.0f);
+	pixel_pos_world.x = pixel_pos_world.x - subdx * 0.5f;
+	pixel_pos_world.y = pixel_pos_world.y - subdx * 0.5f;
+	// [수정] 강의 영상과 달리 subdx에 0.5f를 곱해줬습니다.
+
+
+	// ...
+
+
+
+	return (gl_vec3_multiply_scalar(pixel_color, 0.25f));
+}
+
+
+
+
+
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
 	const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
@@ -239,11 +273,14 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 	*  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
 	*/
 	// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
-	const t_vec3 eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
-	const t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, eye_pos));
+	device->eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
+	// const t_vec3 eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
 
-	t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-	t_vec3 trace_result = gl_vec3_clamp(trace_ray(device, &pixel_ray), gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
+	const float	dx = 2.0f / img->img_size.height; // for super sampling
+
+	// NOTE:  Super-Sampling.
+	t_vec3 trace_result = trace_ray2x2_super_sampling(img, pixel_pos_world, dx, 0); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
+	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
 	return (final_color);

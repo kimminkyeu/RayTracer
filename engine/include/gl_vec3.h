@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/10 18:49:36 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:06:37 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef union s_vec3 {
 }	t_vec3;
 
 /* Create r-value vec3 and Return. */
-extern t_vec3	gl_vec3_3f(float _x, float _y, float _z);
+extern t_vec3	gl_vec3_3f(float _x_b, float _y_g, float _z_r);
 
 /* Create and Return R-value from single float argument.
 - : functions sets every value to (float _k) */

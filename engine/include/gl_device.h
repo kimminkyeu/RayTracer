@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/14 16:45:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:48:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdbool.h>
 
 # include "gl_vec2.h"
+# include "gl_vec3.h"
 # include "vector.h"
 # include "thread.h"
 
@@ -72,6 +73,8 @@ typedef struct s_image {
 	t_vec2	img_location;
 	t_vec2	img_size;
 
+	t_device	*device_ptr; // pointer to device
+
 	// render function for each image.
 	int (*img_update_func)(t_device *device, t_image *image);
 
@@ -80,6 +83,7 @@ typedef struct s_image {
 typedef struct s_light t_light;
 typedef struct s_ambient_light t_ambient_light;
 typedef struct s_camera t_camera;
+
 typedef struct s_device {
 	void			*mlx;
 	void			*win;
@@ -95,6 +99,7 @@ typedef struct s_device {
 	t_input			input; // mouse, keyboard input handler
 
 
+	t_vec3			eye_pos; // 나중에 camera로 빼기.
 
 	// t_objects			objects;
 

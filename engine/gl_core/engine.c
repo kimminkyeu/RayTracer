@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 21:21:50 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 14:26:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ extern int		handle_mouse_release(int key_code, int x, int y, void *param);
 
 static bool	is_inside_window(t_device *device, int _x, int _y)
 {
-	if (_x <= device->win_width && _x >= 0 && \
-			_y <= device->win_height && _y >= 0)
+	if (_x < device->win_width && _x >= 0 && \
+			_y < device->win_height && _y >= 0)
 	{
 		return (true);
 	}
@@ -117,6 +117,7 @@ void engine_new_image(t_device *device, t_vec2 img_size, t_vec2 img_location, in
 		new_image->img_size = img_size;
 		new_image->img_location = img_location;
 		new_image->img_update_func = f_update_func;
+		new_image->device_ptr = device;
 	}
 	images->push_back(images, new_image);
 	printf("New image created. width:%d height:%d\n", (int)img_size.width, (int)img_size.height);
@@ -271,6 +272,7 @@ int	engine_new_xpm_image(t_device *device, char *filename, t_vec2 img_location, 
 	new_image->img_size.width = width;
 	new_image->img_size.height = height;
 	new_image->mlx_ptr = device->mlx;
+	new_image->device_ptr = device;
 	if (new_image->img_ptr == NULL)
 	{
 		free(new_image);
