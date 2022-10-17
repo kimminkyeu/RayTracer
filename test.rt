@@ -4,15 +4,16 @@ A   0.8            50,50,50
 
 #   [ Light ]
 #   pos             intensity     color
+# L   1.0,1.0,-1.0     0.5           10,0,255
 L   1.0,1.0,-1.0     0.5           10,0,255
 
 #   [ Sphere ]
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
 
 # sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                 checker
-sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                   ./raytracer/image/tiled_diffuse.xpm          ./raytracer/image/tiled_normal.xpm
+# sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                   ./raytracer/image/tiled_diffuse.xpm          ./raytracer/image/tiled_normal.xpm
 
-# sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0
+sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0
 # sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0    ./raytracer/image/shadertoy_abstract1.xpm
 # sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0    checker
 # sp  0.0,0.0,4.0    0.5         250,0,0                 255,255,255   0.5   10.0
@@ -31,12 +32,26 @@ sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0  
 # sq  -2.0,-2.0,10.0      -2.0,2.0,10.0     2.0,2.0,10.0      2.0,-2.0,10.0      128,128,128            255,255,255     0.5    10.0         ./raytracer/image/shadertoy_abstract1.xpm
 
 # 바닥
-# sq  -2.0,-2.0,0.0      -2.0,-2.0,10.0     2.0,-2.0,10.0      2.0,-2.0,0.0      128,128,128            255,255,255     0.5    10.0        checker
+# sq  -2.0,-1.0,10.0      2.0,-1.0,10.0     2.0,-1.0,0.0      -2.0,-1.0,0.0        128,128,128            255,255,255       0.5    50.0         ./raytracer/image/cobblestone_diffuse.xpm           ./raytracer/image/cobblestone_normal.xpm
+
+
+#    [ Square Vertex location ]
+#
+#          v0           v1
+#	       --------------
+#	       |  .         |
+#	       |    .  t1   |
+#	       |  t2   .    |
+#	       |         .  |
+#	       --------------
+#	      v3            v2
+
 
 # 정면
-#      vertex1            vertex2           vertex3          vertex4               diffuseColor(rgb)      specular         ks     alpha
-# sq  -2.0,2.0,10.0      2.0,2.0,10.0     2.0,-2.0,10.0      -2.0,-2.0,10.0         0,0,0                  255,255,255       0.8    120.0         ./raytracer/image/shadertoy_abstract1.xpm
-# sq  -2.0,-2.0,10.0      -2.0,2.0,10.0     2.0,2.0,10.0      2.0,-2.0,10.0        128,128,128            255,255,255       0.5    50.0         checker
+#      vertex0            vertex1           vertex2          vertex3               diffuseColor(rgb)      specular         ks     alpha        texture(diffuse)                             normal_map
+sq  -2.0,2.0,10.0      2.0,2.0,10.0     2.0,-2.0,10.0      -2.0,-2.0,10.0        128,128,128            255,255,255       0.2    10.0         ./raytracer/image/cobblestone_diffuse.xpm           ./raytracer/image/cobblestone_normal.xpm
+# tiled_texture : https://polyhaven.com/a/tiled_floor_001
+
 # sq  -2.0,-2.0,10.0      -2.0,2.0,10.0     2.0,2.0,10.0      2.0,-2.0,10.0          0,0,0                  255,255,255       0.5    100.0         checker
 
 # 왼쪽 벽

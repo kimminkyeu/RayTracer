@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 22:23:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 02:13:35 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 		// https://www.youtube.com/watch?v=6_-NNKc4lrk
 		// Normal Map을 이용한다면, _diff 의 값이 달리질 것이다.
 		// hit.normal이 normal_map에 의해 추가적으로 계산되어야 한다.
+
 		t_vec3 hit_normal = hit.normal;
 		if (hit.obj->normal_texture != NULL)
 		{
@@ -145,20 +146,22 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 		// * -------------------------------------------------------------------------------------------
 
 		// (3-1) Calculate Diffuse color
+		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
 		const float _diff = max_float(gl_vec3_dot(hit_normal, hit_point_to_light), 0.0f);
 
-
-		// const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
 		t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
 
 		// *--- [ Diffuse Texture ] -----------------------------------------
-		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
+		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
 		{
 			t_vec3 sample_diffuse;
 			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
 				sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
 			else
 				sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
+				// sample_diffuse = sample_normal_map(&hit); // texture sampling (linear)
+				// sample_diffuse = gl_vec3_multiply_scalar(sample_normal_map(&hit), 255.0f);
+
 			diffuse_final.r = _diff * sample_diffuse.b;
 			diffuse_final.g = _diff * sample_diffuse.g;
 			diffuse_final.b = _diff * sample_diffuse.r;
@@ -169,17 +172,13 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 		point_color = gl_vec3_add_vector(point_color, diffuse_final);
 
 		// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
+		// const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
+		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(hit_point_to_light, hit_normal)), 2.0f), hit_point_to_light);
 
-		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
-
-		// const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(hit_point_to_light, hit_normal)), 2.0f), hit_point_to_light);
 
 		const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
-
 		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
-
-		// (4-2) Add Specular color
-		point_color = gl_vec3_add_vector(point_color, specular_final);
+		point_color = gl_vec3_add_vector(point_color, specular_final);  // (4-2) Add Specular color
 	}
 	return (point_color);
 }
@@ -257,6 +256,8 @@ void *thread_update(void *arg)
 		}
 		y++;
 	}
+
+
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
 	pthread_mutex_unlock(&(data->info->finished_num_mutex));
@@ -274,13 +275,9 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 	}
 
 	const float sub_dx = 0.5f * dx;
-
 	t_vec3 pixel_color = gl_vec3_1f(0.0f); // 재귀 첫 색상.?
-
 	pixel_pos_world.x = pixel_pos_world.x - sub_dx * 0.5f; // 0.25 와 0.75 지점을 구해야 하기 때문.
 	pixel_pos_world.y = pixel_pos_world.y - sub_dx * 0.5f; // 0.25 와 0.75 지점을 구해야 하기 때문.
-	// [수정] 강의 영상과 달리 subdx에 0.5f를 곱해줬습니다.
-
 	int i = 0;
 	int j = 0;
 	while (j < 2)
@@ -306,37 +303,15 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
 	const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
-	/*
-	*  NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요)
-	*/
-	// const t_vec3 ray_dir = gl_vec3_3f(0.0f, 0.0f, 1.0f);
+
+	/* NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요) */
 	device->eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
-	// const t_vec3 eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
 
-	const float	dx = 2.0f / img->img_size.height; // for super sampling.
-	// world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
+	const float	dx = 2.0f / img->img_size.height; // for super sampling. // world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
 
-	// *  NOTE:  Multi-Sampling Anti-aliasing --> No super_sampling if last parameter is 0.
-	// * ============================================================================
-	// (1) 먼저 ray를 쏴서 계산해서 충돌지점의 uv를 구한다.
-	// t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
-	// t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-	// t_hit hit = find_closet_collision(device, &pixel_ray);
+	const int sampling_recursive_step = 0;
 
-	// (2) 만약 hit.uv가 모서리에 가깝다면, 그때 super-sampling 하기.
-	// const float edge_determinant = 0.1f;
-	const int	sampling_recursive_step = 0;
-	t_vec3 trace_result = gl_vec3_1f(0.0f);
-	// if (hit.distance >= 0.0f && (hit.uv.x < edge_determinant || hit.uv.y < edge_determinant || hit.uv.x > 1.0 - edge_determinant || hit.uv.y > 1.0 - edge_determinant))
-	// if (hit.distance >= 0.0f && (abs_float(hit.uv.x) + abs_float(hit.uv.y) < 1.0f + edge_determinant && abs_float(hit.uv.x) + abs_float(hit.uv.y) > 1.0f - edge_determinant))
-	// {
-		trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, sampling_recursive_step); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
-	// }
-	// else
-	// {
-		// trace_result = phong_shading_model(device, &pixel_ray, hit); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
-	// }
-	// * ============================================================================
+	t_vec3 trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, sampling_recursive_step); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
 	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
 	return (final_color);

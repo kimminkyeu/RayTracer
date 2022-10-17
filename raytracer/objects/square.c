@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:17:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:24:49 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 01:43:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,19 @@ t_hit square_intersect_ray_collision(t_ray *ray, t_square *square)
 
 	// t_triangle t2 = create_triangle(square->v0, square->v2, square->v3);
 	t_hit h2 = triangle_intersect_ray_collision(ray, &square->tri_2);
+
+
+
+	/**    v0           v1
+	 *     --------------
+	 *     |  .         |
+	 *     |    .  t1   |
+	 *     |  t2   .    |
+	 *     |         .  |
+	 *     --------------
+	 *    v3            v2
+	 */
+
 
 	if (h1.distance >= 0.0f && h2.distance >= 0.0f)
 	{

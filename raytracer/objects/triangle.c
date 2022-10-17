@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 16:58:01 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 01:42:32 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,16 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	const t_vec3 v1v0 = gl_vec3_subtract_vector(v1, v0);
 	const t_vec3 v2v0 = gl_vec3_subtract_vector(v2, v0);
 
+	/**    v0           v3
+	 *     --------------
+	 *     |  .         |
+	 *     |    .       |
+	 *     |       .    |
+	 *     |         .  |
+	 *     --------------
+	 *    v1            v2
+	 */
+
 	*face_normal = gl_vec3_normalize(gl_vec3_cross(v1v0, v2v0));
 	//  WARN:  주의! 삼각형의 넓이가 0일 경우에는 계산할 수 없음 (normalize에서 0으로 나누는 에러 발생)
 
@@ -84,7 +94,6 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 
 	// 방향만 확인하면 되기 때문에 normalize() 생략 가능
 	// 아래에서 cross product의 절대값으로 작은 삼각형들의 넓이 계산
-
 	if (gl_vec3_dot(cross0, *face_normal) < 0.0f) return false;
 	if (gl_vec3_dot(cross1, *face_normal) < 0.0f) return false;
 	if (gl_vec3_dot(cross2, *face_normal) < 0.0f) return false;
@@ -100,10 +109,6 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	const float area_sum = area0 + area1 + area2;
 	*w0 = area0 / area_sum;
 	*w1 = area1 / area_sum;
-	// *w1 = area2 / area_sum;
-
-	// u = ...
-	// v = ...
 
 	return (true);
 }
@@ -131,6 +136,21 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
+
+		hit.tangent = gl_vec3_normalize(gl_vec3_subtract_vector(triangle->v2, triangle->v1));
+
+
+	/**    v0           v1
+	 *     --------------
+	 *     |  .         |
+	 *     |    .       |
+	 *     |       .    |
+	 *     |         .  |
+	 *     --------------
+	 *    v3           v2
+	 */
+
+
 	}
 
 	return (hit);

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 22:18:54 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 02:11:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ t_vec3 sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 
 // 	v.x = absf(vec.x);
 // 	v.y = absf(vec.y);
-// 	v.z = absf(vec.z);
+//  v.z = absf(vec.z);
 // 	return (v);
 // }
 
@@ -260,10 +260,14 @@ t_vec3	sample_normal_map(const t_hit *hit)
 {
 	// (1) read normal map, get hit_point's uv data
 	// get data rgb each, from (-1.0f,-1.0f,-1.0f ~ 1.0f, 1.0f, 1.0f)
-	const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, true); // color range from (0.0f ~ 1.0f)
+	const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, false); // color range from (0.0f ~ 1.0f)
+	// const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, true); // color range from (0.0f ~ 1.0f)
+	// const t_vec3 rgb = sample_linear(hit->obj->normal_texture, hit->uv, true); // color range from (0.0f ~ 1.0f)
+	// const t_vec3 rgb = sample_linear(hit->obj->normal_texture, hit->uv, false); // color range from (0.0f ~ 1.0f)
 
 	// (1) Change rgb to (-1.0f ~ 1.0f range.)
 	t_vec3 derivative;
+
 	derivative.r = (rgb.r - 0.5f) * 2.0f;
 	derivative.g = (rgb.g - 0.5f) * 2.0f;
 	derivative.b = (rgb.b - 0.5f) * 2.0f;
@@ -271,16 +275,25 @@ t_vec3	sample_normal_map(const t_hit *hit)
 	// (2) get 3 vectors (x, y, z direction. hit.normal is always z.)
 	t_vec3 normal = hit->normal;
 	t_vec3 tangent = hit->tangent; // TODO:  calculate tangent vector!
-	t_vec3 bitangent = gl_vec3_cross(tangent, normal);     // use cross product of z and y.
+	t_vec3 bitangent = gl_vec3_cross(normal, tangent);     // use cross product of z and y.
 
 	// (3) multiply each derivatives with derivative.
-	t_vec3 normal_result = gl_vec3_multiply_scalar(normal, derivative.b);
-	t_vec3 tangent_result = gl_vec3_multiply_scalar(tangent, derivative.g);
-	t_vec3 bitangent_result = gl_vec3_multiply_scalar(bitangent, derivative.r);
+	t_vec3 bitangent_result = gl_vec3_multiply_scalar(bitangent, derivative.x);
+	t_vec3 tangent_result = gl_vec3_multiply_scalar(tangent, derivative.y);
+	t_vec3 normal_result = gl_vec3_multiply_scalar(normal, derivative.z);
 
 	// (4) lastly, Sum all.
 	t_vec3 final_normal = gl_vec3_add_vector(normal_result, tangent_result);
 	final_normal = gl_vec3_add_vector(final_normal, bitangent_result);
+	final_normal = gl_vec3_normalize(gl_vec3_add_vector(final_normal, bitangent_result));
+
+
+	// printf("Before_normal : x(%f) y(%f) z(%f)\t-->\t", hit->normal.x, hit->normal.y, hit->normal.z);
+	// printf("normal_result : x(%f) y(%f) z(%f)\t-->\t", normal_result.x, normal_result.y, normal_result.z);
+	// printf("Derivative : x(%f) y(%f) z(%f)\t-->\t", derivative.x, derivative.y, derivative.z);
+	// printf("Final_normal : x(%f) y(%f) z(%f)\n", final_normal.x, final_normal.y, final_normal.z);
+	// usleep(10000);
+
 
 	return (final_normal);
 	// return (hit->normal);
