@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 14:50:44 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 19:18:07 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ t_texture	*new_texture_checkerboard(t_device *device, int width, int height)
 		free(texture);
 		return (NULL);
 	}
+	texture->type = TEXTURE_CHECKER;
 	texture->width = width;
 	texture->image.img_size.width = width;
 	texture->height = height;
@@ -111,6 +112,7 @@ t_texture	*new_texture(t_device *device, char* filename)
 	int width;
 	int height;
 
+	texture->type = TEXTURE_FILE;
 	// 개행을 지워야 한다.
 	char *filename_without_newline = ft_strtrim(filename, "\n");
 	texture->image.img_ptr = mlx_xpm_file_to_image(device->mlx, filename_without_newline, &width, &height);
@@ -147,8 +149,21 @@ t_vec3 get_clamped(t_texture *texture, int i, int j)
 	return gl_vec3_3f(r, g, b);
 }
 
+t_vec3 get_clamped_raw(t_texture *texture, int i, int j)
+{
+	i = clamp_int(i, 0, texture->width - 1);
+	j = clamp_int(j, 0, texture->height - 1);
 
-t_vec3 sample_point(t_texture *texture, const t_vec2 uv)
+	t_vec4 point = gl_get_pixel_color_vec4(&texture->image, i, j);
+
+	const float r = point.r; // 기존 ambient_color에 나중에 곱해서, 그 값만큼 색을 바꿈. --> 홍정모 코드의 색은 0 ~ 255.0 사이.
+	const float g = point.g;
+	const float b = point.b;
+	return gl_vec3_3f(r, g, b);
+}
+
+
+t_vec3 sample_point(t_texture *texture, const t_vec2 uv, int is_raw)
 // OpenGL에서는 Nearest sampling이라고 부르기도 함
 {
 	(void)uv; (void)texture;
@@ -168,7 +183,10 @@ t_vec3 sample_point(t_texture *texture, const t_vec2 uv)
 	// int i = (int)xy.x;
 	// int j = (int)xy.y;
 
-	return (get_clamped(texture, i, j));
+	if (is_raw != true)
+		return (get_clamped(texture, i, j));
+	else
+		return (get_clamped_raw(texture, i, j));
 }
 
 /* index가 범위를 넘어서면 index 처음으로 돌아감.(%) */
@@ -234,8 +252,8 @@ t_vec3 interpolate_bilinear(
 	return (color_y);
 }
 
-// linear interpolation
-t_vec3 sample_linear(t_texture *texture, const t_vec2 uv)
+// linear interpolation.
+t_vec3 sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 {
 	(void)uv; (void)texture;
 	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]
@@ -252,27 +270,8 @@ t_vec3 sample_linear(t_texture *texture, const t_vec2 uv)
 	const float dx = (float)xy.x - (float)i;
 	const float dy = (float)xy.y - (float)j;
 
-	// return (interpolate_bilinear(dx, dy, get_clamped(texture, i, j), get_clamped(texture, i + 1, j), get_clamped(texture, i, j + 1), get_clamped(texture, i + 1, j + 1)));
-	return (interpolate_bilinear(dx, dy, get_wrapped(texture, i, j), get_wrapped(texture, i + 1, j), get_wrapped(texture, i, j + 1), get_wrapped(texture, i + 1, j + 1)));
-}
-
-t_vec3 sample_linear_raw(t_texture *texture, const t_vec2 uv)
-{
-	(void)uv; (void)texture;
-	// 텍스춰 좌표의 범위 uv [0.0, 1.0] x [0.0, 1.0]
-	// 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
-	// std::cout << floor(-0.3f) << " " << int(-0.3f) << std::endl; // -1 0
-
-	t_vec2 xy = gl_vec2_2f(uv.x * (float)texture->width, uv.y * (float)texture->height);
-	xy = gl_vec2_add_float(xy, -0.5f);
-
-	const int i = (int)floor(xy.x);
-	const int j = (int)floor(xy.y);
-
-	// TODO:  지금 uv 좌표계가 이상하다. 그래서 기존 코드에서 순서를 좀 바꿨다. 나중에 좌표계 고칠 것.
-	const float dx = (float)xy.x - (float)i;
-	const float dy = (float)xy.y - (float)j;
-
-	// return (interpolate_bilinear(dx, dy, get_clamped(texture, i, j), get_clamped(texture, i + 1, j), get_clamped(texture, i, j + 1), get_clamped(texture, i + 1, j + 1)));
-	return (interpolate_bilinear(dx, dy, get_wrapped_raw(texture, i, j), get_wrapped_raw(texture, i + 1, j), get_wrapped_raw(texture, i, j + 1), get_wrapped_raw(texture, i + 1, j + 1)));
+	if (is_raw != true)
+		return (interpolate_bilinear(dx, dy, get_wrapped(texture, i, j), get_wrapped(texture, i + 1, j), get_wrapped(texture, i, j + 1), get_wrapped(texture, i + 1, j + 1)));
+	else
+		return (interpolate_bilinear(dx, dy, get_wrapped_raw(texture, i, j), get_wrapped_raw(texture, i + 1, j), get_wrapped_raw(texture, i, j + 1), get_wrapped_raw(texture, i + 1, j + 1)));
 }

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 17:26:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 19:36:45 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,18 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 	// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
 	if (hit.obj->ambient_texture != NULL) // if has texture + 그림자가 없을 때.
 	{
+		t_vec3 sample_ambient;
 		// const t_vec3 sample_point_result = sample_point(hit.obj->ambient_texture, hit.uv); // texture sampling
-		const t_vec3 sample_point_result = sample_linear(hit.obj->ambient_texture, hit.uv); // texture sampling
-		point_color.r *= sample_point_result.b;												// 홍정모
+		if (hit.obj->ambient_texture->type == TEXTURE_CHECKER)
+			sample_ambient = sample_point(hit.obj->ambient_texture, hit.uv, false); // texture sampling
+		else
+			sample_ambient = sample_linear(hit.obj->ambient_texture, hit.uv, false); // texture sampling
+
+		point_color.r *= sample_ambient.b;												// 홍정모
 		// point_color.r = sample_point_result.r; // 홍정모
-		point_color.g *= sample_point_result.g; // 홍정모
+		point_color.g *= sample_ambient.g; // 홍정모
 		// point_color.g = sample_point_result.g; // 홍정모
-		point_color.b *= sample_point_result.r; // 홍정모
+		point_color.b *= sample_ambient.r; // 홍정모
 												// point_color.b = sample_point_result.b; // 홍정모
 	}
 
@@ -136,10 +141,15 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 		// if (hit.obj->diffuse_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
 		if (hit.obj->ambient_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
 		{
-			const t_vec3 sample_linear_result = sample_linear_raw(hit.obj->ambient_texture, hit.uv); // texture sampling
-			diffuse_final.r = _diff * sample_linear_result.b;
-			diffuse_final.g = _diff * sample_linear_result.g;
-			diffuse_final.b = _diff * sample_linear_result.r;
+			t_vec3 sample_diffuse;
+			if (hit.obj->ambient_texture->type == TEXTURE_CHECKER)
+				sample_diffuse = sample_point(hit.obj->ambient_texture, hit.uv, true); // texture sampling
+			else
+				sample_diffuse = sample_linear(hit.obj->ambient_texture, hit.uv, true); // texture sampling
+
+			diffuse_final.r = _diff * sample_diffuse.b;
+			diffuse_final.g = _diff * sample_diffuse.g;
+			diffuse_final.b = _diff * sample_diffuse.r;
 		}
 		// *------------------------------------------------------------------
 
