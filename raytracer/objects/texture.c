@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 21:39:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 22:18:54 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,22 +245,32 @@ t_vec3 sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 		return (interpolate_bilinear(dx, dy, get_wrapped_raw(texture, i, j), get_wrapped_raw(texture, i + 1, j), get_wrapped_raw(texture, i, j + 1), get_wrapped_raw(texture, i + 1, j + 1)));
 }
 
+// t_vec3 abs_vec3(t_vec3 vec)
+// {
+// 	t_vec3 v;
+
+// 	v.x = absf(vec.x);
+// 	v.y = absf(vec.y);
+// 	v.z = absf(vec.z);
+// 	return (v);
+// }
+
+// 노말맵을 읽어서 hit.normal 값을 변조한다.
 t_vec3	sample_normal_map(const t_hit *hit)
 {
 	// (1) read normal map, get hit_point's uv data
 	// get data rgb each, from (-1.0f,-1.0f,-1.0f ~ 1.0f, 1.0f, 1.0f)
-
-	const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, false); // color range from (0 ~ 255)
+	const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, true); // color range from (0.0f ~ 1.0f)
 
 	// (1) Change rgb to (-1.0f ~ 1.0f range.)
 	t_vec3 derivative;
-	derivative.r = ((rgb.r / 255.0f) - 0.5f) * 2.0f;
-	derivative.g = ((rgb.g / 255.0f) - 0.5f) * 2.0f;
-	derivative.b = ((rgb.b / 255.0f) - 0.5f) * 2.0f;
+	derivative.r = (rgb.r - 0.5f) * 2.0f;
+	derivative.g = (rgb.g - 0.5f) * 2.0f;
+	derivative.b = (rgb.b - 0.5f) * 2.0f;
 
 	// (2) get 3 vectors (x, y, z direction. hit.normal is always z.)
 	t_vec3 normal = hit->normal;
-	t_vec3 tangent; // TODO:  calculate tangent vector!
+	t_vec3 tangent = hit->tangent; // TODO:  calculate tangent vector!
 	t_vec3 bitangent = gl_vec3_cross(tangent, normal);     // use cross product of z and y.
 
 	// (3) multiply each derivatives with derivative.

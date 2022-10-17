@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:32:46 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:22:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 22:00:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@ typedef struct s_hit {
 	t_vec3		normal; 	// 충돌 위치의 표면의 수직 벡터.
 	t_object	*obj; // hit object pointer
 
+	// for texture sampling
 	t_vec2		uv; 		// 텍스쳐 좌표
+
+	// for bump map calculation.
+	t_vec3		tangent;
 
 }	t_hit;
 

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 21:21:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 22:23:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,19 +132,22 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
 	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
 	{
-
 		// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
 		// 참고 자료
 		// https://www.youtube.com/watch?v=6_-NNKc4lrk
 		// Normal Map을 이용한다면, _diff 의 값이 달리질 것이다.
 		// hit.normal이 normal_map에 의해 추가적으로 계산되어야 한다.
-
-		const t_vec3 hit_normal_new = sample_normal_map(&hit);
+		t_vec3 hit_normal = hit.normal;
+		if (hit.obj->normal_texture != NULL)
+		{
+			hit_normal = sample_normal_map(&hit);
+		}
 		// * -------------------------------------------------------------------------------------------
 
-
 		// (3-1) Calculate Diffuse color
-		const float _diff = max_float(gl_vec3_dot(hit_normal_new, hit_point_to_light), 0.0f);
+		const float _diff = max_float(gl_vec3_dot(hit_normal, hit_point_to_light), 0.0f);
+
+
 		// const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
 		t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
 
@@ -155,7 +158,6 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
 				sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
 			else
-				// sample_diffuse = sample_normal_map(&hit);
 				sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
 			diffuse_final.r = _diff * sample_diffuse.b;
 			diffuse_final.g = _diff * sample_diffuse.g;
@@ -168,9 +170,9 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 
 		// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
 
-		// const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
+		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
 
-		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal_new, gl_vec3_dot(hit_point_to_light, hit_normal_new)), 2.0f), hit_point_to_light);
+		// const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(hit_point_to_light, hit_normal)), 2.0f), hit_point_to_light);
 
 		const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
 
