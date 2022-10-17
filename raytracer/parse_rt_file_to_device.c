@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 19:25:35 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 20:48:55 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,6 @@
 #include "gl_engine.h"
 #include "main.h"
 #include "texture.h"
-
-// static t_vec3 world(t_device *device, t_vec3 pos_screen)
-// {
-// 	const float x_scale = 2.0f / device->win_width;
-// 	const float y_scale = 2.0f / device->win_height;
-// 	const float aspect_ratio = (float)device->win_width / device->win_height;
-
-// 	// 3차원 공간으로 확장.
-// 	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
-// }
 
 t_object *custom_allocator_for_object(int obj_type)
 {
@@ -61,16 +51,15 @@ void	custom_deallocator_for_object(void *data)
 	t_object *obj_ptr = data;
 	if (obj_ptr->obj_data != NULL)
 		free(obj_ptr->obj_data);
-	if (obj_ptr->ambient_texture != NULL)
-	{
-		printf("mlx_ptr addr:%p  imag_ptr addr:%p\n", obj_ptr->ambient_texture->image.mlx_ptr, obj_ptr->ambient_texture->image.img_ptr);
-		mlx_destroy_image(obj_ptr->ambient_texture->image.mlx_ptr, obj_ptr->ambient_texture->image.img_ptr);
-		free(obj_ptr->ambient_texture);
-	}
 	if (obj_ptr->diffuse_texture != NULL)
 	{
 		mlx_destroy_image(obj_ptr->diffuse_texture->image.mlx_ptr, obj_ptr->diffuse_texture->image.img_ptr);
 		free(obj_ptr->diffuse_texture);
+	}
+	if (obj_ptr->normal_texture != NULL)
+	{
+		mlx_destroy_image(obj_ptr->normal_texture->image.mlx_ptr, obj_ptr->normal_texture->image.img_ptr);
+		free(obj_ptr->normal_texture);
 	}
 }
 
@@ -96,24 +85,27 @@ t_vec3	parse_3float(t_device *device, char* line, int is_color)
 	return (result);
 }
 
-void	parse_texture(t_device *device, t_object *object, char *file_name)
+
+void	parse_normal_texture(t_device *device, t_object *object, char *file_name)
+{
+	object->normal_texture = new_texture(device, file_name);
+}
+
+void	parse_diffuse_texture(t_device *device, t_object *object, char *file_name)
 {
 	// TODO:  diffuse_texture는 나중에 추가
-//	printf("Texture : [%s], strlen : %zd\n", file_name, ft_strlen(file_name));
 	if (ft_strncmp("checker", file_name, 7) == 0)
-	{
-		printf("checker texture loading...\n");
-	object->ambient_texture = new_texture_checkerboard(device, 32, 32); // 4 * 4 checker
-	}
+		object->diffuse_texture = new_texture_checkerboard(device, 32, 32);
 	else
-		object->ambient_texture = new_texture(device, file_name);
+		object->diffuse_texture = new_texture(device, file_name);
 }
 
 void	parse_sphere(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (strs_count != 4 && strs_count != 7 && strs_count != 8)
+	printf("strs_count %zd\n", strs_count);
+	if (strs_count != 4 && strs_count != 7 && strs_count != 8 && strs_count != 9)
 		print_error_and_exit(device, "parse_sphere(): .rt file error\n");
 
 	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
@@ -130,14 +122,17 @@ void	parse_sphere(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	if (strs_count == 7 || strs_count == 8)
+	if (strs_count == 7 || strs_count == 8 || strs_count == 9)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[4], true);
 		new_obj->material.ks = atof(line_split[5]);
 		new_obj->material.alpha = atof(line_split[6]);
 	}
-	if (strs_count == 8)
-		parse_texture(device, new_obj, line_split[7]);
+	if (strs_count == 8 || strs_count == 9)
+		parse_diffuse_texture(device, new_obj, line_split[7]);
+	if (strs_count == 9)
+		parse_normal_texture(device, new_obj, line_split[8]);
+
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
 	device->objects->push_back(device->objects, new_obj);
@@ -147,7 +142,7 @@ void	parse_triangle(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (strs_count != 5 && strs_count != 8 && strs_count != 9)
+	if (strs_count != 5 && strs_count != 8 && strs_count != 9 && strs_count != 10)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
 	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
@@ -168,14 +163,15 @@ void	parse_triangle(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	if (strs_count == 8 || strs_count == 9)
+	if (strs_count == 8 || strs_count == 9 || strs_count == 10)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[5], true);
 		new_obj->material.ks = atof(line_split[6]);
 		new_obj->material.alpha = atof(line_split[7]);
-		if (strs_count == 9)
-			parse_texture(device, new_obj, line_split[8]);
-//			new_obj->ambient_texture = new_texture(device, line_split[8]);
+		if (strs_count == 9 || strs_count == 10)
+			parse_diffuse_texture(device, new_obj, line_split[8]);
+		if (strs_count == 10)
+			parse_normal_texture(device, new_obj, line_split[9]);
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;
@@ -186,39 +182,26 @@ void	parse_square(t_device *device, char **line_split)
 {
 	size_t	strs_count = get_strs_count(line_split);
 	// (1) check if sp has 4 char members
-	if (strs_count != 6 && strs_count != 9 && strs_count != 10)
+	if (strs_count != 6 && strs_count != 9 && strs_count != 10 && strs_count != 11)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
-	// t_object *new_obj = ft_calloc(1, sizeof(*new_obj));
-	// new_obj->type = TYPE_SQUARE;
 	t_object *new_obj = custom_allocator_for_object(TYPE_SQUARE);
 
-	// tr vertex1  vertex2   vertex3   diffuseColor(rgb)  specular  ks  alpha
-	// ((t_square *)new_obj->obj_data)->v0 = parse_3float(device, line_split[1], false);
 	((t_square *)new_obj->obj_data)->tri_1.v0 = parse_3float(device, line_split[1], false);
 	((t_square *)new_obj->obj_data)->tri_1.v1 = parse_3float(device, line_split[2], false);
 	((t_square *)new_obj->obj_data)->tri_1.v2 = parse_3float(device, line_split[3], false);
-
 
 	((t_square *)new_obj->obj_data)->tri_1.uv0 = gl_vec2_2f(0.0f, 0.0f);
 	((t_square *)new_obj->obj_data)->tri_1.uv1 = gl_vec2_2f(1.0f, 0.0f);
 	((t_square *)new_obj->obj_data)->tri_1.uv2 = gl_vec2_2f(1.0f, 1.0f);
 
-
 	((t_square *)new_obj->obj_data)->tri_2.v0 = parse_3float(device, line_split[1], false);
 	((t_square *)new_obj->obj_data)->tri_2.v1 = parse_3float(device, line_split[3], false);
 	((t_square *)new_obj->obj_data)->tri_2.v2 = parse_3float(device, line_split[4], false);
 
-
 	((t_square *)new_obj->obj_data)->tri_2.uv0 = gl_vec2_2f(0.0f, 0.0f);
 	((t_square *)new_obj->obj_data)->tri_2.uv1 = gl_vec2_2f(1.0f, 1.0f);
 	((t_square *)new_obj->obj_data)->tri_2.uv2 = gl_vec2_2f(0.0f, 1.0f);
-
-
-	// ((t_square *)new_obj->obj_data)->v1 = parse_3float(device, line_split[2], false);
-	// ((t_square *)new_obj->obj_data)->v2 = parse_3float(device, line_split[3], false);
-	// ((t_square *)new_obj->obj_data)->v3 = parse_3float(device, line_split[4], false);
-
 
 	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
 
@@ -229,14 +212,15 @@ void	parse_square(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	if (strs_count == 9 || strs_count == 10)
+	if (strs_count == 9 || strs_count == 10 || strs_count == 11)
 	{
 		new_obj->material.specular = parse_3float(device, line_split[6], true);
 		new_obj->material.ks = atof(line_split[7]);
 		new_obj->material.alpha = atof(line_split[8]);
-		if (strs_count == 10)
-			parse_texture(device, new_obj, line_split[9]);
-			// 나중엔 diffTexture 까지.
+		if (strs_count == 10 || strs_count == 11)
+			parse_diffuse_texture(device, new_obj, line_split[9]);
+		if (strs_count == 11)
+			parse_normal_texture(device, new_obj, line_split[10]);
 	}
 	// new_sphere->reflection = 0.0f;
 	// new_sphere->transparency = 0.0f;

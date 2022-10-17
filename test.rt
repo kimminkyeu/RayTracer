@@ -7,10 +7,10 @@ A   0.8            50,50,50
 L   1.0,1.0,-1.0     0.5           10,0,255
 
 #   [ Sphere ]
-#   center          radius    diffuseColor(rgb)        specular      ks   alpha     texture_file
+#   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
 
-sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0    checker
-# sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0    ./raytracer/image/tiled_diffuse.xpm
+# sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                 checker
+sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                   ./raytracer/image/tiled_diffuse.xpm          ./raytracer/image/tiled_normal.xpm
 
 # sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0
 # sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0    ./raytracer/image/shadertoy_abstract1.xpm

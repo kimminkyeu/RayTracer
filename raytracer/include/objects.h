@@ -52,8 +52,8 @@ typedef struct s_object {
 	void		*obj_data;
 
 	// Texture
-	t_texture	*ambient_texture;
-	t_texture	*diffuse_texture;
+	t_texture	*diffuse_texture; // diffuse_color
+	t_texture	*normal_texture;  // normal_map
 
 }	t_object;
 

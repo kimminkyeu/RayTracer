@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 19:18:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 21:39:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,37 +39,6 @@ static void fill_checker_board(t_texture *texture)
 		}
 		y++;
 	}
-
-	// NOTE:  sample_linear 테스트용.
-	// while (y < texture->height)
-	// {
-	// 	x = 0;
-	// 	while (x < texture->width)
-	// 	{
-	// 		if (y % 4 == 0)
-	// 		{
-	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(255.0f, 0.0f, 0.0f), (1.0f + x) * 0.25f);
-	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-	// 		}
-	// 		else if (y % 4 == 1)
-	// 		{
-	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(0.0f, 255.0f, 0.0f), (1.0f + x) * 0.25f);
-	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-	// 		}
-	// 		else if (y % 4 == 2)
-	// 		{
-	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(0.0f, 0.0f, 255.0f), (1.0f + x) * 0.25f);
-	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-	// 		}
-	// 		else
-	// 		{
-	// 			t_vec3 color = gl_vec3_multiply_scalar(gl_vec3_3f(255.0f, 255.0f, 255.0f), (1.0f + x) * 0.25f);
-	// 			gl_draw_pixel(&texture->image, x, y, gl_get_color_from_4int(0, color.r, color.g, color.b));
-	// 		}
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
 }
 
 t_texture	*new_texture_checkerboard(t_device *device, int width, int height)
@@ -274,4 +243,36 @@ t_vec3 sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 		return (interpolate_bilinear(dx, dy, get_wrapped(texture, i, j), get_wrapped(texture, i + 1, j), get_wrapped(texture, i, j + 1), get_wrapped(texture, i + 1, j + 1)));
 	else
 		return (interpolate_bilinear(dx, dy, get_wrapped_raw(texture, i, j), get_wrapped_raw(texture, i + 1, j), get_wrapped_raw(texture, i, j + 1), get_wrapped_raw(texture, i + 1, j + 1)));
+}
+
+t_vec3	sample_normal_map(const t_hit *hit)
+{
+	// (1) read normal map, get hit_point's uv data
+	// get data rgb each, from (-1.0f,-1.0f,-1.0f ~ 1.0f, 1.0f, 1.0f)
+
+	const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, false); // color range from (0 ~ 255)
+
+	// (1) Change rgb to (-1.0f ~ 1.0f range.)
+	t_vec3 derivative;
+	derivative.r = ((rgb.r / 255.0f) - 0.5f) * 2.0f;
+	derivative.g = ((rgb.g / 255.0f) - 0.5f) * 2.0f;
+	derivative.b = ((rgb.b / 255.0f) - 0.5f) * 2.0f;
+
+	// (2) get 3 vectors (x, y, z direction. hit.normal is always z.)
+	t_vec3 normal = hit->normal;
+	t_vec3 tangent; // TODO:  calculate tangent vector!
+	t_vec3 bitangent = gl_vec3_cross(tangent, normal);     // use cross product of z and y.
+
+	// (3) multiply each derivatives with derivative.
+	t_vec3 normal_result = gl_vec3_multiply_scalar(normal, derivative.b);
+	t_vec3 tangent_result = gl_vec3_multiply_scalar(tangent, derivative.g);
+	t_vec3 bitangent_result = gl_vec3_multiply_scalar(bitangent, derivative.r);
+
+	// (4) lastly, Sum all.
+	t_vec3 final_normal = gl_vec3_add_vector(normal_result, tangent_result);
+	final_normal = gl_vec3_add_vector(final_normal, bitangent_result);
+
+	return (final_normal);
+	// return (hit->normal);
+	// return (rgb);
 }
