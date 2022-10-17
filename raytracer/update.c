@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 16:28:08 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 17:17:34 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,79 +92,80 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 
  ---------------------------------------------------------------------------------------------- */
 
+t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
+{
+	// (1) Start with Ambient Color.
+	t_vec3 point_color;
 
+	point_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
+	// return (point_color);
+
+	// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
+	// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
+	if (hit.obj->ambient_texture != NULL) // if has texture + 그림자가 없을 때.
+	{
+		// const t_vec3 sample_point_result = sample_point(hit.obj->ambient_texture, hit.uv); // texture sampling
+		const t_vec3 sample_point_result = sample_linear(hit.obj->ambient_texture, hit.uv); // texture sampling
+		point_color.r *= sample_point_result.b;												// 홍정모
+		// point_color.r = sample_point_result.r; // 홍정모
+		point_color.g *= sample_point_result.g; // 홍정모
+		// point_color.g = sample_point_result.g; // 홍정모
+		point_color.b *= sample_point_result.r; // 홍정모
+												// point_color.b = sample_point_result.b; // 홍정모
+	}
+
+	// (2) Diffuse
+	// 그림자 처리. 아주 작은 값만큼 광원을 향해 이동시켜야 hit_point로 부터 충돌처리를 피할 수 있다.
+	const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
+
+	// (3) Shadow
+	// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
+	// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
+	t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
+	t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
+
+	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다.
+	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
+	{
+		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
+
+		// (3-1) Calculate Diffuse color
+		t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+
+		// *------------------------------------------------------------------
+		// if (hit.obj->diffuse_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
+		if (hit.obj->ambient_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
+		{
+			const t_vec3 sample_linear_result = sample_linear_raw(hit.obj->ambient_texture, hit.uv); // texture sampling
+			diffuse_final.r = _diff * sample_linear_result.b;
+			diffuse_final.g = _diff * sample_linear_result.g;
+			diffuse_final.b = _diff * sample_linear_result.r;
+		}
+		// *------------------------------------------------------------------
+
+		// (3-2) Add Diffuse color
+		point_color = gl_vec3_add_vector(point_color, diffuse_final);
+
+		// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
+		const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
+		const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
+		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
+
+		// (4-2) Add Specular color
+		point_color = gl_vec3_add_vector(point_color, specular_final);
+	}
+	return (point_color);
+}
 
 t_vec3 trace_ray(t_device *device, t_ray *ray)
 {
 	// (0) Render first hit
 	t_hit hit = find_closet_collision(device, ray);
 
-	if (hit.distance >= 0.0f) // if no hit.
-	/**
-	 * * If ray hit object, then calculate with Phong-Shading-model. */
+	// * If ray hit object, then calculate with Phong-Shading-model.
+	if (hit.distance >= 0.0f) // if has hit.
 	{
-		// (1) Start with Ambient Color.
-		t_vec3 point_color;
-
-		point_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
-		// return (point_color);
-
-		// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
-		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
-		if (hit.obj->ambient_texture != NULL)  // if has texture + 그림자가 없을 때.
-		{
-			// const t_vec3 sample_point_result = sample_point(hit.obj->ambient_texture, hit.uv); // texture sampling
-			const t_vec3 sample_point_result = sample_linear(hit.obj->ambient_texture, hit.uv); // texture sampling
-			point_color.r *= sample_point_result.b; // 홍정모
-			// point_color.r = sample_point_result.r; // 홍정모
-			point_color.g *= sample_point_result.g; // 홍정모
-			// point_color.g = sample_point_result.g; // 홍정모
-			point_color.b *= sample_point_result.r; // 홍정모
-			// point_color.b = sample_point_result.b; // 홍정모
-		}
-
-		// (2) Diffuse
-		// 그림자 처리. 아주 작은 값만큼 광원을 향해 이동시켜야 hit_point로 부터 충돌처리를 피할 수 있다.
-		const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
-
-		// (3) Shadow
-		// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
-		// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
-		t_ray	shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
-		t_hit	shadow_ray_hit = find_closet_collision(device, &shadow_ray);
-
-		// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다.
-		if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
-		{
-			const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
-
-			// (3-1) Calculate Diffuse color
-			t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
-
-			// *------------------------------------------------------------------
-			// if (hit.obj->diffuse_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
-			if (hit.obj->ambient_texture != NULL) // if has diffuse texture // TODO:  일단 지금은 ambient_texture만 이용하기. 나중에 bump_map으로 확장할 것.
-			{
-				const t_vec3 sample_linear_result = sample_linear_raw(hit.obj->ambient_texture, hit.uv); // texture sampling
-				diffuse_final.r = _diff * sample_linear_result.b;
-				diffuse_final.g = _diff * sample_linear_result.g;
-				diffuse_final.b = _diff * sample_linear_result.r;
-			}
-			// *------------------------------------------------------------------
-
-			// (3-2) Add Diffuse color
-			point_color = gl_vec3_add_vector(point_color, diffuse_final);
-
-			// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
-			const t_vec3 reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
-			const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), reflection_dir), 0.0f), hit.obj->material.alpha);
-			const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
-
-			// (4-2) Add Specular color
-			point_color = gl_vec3_add_vector(point_color, specular_final);
-		}
-
-		return (point_color);
+		return (phong_shading_model(device, ray, hit));
 	}
 	return (gl_vec3_1f(0.0f)); // return black
 }
@@ -236,10 +237,8 @@ void *thread_update(void *arg)
 }
 
 
-// NOTE:  for super-sampling (픽셀 하나를 4개의 작은 픽셀로 나눠 4의 ray를 쏘고, 평균을 낸다.)
-t_vec3 trace_ray2x2_super_sampling(t_image *img, t_vec3 pixel_pos_world, const float dx, const int recursive_level)
+t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const float dx, const int recursive_level)
 {
-
 	if (recursive_level == 0) // recursive_level이 0이면 하던대로 단일 Ray_tracing 진행.
 	{
 		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
@@ -269,7 +268,7 @@ t_vec3 trace_ray2x2_super_sampling(t_image *img, t_vec3 pixel_pos_world, const f
 										pixel_pos_world.z);
 
 			// 재귀 호출. (Recursive Super-Sampling)
-			pixel_color = gl_vec3_add_vector(pixel_color, trace_ray2x2_super_sampling(img, sub_pos, sub_dx, recursive_level - 1));
+			pixel_color = gl_vec3_add_vector(pixel_color, super_sampling_anti_aliasing(img, sub_pos, sub_dx, recursive_level - 1));
 			i++;
 		}
 		j++;
@@ -290,11 +289,27 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 	const float	dx = 2.0f / img->img_size.height; // for super sampling.
 	// world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
 
-	// *  NOTE:  Super-Sampling Anti-aliasing --> No super_sampling if last parameter is 0.
+	// *  NOTE:  Multi-Sampling Anti-aliasing --> No super_sampling if last parameter is 0.
 	// * ============================================================================
-	t_vec3 trace_result = trace_ray2x2_super_sampling(img, pixel_pos_world, dx, 0); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
-	// * ============================================================================
+	// (1) 먼저 ray를 쏴서 계산해서 충돌지점의 uv를 구한다.
+	t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
+	t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
+	t_hit hit = find_closet_collision(device, &pixel_ray);
 
+	// (2) 만약 hit.uv가 모서리에 가깝다면, 그때 super-sampling 하기.
+	const float edge_determinant = 0.1f;
+	const int	sampling_recursive_step = 0;
+	t_vec3 trace_result = gl_vec3_1f(0.0f);
+	// if (hit.distance >= 0.0f && (hit.uv.x < edge_determinant || hit.uv.y < edge_determinant || hit.uv.x > 1.0 - edge_determinant || hit.uv.y > 1.0 - edge_determinant))
+	if (hit.distance >= 0.0f && (abs_float(hit.uv.x) + abs_float(hit.uv.y) < 1.0f + edge_determinant && abs_float(hit.uv.x) + abs_float(hit.uv.y) > 1.0f - edge_determinant))
+	{
+		trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, sampling_recursive_step); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
+	}
+	else
+	{
+		// trace_result = phong_shading_model(device, &pixel_ray, hit); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
+	}
+	// * ============================================================================
 	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
 	return (final_color);

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/16 20:29:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 16:58:01 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,6 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 
 		// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
 		// (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
-
 		// printf("hit_point uv's barycentric coord : w0 %f w1 %f w2 %f\n", w0, w1, 1.0f - w0 - w1);
 
 		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);

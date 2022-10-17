@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:20:41 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 17:10:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 /** ------------------------------ *
  *  |     Sphere hit detection     |
  *  ------------------------------ */
+
+#define PI (3.142857)
+
 t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
@@ -35,6 +38,13 @@ t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 		hit.distance = min_float(d1, d2);
 		hit.point = gl_vec3_add_vector(ray->origin, gl_vec3_multiply_scalar(ray->direction, hit.distance));
 		hit.normal = gl_vec3_normalize(gl_vec3_subtract_vector(hit.point, sphere->center));
+
+
+		// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
+		// https://www.mvps.org/directx/articles/spheremap.htm
+		// https://gamedev.stackexchange.com/questions/114412/how-to-get-uv-coordinates-for-sphere-cylindrical-projection
+		hit.uv.x = asin(hit.normal.x) / (PI) + 0.5;
+		hit.uv.y = asin(hit.normal.y) / (PI) + 0.5;
 	}
 	return (hit);
 }
