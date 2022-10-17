@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 14:47:46 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 16:28:08 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ void *thread_update(void *arg)
 }
 
 
-// NOTE:  for super-sampling
+// NOTE:  for super-sampling (픽셀 하나를 4개의 작은 픽셀로 나눠 4의 ray를 쏘고, 평균을 낸다.)
 t_vec3 trace_ray2x2_super_sampling(t_image *img, t_vec3 pixel_pos_world, const float dx, const int recursive_level)
 {
 
@@ -247,24 +247,35 @@ t_vec3 trace_ray2x2_super_sampling(t_image *img, t_vec3 pixel_pos_world, const f
 		return (trace_ray(img->device_ptr, &pixel_ray));
 	}
 
-	const float subdx = 0.5f * dx;
+	const float sub_dx = 0.5f * dx;
 
-	t_vec3 pixel_color = gl_vec3_1f(0.0f);
-	pixel_pos_world.x = pixel_pos_world.x - subdx * 0.5f;
-	pixel_pos_world.y = pixel_pos_world.y - subdx * 0.5f;
+	t_vec3 pixel_color = gl_vec3_1f(0.0f); // 재귀 첫 색상.?
+
+	pixel_pos_world.x = pixel_pos_world.x - sub_dx * 0.5f; // 0.25 와 0.75 지점을 구해야 하기 때문.
+	pixel_pos_world.y = pixel_pos_world.y - sub_dx * 0.5f; // 0.25 와 0.75 지점을 구해야 하기 때문.
 	// [수정] 강의 영상과 달리 subdx에 0.5f를 곱해줬습니다.
 
+	int i = 0;
+	int j = 0;
+	while (j < 2)
+	{
+		// j = 0일때 pos는 0.25 지점, j = 1일때 pos는 0.75 지점.
+		i = 0;
+		while (i < 2)
+		{
+			// i = 0일때 pos는 0.25 지점, i = 1일때 pos는 0.75 지점.
+			t_vec3 sub_pos = gl_vec3_3f(pixel_pos_world.x + ((float)i * sub_dx),\
+										pixel_pos_world.y + ((float)j * sub_dx),\
+										pixel_pos_world.z);
 
-	// ...
-
-
-
-	return (gl_vec3_multiply_scalar(pixel_color, 0.25f));
+			// 재귀 호출. (Recursive Super-Sampling)
+			pixel_color = gl_vec3_add_vector(pixel_color, trace_ray2x2_super_sampling(img, sub_pos, sub_dx, recursive_level - 1));
+			i++;
+		}
+		j++;
+	}
+	return (gl_vec3_multiply_scalar(pixel_color, 0.25f)); // pixel의 색상을 평균내는 부분 (나누기 4)
 }
-
-
-
-
 
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
@@ -276,12 +287,15 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 	device->eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
 	// const t_vec3 eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
 
-	const float	dx = 2.0f / img->img_size.height; // for super sampling
+	const float	dx = 2.0f / img->img_size.height; // for super sampling.
+	// world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
 
-	// NOTE:  Super-Sampling.
+	// *  NOTE:  Super-Sampling Anti-aliasing --> No super_sampling if last parameter is 0.
+	// * ============================================================================
 	t_vec3 trace_result = trace_ray2x2_super_sampling(img, pixel_pos_world, dx, 0); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
-	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
+	// * ============================================================================
 
+	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
 	return (final_color);
 }

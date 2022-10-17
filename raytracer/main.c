@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 14:56:59 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/17 15:57:19 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	}
 
-	const int WIDTH = 1000;
-	const int HEIGHT = 800;
+	const int WIDTH = 700;
+	const int HEIGHT = 700;
 	/** (1) Init engine && create image */
 	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing");
 	engine_new_image(device, gl_vec2_2f(WIDTH, HEIGHT), gl_vec2_2f(0,0), update);
