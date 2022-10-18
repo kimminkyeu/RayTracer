@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 22:32:19 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 21:56:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 		// *  NOTE:  Bump Map( = Normal Map) 에서 사용하기 위한 변수 계산.
 		// * (1) http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/
 		// * (2) https://mgun.tistory.com/m/1289
-		// const float delta_pos1 = hit.uv.x *
+		// * (3) https://computergraphics.stackexchange.com/questions/1945/ray-tracing-tangent-space-for-a-point-on-a-sphere
+		// ray_direction과 normal_vector를 cross하면 tangent를 구할 수 있다.
+		// hit.tangent = gl_vec3_normalize(gl_vec3_cross(ray->direction, hit.normal));
+		hit.tangent = gl_vec3_cross(ray->direction, hit.normal);
 	}
 	return (hit);
 }
