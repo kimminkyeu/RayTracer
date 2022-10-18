@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 14:54:47 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:54:51 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/19 02:51:39 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ typedef struct s_plane {
 	t_vec3 normal; // surface-normal
 }	t_plane;
 
-extern t_hit plane_intersect_ray_collision(t_ray *ray, t_plane *plane);
+extern t_hit plane_intersect_ray_collision(const t_ray *ray, t_plane *plane);
 
 #endif /** plane.h */

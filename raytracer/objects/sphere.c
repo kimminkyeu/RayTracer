@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 00:16:18 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/19 04:48:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 #define PI (3.141592)
 
-t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
+t_hit sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
@@ -36,18 +36,29 @@ t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 		const float d2 = (-b + sqrtf(determinant)) / 2.0f;
 
 		hit.distance = min_float(d1, d2);
+
+		// 투명 물체의 경우 물체 안에서 다시 밖으로 나가면서 충돌 가능.
+		// 이 경우 더 큰 값을 hit_point로 사용.
+		if (hit.distance < 0.0f)
+		{
+			hit.distance = max_float(d1, d2);
+		}
+
+
+
 		hit.point = gl_vec3_add_vector(ray->origin, gl_vec3_multiply_scalar(ray->direction, hit.distance));
 		hit.normal = gl_vec3_normalize(gl_vec3_subtract_vector(hit.point, sphere->center));
 
 		// *  NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
 		// * -----------------------------------------------------------
-		// * (1) https://www.mvps.org/directx/articles/spheremap.htm
-		// * (2) https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/spherical-coordinates-and-trigonometric-functions
-		// * (3) https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
-		// * (4) https://en.wikipedia.org/wiki/UV_mapping
+		// * (1) https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/spherical-coordinates-and-trigonometric-functions
+		// * (2) https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
+		// * (3) https://en.wikipedia.org/wiki/UV_mapping
 		const t_vec3 d = gl_vec3_reverse(hit.normal);
-		// hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f;
-		hit.uv.x = atan2(d.x, d.z) / (PI) + 0.5f; // 원래 2PI 였는데, 텍스쳐가 가로로 2배 늘어나서 PI로 바꿨더니 잘되더라.
+		hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f;
+		// 원리 :  간단함. 구의 xz축 평면의 각도를 구하고 (-PI ~ PI), 이를 2PI로 나누면 -0.5~0.5까지 범위가 되고, 다시 0.5를 더해서 0~1.0 범위로 조정한 것이다. (텍스쳐 기준으로 x축)
+		// hit.uv.x = atan2(d.x, d.z) / (PI) + 0.5f; // 해상도 조정을 위해 값을 살짝 바꾸었음.
+		// 원리 :  텍스쳐 기준으로 y축. y축의 각도를 구한다.
 		hit.uv.y = asin(d.y) / (PI) + 0.5f;
 		// * -----------------------------------------------------------
 

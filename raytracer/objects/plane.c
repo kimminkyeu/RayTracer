@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:21:00 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:52:25 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/19 02:53:01 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 /** ------------------------------ *
  *  |     Plain hit detection      |
  *  ------------------------------ */
-t_hit plane_intersect_ray_collision(t_ray *ray, t_plane *plane)
+t_hit plane_intersect_ray_collision(const t_ray *ray, t_plane *plane)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 

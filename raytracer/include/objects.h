@@ -39,8 +39,9 @@ typedef struct s_material {
 	t_vec3	specular;
 	float	ks;
 	float	alpha;
-	// float reflection;
-	// float transparency;
+	float	reflection;
+	float	transparency;
+
 }	t_material;
 
 typedef struct s_object {

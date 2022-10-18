@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/18 19:28:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/19 02:52:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	return (true);
 }
 
-t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
+t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
