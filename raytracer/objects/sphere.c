@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/18 21:56:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/19 00:16:18 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_hit sphere_intersect_ray_collision(t_ray *ray, t_sphere *sphere)
 		// * (3) https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
 		// * (4) https://en.wikipedia.org/wiki/UV_mapping
 		const t_vec3 d = gl_vec3_reverse(hit.normal);
+		// hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f;
 		hit.uv.x = atan2(d.x, d.z) / (PI) + 0.5f; // 원래 2PI 였는데, 텍스쳐가 가로로 2배 늘어나서 PI로 바꿨더니 잘되더라.
 		hit.uv.y = asin(d.y) / (PI) + 0.5f;
 		// * -----------------------------------------------------------

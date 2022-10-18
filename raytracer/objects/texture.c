@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/18 02:11:49 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/19 00:15:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,6 @@ t_vec3 get_clamped_raw(t_texture *texture, int i, int j)
 	const float b = point.b;
 	return gl_vec3_3f(r, g, b);
 }
-
 
 t_vec3 sample_point(t_texture *texture, const t_vec2 uv, int is_raw)
 // OpenGL에서는 Nearest sampling이라고 부르기도 함

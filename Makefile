@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/14 19:05:15 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/19 00:14:09 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,8 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 
 # MYAPP-DIRECTORY
 MINIRT_DIR					= raytracer
-MINIRT_SRC					= main helper parse_rt_file_to_device update\
+MINIRT_SRC					= main helper parse_rt_file_to_device\
+							  update trace_ray\
 
 
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
