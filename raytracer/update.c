@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/18 02:13:35 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 19:27:06 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,12 @@ t_vec3 phong_shading_model(t_device *device, t_ray *ray, t_hit hit)
 	return (point_color);
 }
 
+
+
+
+
+
+
 t_vec3 trace_ray(t_device *device, t_ray *ray)
 {
 	// (0) Render first hit
@@ -195,6 +201,14 @@ t_vec3 trace_ray(t_device *device, t_ray *ray)
 	}
 	return (gl_vec3_1f(0.0f)); // return black
 }
+
+
+
+
+
+
+
+
 
 void *thread_update(void *arg);
 

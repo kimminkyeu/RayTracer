@@ -10,10 +10,10 @@ L   1.0,1.0,-1.0     0.5           10,0,255
 #   [ Sphere ]
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
 
-# sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                 checker
-# sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                   ./raytracer/image/tiled_diffuse.xpm          ./raytracer/image/tiled_normal.xpm
+sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                 ./raytracer/image/cobblestone_diffuse.xpm        ./raytracer/image/cobblestone_normal.xpm
 
-sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0
+# sp  0.0,0.0,1.0      0.9       0,0,0                  255,255,255   0.5   10.0                   ./raytracer/image/tiled_diffuse.xpm          ./raytracer/image/tiled_normal.xpm
+# sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0
 # sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0    ./raytracer/image/shadertoy_abstract1.xpm
 # sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0    checker
 # sp  0.0,0.0,4.0    0.5         250,0,0                 255,255,255   0.5   10.0
@@ -47,10 +47,15 @@ sp  0.0,0.0,4.0      0.5       250,0,0                 255,255,255   0.5   10.0
 #	      v3            v2
 
 
-# 정면
+# [정면]
 #      vertex0            vertex1           vertex2          vertex3               diffuseColor(rgb)      specular         ks     alpha        texture(diffuse)                             normal_map
-sq  -2.0,2.0,10.0      2.0,2.0,10.0     2.0,-2.0,10.0      -2.0,-2.0,10.0        128,128,128            255,255,255       0.2    10.0         ./raytracer/image/cobblestone_diffuse.xpm           ./raytracer/image/cobblestone_normal.xpm
+# sq  -2.0,2.0,10.0      2.0,2.0,10.0     2.0,-2.0,5.0      -2.0,-2.0,5.0        128,128,128            255,255,255       0.2    10.0         ./raytracer/image/cobblestone_diffuse.xpm      ./raytracer/image/cobblestone_normal.xpm
+# sq  -2.0,2.0,5.0      2.0,2.0,5.0     2.0,-2.0,10.0      -2.0,-2.0,10.0        128,128,128            255,255,255       0.2    10.0         ./raytracer/image/cobblestone_diffuse.xpm      ./raytracer/image/cobblestone_normal.xpm
+
 # tiled_texture : https://polyhaven.com/a/tiled_floor_001
+
+
+
 
 # sq  -2.0,-2.0,10.0      -2.0,2.0,10.0     2.0,2.0,10.0      2.0,-2.0,10.0          0,0,0                  255,255,255       0.5    100.0         checker
 

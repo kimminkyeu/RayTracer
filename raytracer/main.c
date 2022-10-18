@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/18 01:22:54 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 19:20:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	main(int ac, char **av)
 	info->finished_thread_num = 0;
 	if (pthread_mutex_init(&(info->finished_num_mutex), NULL) != 0)
 		print_error_and_exit(device, "error in pthread_mutex_init()\n");
+
 
 	/** (3) start rendering */
 	engine_render(device);

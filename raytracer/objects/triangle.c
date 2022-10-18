@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/18 01:42:32 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/18 19:28:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,14 +137,15 @@ t_hit triangle_intersect_ray_collision(t_ray *ray, t_triangle *triangle)
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
 
-		hit.tangent = gl_vec3_normalize(gl_vec3_subtract_vector(triangle->v2, triangle->v1));
 
+		// t1 과 t2의 tangent가 서로 반대방향인 문제가 발생함.
+		hit.tangent = gl_vec3_normalize(gl_vec3_subtract_vector(triangle->v2, triangle->v1));
 
 	/**    v0           v1
 	 *     --------------
-	 *     |  .         |
+	 *     |  .     t1  |
 	 *     |    .       |
-	 *     |       .    |
+	 *     | t2    .    |
 	 *     |         .  |
 	 *     --------------
 	 *    v3           v2
