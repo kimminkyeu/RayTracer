@@ -80,6 +80,7 @@ t_vec3 trace_ray(t_device *device, const t_ray *ray, const int recursive_level)
 {
 	if (recursive_level < 0)
 		return (gl_vec3_1f(0.0f));
+
 	// (0) Render first hit
 	t_hit hit = find_closet_collision(device, ray);
 
@@ -205,10 +206,11 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 
 		if (hit.obj->material.transparency)
 		{
-			// 참고
-			// https://samdriver.xyz/article/refraction-sphere (그림들이 좋아요)
-			// https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel (오류있음)
-			// https://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/reflection_refraction.pdf (슬라이드가 보기 좋지는 않지만 정확해요)
+			// * 참고
+			// * (1) https://samdriver.xyz/article/refraction-sphere (그림들이 좋아요)
+			// * (2) https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel (오류있음)
+			// * (3) https://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/reflection_refraction.pdf (슬라이드가 보기 좋지는 않지만 정확해요)
+			// * (4) https://lifeisforu.tistory.com/384
 
 			const float ior = 1.5f; // Index of refraction (유리: 1.5, 물: 1.3)
 
@@ -231,18 +233,18 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 			const float sinTheta2 = sinTheta1 / eta ;
 			const float cosTheta2 = sqrt(1.0f - sinTheta2 * sinTheta2);
 
-			const float m_0 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
+			const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
 			const t_vec3 m = gl_vec3_normalize(gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction));
+
 			const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
 			const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
-			const t_vec3 refracted_direction = gl_vec3_normalize(gl_vec3_add_vector(A, B));
+			const t_vec3 refracted_direction = gl_vec3_normalize(gl_vec3_add_vector(A, B)); // Transmission
 
 			t_vec3 offset = gl_vec3_multiply_scalar(refracted_direction, 0.0001f);
 			t_ray refraction_ray = create_ray(gl_vec3_add_vector(hit.point, offset), refracted_direction);
 
 			const t_vec3 refracted_color = trace_ray(device, &refraction_ray, recursive_level - 1);
 			final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
-
 			// Fresnel 효과는 생략되었습니다.
 		}
 		return (final_color);
