@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 06:48:54 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/20 00:00:54 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	parse_sphere(t_device *device, char **line_split)
 	new_obj->material.alpha = 9.0f;
 
 	// new_obj->material.reflection = 0.5f;
-	new_obj->material.transparency = 0.8f;
+	new_obj->material.transparency = 1.0f;
 
 	if (strs_count == 7 || strs_count == 8 || strs_count == 9)
 	{

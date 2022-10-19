@@ -103,6 +103,8 @@ t_vec3 trace_ray(t_device *device, const t_ray *ray, const int recursive_level)
  --> 그림자를 처리하는 다른 방법이 있는 걸까?
 
  ---------------------------------------------------------------------------------------------- */
+ # include <unistd.h>
+ # include <stdio.h>
 
 t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const int recursive_level)
 {
@@ -136,12 +138,17 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 	// * (3) Shadow
 	// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
 	// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
-	t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
-	t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
 
 	// * (2) Diffuse COlor
 	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
-	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
+
+
+	// * 그림자 처리. 투명한 물체에 대한 그림자 처리는 어떻게?
+	// https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
+	// t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
+	// t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
+
+	// if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
 	{
 		// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
 		// 참고 자료
@@ -221,20 +228,23 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 			{
 				eta = ior;
 				normal = hit.normal;
+				// normal = gl_vec3_reverse(hit.normal);
 			}
 			else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
 			{
 				eta = 1.0f / ior;
+				// normal = hit.normal;
 				normal = gl_vec3_reverse(hit.normal);
 			}
 
 			const float cosTheta1 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
-			const float sinTheta1 = sqrt(1.0f - cosTheta1 * cosTheta1) ; // cos^2 + sin^2 = 1
+			const float sinTheta1 = sqrtf(1.0f - cosTheta1 * cosTheta1) ; // cos^2 + sin^2 = 1
 			const float sinTheta2 = sinTheta1 / eta ;
-			const float cosTheta2 = sqrt(1.0f - sinTheta2 * sinTheta2);
+			const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
 
 			const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
-			const t_vec3 m = gl_vec3_normalize(gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction));
+			const t_vec3 m_1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction);
+			const t_vec3 m = gl_vec3_normalize(m_1);
 
 			const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
 			const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
@@ -246,6 +256,26 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 			const t_vec3 refracted_color = trace_ray(device, &refraction_ray, recursive_level - 1);
 			final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
 			// Fresnel 효과는 생략되었습니다.
+
+			if (ray->direction.x == 0.0f && ray->direction.y == 0.0f)
+			{
+
+				printf("cosTheta1 : (%f)\n", cosTheta1);
+				printf("1.0f - cosTheta1^2 = %f\n", (1.0f - cosTheta1 * cosTheta1));
+				printf("sinTheta1 : (%f)\n", sinTheta1);
+				printf("cosTheta2 : (%f)\n", cosTheta2);
+				printf("sinTheta2 : (%f)\n", sinTheta2);
+
+				printf("in_ray: (x %f y %f z %f)\n", ray->direction.x, ray->direction.y, ray->direction.z);
+				printf("normal : (%f %f %f)\n", normal.x, normal.y, normal.z);
+				printf("m_0 : (%f)\n", m_0);
+				printf("m_1 : (x %f y %f z %f)\n", m_1.x, m_1.y, m_1.z);
+				printf("m : (%f %f %f)\n\n", m.x, m.y, m.z);
+
+				printf("A : (%f %f %f)\n", A.x, A.y, A.z);
+				printf("B : (%f %f %f)\n", B.x, B.y, B.z);
+				printf("out_ray: (x %f y %f z %f)\n", refracted_direction.x, refracted_direction.y, refracted_direction.z);
+			}
 		}
 		return (final_color);
 	}
