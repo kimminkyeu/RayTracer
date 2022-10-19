@@ -145,10 +145,16 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 
 	// * 그림자 처리. 투명한 물체에 대한 그림자 처리는 어떻게?
 	// https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
-	// t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
-	// t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
+	t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
+	t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
 
-	// if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
+	t_vec3 hit_normal = hit.normal;
+		if (hit.obj->normal_texture != NULL)
+		{
+			hit_normal = sample_normal_map(&hit);
+		}
+
+	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
 	{
 		// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
 		// 참고 자료
@@ -156,11 +162,7 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		// Normal Map을 이용한다면, _diff 의 값이 달리질 것이다.
 		// hit.normal이 normal_map에 의해 추가적으로 계산되어야 한다.
 
-		t_vec3 hit_normal = hit.normal;
-		if (hit.obj->normal_texture != NULL)
-		{
-			hit_normal = sample_normal_map(&hit);
-		}
+
 		// * -------------------------------------------------------------------------------------------
 
 		// (3-1) Calculate Diffuse color
@@ -194,92 +196,72 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
 		phong_color = gl_vec3_add_vector(phong_color, specular_final);  // (4-2) Add Specular color
 		final_color = gl_vec3_multiply_scalar(phong_color, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
-
-		if (hit.obj->material.reflection)
-		{
-			// 여기에 반사 구현
-			// 수치 오류 주의
-			// 반사광이 반환해준 색을 더할 때의 비율은 hit.obj->reflection
-			// d - 2( n . d )n
-			const t_vec3 reflected_ray_dir = gl_vec3_subtract_vector(ray->direction, (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(ray->direction, hit_normal)), 2.0f)));
-
-			// 살짝 위로 떨궈야 hit 계산시에 충돌처리 되지 않음.
-			const t_vec3 hit_point_offset = gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(reflected_ray_dir, 1e-4f));
-			const t_ray reflected_ray = create_ray(hit_point_offset, reflected_ray_dir);
-			const t_vec3 reflected_color = trace_ray(device, &reflected_ray, recursive_level - 1);
-
-			final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(reflected_color, hit.obj->material.reflection));
-		}
-
-		if (hit.obj->material.transparency)
-		{
-			// * 참고
-			// * (1) https://samdriver.xyz/article/refraction-sphere (그림들이 좋아요)
-			// * (2) https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel (오류있음)
-			// * (3) https://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/reflection_refraction.pdf (슬라이드가 보기 좋지는 않지만 정확해요)
-			// * (4) https://lifeisforu.tistory.com/384
-
-			const float ior = 1.5f; // Index of refraction (유리: 1.5, 물: 1.3)
-
-			float eta; // sinTheta1 / sinTheta2
-			t_vec3 normal;
-
-			if (gl_vec3_dot(ray->direction, hit.normal) < 0.0f) // 밖에서 안에서 들어가는 경우 (예: 공기->유리)
-			{
-				eta = ior;
-				normal = hit.normal;
-				// normal = gl_vec3_reverse(hit.normal);
-			}
-			else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
-			{
-				eta = 1.0f / ior;
-				// normal = hit.normal;
-				normal = gl_vec3_reverse(hit.normal);
-			}
-
-			const float cosTheta1 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
-			const float sinTheta1 = sqrtf(1.0f - cosTheta1 * cosTheta1) ; // cos^2 + sin^2 = 1
-			const float sinTheta2 = sinTheta1 / eta ;
-			const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
-
-			const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
-			const t_vec3 m_1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction);
-			const t_vec3 m = gl_vec3_normalize(m_1);
-
-			const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
-			const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
-			const t_vec3 refracted_direction = gl_vec3_normalize(gl_vec3_add_vector(A, B)); // Transmission
-
-			t_vec3 offset = gl_vec3_multiply_scalar(refracted_direction, 0.0001f);
-			t_ray refraction_ray = create_ray(gl_vec3_add_vector(hit.point, offset), refracted_direction);
-
-			const t_vec3 refracted_color = trace_ray(device, &refraction_ray, recursive_level - 1);
-			final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
-			// Fresnel 효과는 생략되었습니다.
-
-			if (ray->direction.x == 0.0f && ray->direction.y == 0.0f)
-			{
-
-				printf("cosTheta1 : (%f)\n", cosTheta1);
-				printf("1.0f - cosTheta1^2 = %f\n", (1.0f - cosTheta1 * cosTheta1));
-				printf("sinTheta1 : (%f)\n", sinTheta1);
-				printf("cosTheta2 : (%f)\n", cosTheta2);
-				printf("sinTheta2 : (%f)\n", sinTheta2);
-
-				printf("in_ray: (x %f y %f z %f)\n", ray->direction.x, ray->direction.y, ray->direction.z);
-				printf("normal : (%f %f %f)\n", normal.x, normal.y, normal.z);
-				printf("m_0 : (%f)\n", m_0);
-				printf("m_1 : (x %f y %f z %f)\n", m_1.x, m_1.y, m_1.z);
-				printf("m : (%f %f %f)\n\n", m.x, m.y, m.z);
-
-				printf("A : (%f %f %f)\n", A.x, A.y, A.z);
-				printf("B : (%f %f %f)\n", B.x, B.y, B.z);
-				printf("out_ray: (x %f y %f z %f)\n", refracted_direction.x, refracted_direction.y, refracted_direction.z);
-			}
-		}
-		return (final_color);
 	}
-	return (gl_vec3_1f(0.0f));
+
+	if (hit.obj->material.reflection)
+	{
+		// 여기에 반사 구현
+		// 수치 오류 주의
+		// 반사광이 반환해준 색을 더할 때의 비율은 hit.obj->reflection
+		// d - 2( n . d )n
+		const t_vec3 reflected_ray_dir = gl_vec3_subtract_vector(ray->direction, (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(ray->direction, hit_normal)), 2.0f)));
+
+		// 살짝 위로 떨궈야 hit 계산시에 충돌처리 되지 않음.
+		const t_vec3 hit_point_offset = gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(reflected_ray_dir, 1e-4f));
+		const t_ray reflected_ray = create_ray(hit_point_offset, reflected_ray_dir);
+		const t_vec3 reflected_color = trace_ray(device, &reflected_ray, recursive_level - 1);
+
+		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(reflected_color, hit.obj->material.reflection));
+	}
+
+	if (hit.obj->material.transparency)
+	{
+		// * 참고
+		// * (1) https://samdriver.xyz/article/refraction-sphere (그림들이 좋아요)
+		// * (2) https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel (오류있음)
+		// * (3) https://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/reflection_refraction.pdf (슬라이드가 보기 좋지는 않지만 정확해요)
+		// * (4) https://lifeisforu.tistory.com/384
+
+		const float ior = 1.5f; // Index of refraction (유리: 1.5, 물: 1.3)
+
+		float eta; // sinTheta1 / sinTheta2
+		t_vec3 normal;
+
+		if (gl_vec3_dot(ray->direction, hit.normal) < 0.0f) // 밖에서 안에서 들어가는 경우 (예: 공기->유리)
+		{
+			eta = ior;
+			normal = hit.normal;
+			// normal = gl_vec3_reverse(hit.normal);
+		}
+		else // 안에서 밖으로 나가는 경우 (예: 유리->공기)
+		{
+			eta = 1.0f / ior;
+			// normal = hit.normal;
+			normal = gl_vec3_reverse(hit.normal);
+		}
+
+		const float cosTheta1 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
+		const float sinTheta1 = sqrtf(1.0f - cosTheta1 * cosTheta1) ; // cos^2 + sin^2 = 1
+		const float sinTheta2 = sinTheta1 / eta ;
+		const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
+
+		const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
+		const t_vec3 m_1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction);
+		const t_vec3 m = gl_vec3_normalize(m_1);
+
+		const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
+		const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
+		const t_vec3 refracted_direction = gl_vec3_normalize(gl_vec3_add_vector(A, B)); // Transmission
+
+		t_vec3 offset = gl_vec3_multiply_scalar(refracted_direction, 0.0001f);
+		t_ray refraction_ray = create_ray(gl_vec3_add_vector(hit.point, offset), refracted_direction);
+
+		const t_vec3 refracted_color = trace_ray(device, &refraction_ray, recursive_level - 1);
+		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
+		// Fresnel 효과는 생략되었습니다.
+	}
+	return (final_color);
+	// return (gl_vec3_1f(0.0f));
 }
 
 

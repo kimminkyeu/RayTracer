@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 23:12:25 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/20 00:58:00 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,31 +37,31 @@ void *thread_update(void *arg)
 	int x = 0;
 
 	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
-	while (data->id == 1 && y < height)
-	{
-		x = -1;
-		while (x < width)
-		{
-			const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
-			gl_draw_pixel(img, x, y, final_color);
-			x++;
-		}
-		y++;
-	}
-
-
-	// const int num_of_thread = data->info->thread_num;
-	// while ((data->id + (y * num_of_thread)) < height)
+	// while (data->id == 1 && y < height)
 	// {
-	// 	x = 0;
-	// 	while (x < width) // draw each row
+	// 	x = -1;
+	// 	while (x < width)
 	// 	{
-	// 		const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
-	// 		gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
+	// 		const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
+	// 		gl_draw_pixel(img, x, y, final_color);
 	// 		x++;
 	// 	}
 	// 	y++;
 	// }
+
+
+	const int num_of_thread = data->info->thread_num;
+	while ((data->id + (y * num_of_thread)) < height)
+	{
+		x = 0;
+		while (x < width) // draw each row
+		{
+			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
+			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
+			x++;
+		}
+		y++;
+	}
 
 
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
