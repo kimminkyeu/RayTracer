@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/20 00:58:51 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/22 21:28:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,7 @@ void	parse_cylinder(t_device *device, char **line_split)
 	t_object *new_obj = custom_allocator_for_object(TYPE_CYLINDER);
 	((t_cylinder *)new_obj->obj_data)->pos = parse_3float(device, line_split[1], false);
 	((t_cylinder *)new_obj->obj_data)->orientation = parse_3float(device, line_split[2], false);
-	((t_cylinder *)new_obj->obj_data)->diameter = atof(line_split[3]);
+	((t_cylinder *)new_obj->obj_data)->radius = atof(line_split[3]);
 	((t_cylinder *)new_obj->obj_data)->height = atof(line_split[4]);
 	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
 

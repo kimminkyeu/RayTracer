@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/19 00:14:09 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/22 22:25:37 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,7 @@ MINIRT_SRC					= main helper parse_rt_file_to_device\
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
 MINIRT_OBJECTS_SRC          = hit ray\
                               texture\
-							  triangle square plane sphere cone cylinder\
+							  triangle square plane sphere cone cylinder disk\
 
 
 # MYAPP-SOURCE AL
