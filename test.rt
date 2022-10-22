@@ -7,6 +7,14 @@ A   0.8            50,50,50
 L   1.0,1.0,-1.0     0.9           10,0,255
 # L   0.0,8.0,4.0     0.5           10,0,255
 
+#   [ Cylinder ]
+#    pos              orientation       diameter   height      diffuse color
+cy   0.0,0.0,2.0      0.0,1.0,0.0       14.2       21.42       10,0,255
+
+
+#   [ Cone ]
+
+
 #   [ Sphere ]
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
 
@@ -41,10 +49,10 @@ L   1.0,1.0,-1.0     0.9           10,0,255
 
 #--[  Refraction Test Set ( glass )]-----------------------------------------------------------
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
-sp  0.0,-0.3,2.0     0.7       0,0,255                  255,255,255   0.5   10.0
+# sp  0.0,-0.3,2.0     0.7       0,0,255                  255,255,255   0.5   10.0
 #   vertex1             vertex2           vertex3           vertex4             diffuseColor(rgb)       specular          ks    alpha
-sq  -2.0,-1.0,10.0      2.0,-1.0,10.0     2.0,-1.0,0.0      -2.0,-1.0,0.0        128,128,128            255,255,255       0.5    50.0         checker
-sq  -2.0,3.0,5.0       2.0,3.0,5.0     2.0,-1.0,5.0      -2.0,-1.0,5.0        128,128,128            255,255,255       0.2    10.0        ./raytracer/image/back.xpm
+# sq  -2.0,-1.0,10.0      2.0,-1.0,10.0     2.0,-1.0,0.0      -2.0,-1.0,0.0        128,128,128            255,255,255       0.5    50.0         checker
+# sq  -2.0,3.0,5.0       2.0,3.0,5.0     2.0,-1.0,5.0      -2.0,-1.0,5.0        128,128,128            255,255,255       0.2    10.0        ./raytracer/image/back.xpm
 #------------------------------------------------------------------------------------
 
 

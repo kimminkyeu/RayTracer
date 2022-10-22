@@ -270,6 +270,29 @@ void	parse_plane(t_device *device, char **line_split)
 	device->objects->push_back(device->objects, new_obj);
 }
 
+void	parse_cylinder(t_device *device, char **line_split)
+{
+	//#    pos              orientation       diameter   height      diffuse color
+	//cy   50.0,0.0,20.6    0.0,0.0,1.0        14.2      21.42       10,0,255
+
+	// TODO:  예외 처리는 나중에 추가
+//	size_t	strs_count = get_strs_count(line_split);
+	t_object *new_obj = custom_allocator_for_object(TYPE_CYLINDER);
+	((t_cylinder *)new_obj->obj_data)->pos = parse_3float(device, line_split[1], false);
+	((t_cylinder *)new_obj->obj_data)->orientation = parse_3float(device, line_split[2], false);
+	((t_cylinder *)new_obj->obj_data)->diameter = atof(line_split[3]);
+	((t_cylinder *)new_obj->obj_data)->height = atof(line_split[4]);
+	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
+
+	new_obj->material.specular = gl_vec3_1f(255.0f);
+	new_obj->material.ks = 0.5f;
+	new_obj->material.alpha = 9.0f;
+	// add others later.
+
+	device->objects->push_back(device->objects, new_obj);
+}
+
+
 void	parse_light(t_device *device, char **line_split)
 {
 	// if light is more than 1, or is in wrong format
@@ -280,6 +303,7 @@ void	parse_light(t_device *device, char **line_split)
 	device->light->color = parse_3float(device, line_split[3], true);
 	device->light->has_light = true;
 }
+
 
 void	parse_ambient_light(t_device *device, char **line_split)
 {
@@ -340,6 +364,8 @@ void	parse_each(t_device *device, char **line_split)
 	else if (ft_strncmp(line_split[0], "cy", ft_strlen(line_split[0])) == 0)
 	// if cylinder
 	{
+		printf("parsing Cylinder...\n");
+		parse_cylinder(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "co", ft_strlen(line_split[0])) == 0)
 	// if cone

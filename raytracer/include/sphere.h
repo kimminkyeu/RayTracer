@@ -15,6 +15,8 @@
 
 # include "ray.h"
 
+
+
 typedef struct s_sphere {
 	t_vec3	center;
 	float	radius;

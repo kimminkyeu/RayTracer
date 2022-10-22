@@ -303,8 +303,8 @@ t_hit check_ray_collision(const t_ray *ray, t_object *obj)
 		return (plane_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_SQUARE)
 		return (square_intersect_ray_collision(ray, obj->obj_data));
-	// else if (obj->type == TYPE_CYLINDER)
-	// {}
+	else if (obj->type == TYPE_CYLINDER)
+		return (cylinder_intersect_ray_collision(ray, obj->obj_data));
 	// else if (obj->type == TYPE_CONE)
 	// {}
 	return (create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
