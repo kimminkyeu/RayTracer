@@ -15,6 +15,8 @@
 
 # include "gl_engine.h"
 
+t_vec3 get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point);
+
 // helper for min max abs
 float min_float(float f1, float f2);
 float max_float(float f1, float f2);

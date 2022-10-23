@@ -16,6 +16,30 @@
 #include "texture.h"
 
 
+// return w0, w1, w2 weights
+t_vec3 get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point)
+{
+	float w0, w1, w2;
+	// 작은 삼각형들 3개의 normal 계산. 이때, ( WARN:  cross-product는 오른손 좌표계)
+	// 이때, 방향만 알면 되기 때문에 normalize를 할 필요가 없음.
+	// const t_vec3 normal0 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2)));
+	const t_vec3 cross0 = gl_vec3_cross(gl_vec3_subtract_vector(point, v2), gl_vec3_subtract_vector(v1, v2));
+	// const t_vec3 normal1 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v2, v0)));
+	const t_vec3 cross1 = gl_vec3_cross(gl_vec3_subtract_vector(point, v0), gl_vec3_subtract_vector(v2, v0));
+	// const t_vec3 normal2 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(*point, v0)));
+	const t_vec3 cross2 = gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(point, v0));
+
+	const float area0 = gl_vec3_get_magnitude(cross0) * 0.5f;
+	const float area1 = gl_vec3_get_magnitude(cross1) * 0.5f;
+	const float area2 = gl_vec3_get_magnitude(cross2) * 0.5f;
+
+	const float area_sum = area0 + area1 + area2;
+	w0 = area0 / area_sum;
+	w1 = area1 / area_sum;
+	w2 = 1.0f - w0 - w1;
+	return (gl_vec3_3f(w0, w1, w2));
+}
+
 /** helper function. (min) */
 float min_float(float f1, float f2)
 {

@@ -78,7 +78,8 @@ MINIRT_SRC					= main helper parse_rt_file_to_device\
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
 MINIRT_OBJECTS_SRC          = hit ray\
                               texture\
-							  triangle square plane sphere cone cylinder disk\
+                              disk\
+							  triangle square plane sphere cone cylinder\
 
 
 # MYAPP-SOURCE AL

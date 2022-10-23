@@ -1,10 +1,10 @@
 
-#include "disk.h"
 #include "gl_vec3.h"
 #include "hit.h"
 # include "ray.h"
 # include "helper.h"
 # include "cylinder.h"
+# include "disk.h"
 
 #define PI (3.141592)
 /** ------------------------------ *
@@ -22,7 +22,7 @@ t_hit cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
 	const t_vec3 bottom_center = cylinder->pos;
 	// (1) Highest Point (상단 TOP)
 	// : top_center = cylinder->pos + cylinder->height * cylinder->orientation;
-	const t_vec3 top_center = gl_vec3_add_vector(bottom_center, gl_vec3_multiply_scalar(cylinder->orientation, cylinder->height));
+
 
 	// (2) 중심점 normal. (가운데 축. 혹시 normal이 안되있을 수도 있으니 한번 해준다.)
 
@@ -55,25 +55,34 @@ t_hit cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
 
 		// normal is from q to p, normalized
 		hit.point = gl_vec3_add_vector(ray->origin, gl_vec3_multiply_scalar(ray->direction, hit.distance));
-		const float c_to_q = gl_vec3_dot(cylinder->orientation, gl_vec3_subtract_vector(hit.point, bottom_center));
+
+		// WARN:  아 여기 계산 잘못했나...;;;
+		float c_to_q = gl_vec3_dot(cylinder->orientation, gl_vec3_subtract_vector(hit.point, bottom_center));
+//		float c_to_q = gl_vec3_get_magnitude(gl_vec3_subtract_vector(hit.point, bottom_center));
 		// *  TODO:  set uv later.
 		// if is lower or higher than it's height
 		// check top and bottom disk.
-		if (c_to_q < 0)
+//		(void)top_center;
+		if (c_to_q <= 0)
 		{
 			t_disk bottom_disk;
 			bottom_disk.center = bottom_center;
 			bottom_disk.orientation = gl_vec3_reverse(cylinder->orientation);
 			bottom_disk.radius = cylinder->radius;
 			return (disk_intersect_ray_collision(ray, &bottom_disk));
+//			return (create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
 		}
-		else if (c_to_q > cylinder->height)
+		else if (c_to_q >= cylinder->height)
+		// TODO:  여기서 계산 오류가 발생함... 대체 왜 여기서 터지지? 아래 면은 잘나옴. 유일한 차이는 top을 향하는 방향 계산이 잘못된 거임.
 		{
+			const t_vec3 top_center = gl_vec3_add_vector(bottom_center, gl_vec3_multiply_scalar(cylinder->orientation, cylinder->height));
 			t_disk top_disk;
-			top_disk.center = top_center;
-			top_disk.orientation = cylinder->orientation;
+			top_disk.center = top_center; // TODO:  바로 여기서 문제 발생함!!!
+			top_disk.orientation = cylinder->orientation; // TODO: 방향을 뒤집어야 하나?
+//			top_disk.orientation = gl_vec3_reverse(cylinder->orientation); // TODO: 방향을 뒤집어야 하나?
 			top_disk.radius = cylinder->radius;
 			return (disk_intersect_ray_collision(ray, &top_disk));
+//			return (create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
 		}
 		else // if cylinder
 		{
@@ -86,12 +95,10 @@ t_hit cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
 //			hit.uv.y = asin(d.y) / (PI) + 0.5f;
 			// y의 경우는 c_to_q와 height의 비율을 이용하면 된다.
 			// (c_to_q / height)
-			hit.uv.y = c_to_q / cylinder->height;
+			hit.uv.y = (c_to_q / cylinder->height);
 			hit.tangent = gl_vec3_cross(ray->direction, hit.normal);
+			return (hit);
 		}
 	}
-
-
-
 	return (hit);
 }

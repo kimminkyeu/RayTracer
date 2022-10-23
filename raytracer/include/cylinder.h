@@ -14,7 +14,6 @@
 # define CYLINDER_H
 
 # include "gl_vec3.h"
-# include "disk.h"
 
 //#    pos              orientation       diameter   height      diffuse color
 //cy   50.0,0.0,20.6    0.0,0.0,1.0        14.2      21.42       10,0,255

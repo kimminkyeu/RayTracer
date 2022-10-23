@@ -16,6 +16,7 @@
 #include "gl_vec3.h"
 #include "hit.h"
 #include "ray.h"
+#include "helper.h"
 
 typedef struct s_disk {
 

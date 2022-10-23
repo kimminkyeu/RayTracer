@@ -289,7 +289,7 @@ void	parse_cylinder(t_device *device, char **line_split)
 	new_obj->material.alpha = 9.0f;
 
 	// TODO:  예외처리 나중에 추가.
-	//	parse_diffuse_texture(device, new_obj, line_split[6]);
+//		parse_diffuse_texture(device, new_obj, line_split[6]);
 	// add others later.
 
 	device->objects->push_back(device->objects, new_obj);
