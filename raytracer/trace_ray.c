@@ -11,7 +11,7 @@
 
 #include "trace_ray.h"
 
-#define ANTI_ALIASING_RECURSIVE_LEVEL 	(0)
+#define ANTI_ALIASING_RECURSIVE_LEVEL 	(0) // best option is 3
 #define REFLECTION_RECURSIVE_LEVEL		(5)
 
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
@@ -40,6 +40,19 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
 }
 
+bool	is_pixels_are_same(t_vec3 *colors)
+{
+	// check if 4 colors are same
+	int i = 0;
+	while (i < 3)
+	{
+		if (!(colors[i].r == colors[i+1].r && colors[i].g == colors[i+1].g && colors[i].b == colors[i+1].b))
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const float dx, const int recursive_level)
 {
 	if (recursive_level == 0) // recursive_level이 0이면 하던대로 단일 Ray_tracing 진행.
@@ -55,6 +68,39 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 	pixel_pos_world.y = pixel_pos_world.y - sub_dx * 0.5f; // 0.25 와 0.75 지점을 구해야 하기 때문.
 	int i = 0;
 	int j = 0;
+
+	// (1) 먼저 4개의 픽셀을 비교한다.
+	t_vec3 sample_color[4];
+	while (j < 2)
+	{
+		// j = 0일때 pos는 0.25 지점, j = 1일때 pos는 0.75 지점.
+		i = 0;
+		while (i < 2)
+		{
+			// i = 0일때 pos는 0.25 지점, i = 1일때 pos는 0.75 지점.
+			t_vec3 sub_pos = gl_vec3_3f(pixel_pos_world.x + ((float)i * sub_dx),\
+										pixel_pos_world.y + ((float)j * sub_dx),\
+										pixel_pos_world.z);
+
+			// 재귀 호출. (Recursive Super-Sampling)
+			t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(sub_pos, img->device_ptr->eye_pos));
+			t_ray pixel_ray = create_ray(sub_pos, ray_dir);
+			sample_color[j * 2 + i] = trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL);
+			i++;
+		}
+		j++;
+	}
+	// (2) 만약 4개의 픽셀이 같다면, return. (supersampling 진행 하지 않기.)
+	if (is_pixels_are_same(sample_color))
+	{
+		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
+		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
+		return (trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL));
+	}
+
+	// (3) 만약 4개의 픽셀이 하나라도 다르다면, super_sampling 진행.
+	i = 0;
+	j = 0;
 	while (j < 2)
 	{
 		// j = 0일때 pos는 0.25 지점, j = 1일때 pos는 0.75 지점.
