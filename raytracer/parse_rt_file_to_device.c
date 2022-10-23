@@ -295,6 +295,27 @@ void	parse_cylinder(t_device *device, char **line_split)
 	device->objects->push_back(device->objects, new_obj);
 }
 
+void	parse_cone(t_device *device, char **line_split)
+{
+	//#    pos              orientation       diameter   height      diffuse color
+
+	// TODO:  예외 처리는 나중에 추가
+	t_object *new_obj = custom_allocator_for_object(TYPE_CONE);
+	((t_cylinder *)new_obj->obj_data)->pos = parse_3float(device, line_split[1], false);
+	((t_cylinder *)new_obj->obj_data)->orientation = parse_3float(device, line_split[2], false);
+	((t_cylinder *)new_obj->obj_data)->radius = atof(line_split[3]);
+	((t_cylinder *)new_obj->obj_data)->height = atof(line_split[4]);
+	new_obj->material.diffuse = parse_3float(device, line_split[5], true);
+	new_obj->material.specular = gl_vec3_1f(255.0f);
+	new_obj->material.ks = 0.5f;
+	new_obj->material.alpha = 9.0f;
+
+	// TODO:  예외처리 나중에 추가.
+//		parse_diffuse_texture(device, new_obj, line_split[6]);
+	// add others later.
+
+	device->objects->push_back(device->objects, new_obj);
+}
 
 void	parse_light(t_device *device, char **line_split)
 {
@@ -373,6 +394,8 @@ void	parse_each(t_device *device, char **line_split)
 	else if (ft_strncmp(line_split[0], "co", ft_strlen(line_split[0])) == 0)
 	// if cone
 	{
+		printf("parsing Cone...\n");
+		parse_cone(device, line_split);
 	}
 	else if (ft_strncmp(line_split[0], "tr", ft_strlen(line_split[0])) == 0)
 	// if triangle
