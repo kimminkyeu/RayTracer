@@ -25,11 +25,6 @@ int input_handler(t_device *device)
 	// t_vec2 delta = gl_vec2_multiply_scalar((gl_vec2_subtract_vector(mouse_pos, device->input.last_mouse_pos)), 0.002f);
 	// device->input.last_mouse_pos = mouse_pos;
 
-	// if (input_is_key_down(device, KEY_R))
-	// {
-		// printf("r pressed\n");
-	// }
-
 	if (device->is_high_resolution_render_mode == false && input_is_key_down(device, KEY_R))
 	{
 		printf("[change to High Resolution mode]\n");
@@ -48,7 +43,7 @@ int input_handler(t_device *device)
 	t_vec3 right_direction = gl_vec3_cross(camera->dir, gl_vec3_3f(0.0f, 1.0f, 0.0f));
 	t_vec3 up_direction = gl_vec3_3f(0.0f, 1.0f, 0.0f);
 
-	float speed = 0.1f;
+	float speed = 0.5f;
 
 	// Movement
 	if (input_is_key_down(device, KEY_W))

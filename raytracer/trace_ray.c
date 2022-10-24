@@ -29,12 +29,17 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 // screen 좌표계를 world 좌표계로 변환. (-aspect ~ +aspect)
 t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 {
+
 	const float x_scale = 2.0f / img->img_size.width;
 	const float y_scale = 2.0f / img->img_size.height;
 	const float aspect_ratio = (float)img->img_size.width / img->img_size.height;
 
 	// 3차원 공간으로 확장.
 	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
+
+	// const float camera_x = (pos_screen.x * x_scale - 1.0f * aspect_ratio) * tanf(gl_get_radian(img->device_ptr->camera->fov));
+	// const float camera_y = (-pos_screen.y * y_scale + 1.0f) * tanf(gl_get_radian(img->device_ptr->camera->fov));
+	// return (gl_vec3_3f(camera_x, camera_y, 0.0f));
 }
 
 bool	is_pixels_are_same(t_vec3 *colors)
