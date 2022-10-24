@@ -43,7 +43,6 @@ int input_handler(t_device *device)
 		return (0);
 	}
 	// below code will be executed only if mouse is pressed
-
 	bool moved = false;
 
 	t_vec3 right_direction = gl_vec3_cross(camera->dir, gl_vec3_3f(0.0f, 1.0f, 0.0f));
@@ -87,7 +86,6 @@ int input_handler(t_device *device)
 
 	if(moved)
 	{
-		printf("[change to Lower Resolution mode]\n");
 		device->is_high_resolution_render_mode = false;
 		update(device);
 	}

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 16:04:59 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 00:12:49 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 18:46:02 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ typedef struct s_thread {
 
 typedef struct s_thread_info {
 	t_thread	*thread_group;
+
+	pthread_t   monitoring_thread;
+
 	int			thread_num;
 
 	pthread_mutex_t	finished_num_mutex; // mutex for mutex finished
