@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 23:18:58 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 23:45:53 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/25 00:03:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,28 @@
 #include "gl_vec2.h"
 #include "gl_vec3.h"
 #include "ray.h"
-// #include "gl_device.h"
 
+
+
+
+
+
+
+/**_______________________________________________________
+ *                                                        *
+ *                          Y-axis                        *
+ *                                                        *
+ *                          [1.0f]                        *
+ *                            |                           *
+ *                c.len       |                           *
+ *    CAM +-------------------|---------> Z-axis          *
+ *  (Thera = FOV)             |                           *
+ *                            |                           *
+ *                         [-1.0f]                        *
+ *                                                        *
+ *    1.0f / C.len = cotangent( Fov / 2 )                 *
+ * _______________________________________________________*
+ */
 void update_camera_geometry(t_device *device)
 {
 	t_camera *camera = device->camera;
@@ -29,15 +49,15 @@ void update_camera_geometry(t_device *device)
 /**
  *                     [World Coord]
  * __________________________________________________________
- *
- *                         -1.0
- *                           |
- *                           |
- * -1.0 * aspect ------------------------- 1.0 * aspect
- *                           |
- *                           |
- *                          1.0
- * __________________________________________________________
+ *                                                          *
+ *                         -1.0                             *
+ *                           |                              *
+ *                           |                              *
+ *  -1.0 * aspect ------------------------ 1.0 * aspect     *
+ *                           |                              *
+ *                           |                              *
+ *                          1.0                             *
+ * _________________________________________________________*
  *
 */
 t_vec3 transform_screen_to_camera_world(t_camera *camera, t_image *img, t_vec2 pos_screen)
