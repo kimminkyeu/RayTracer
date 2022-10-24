@@ -171,13 +171,12 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
 	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
 	{
-
-
 		// (3-1) Calculate Diffuse color
 		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
 		// * (2) Diffuse Color
 		// *--- [ Diffuse Texture ] -----------------------------------------
-		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
+		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f) * light->brightness_ratio;
+
 		t_vec3 diffuse_final = gl_vec3_1f(0.0f);
 		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
 		{
@@ -194,20 +193,22 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 		else // if has no texture
 		{
 			diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+			diffuse_final = gl_vec3_add_vector(diffuse_final, gl_vec3_multiply_scalar(light->color, _diff));
+			// 빛의 색상값을 이용해서 diffuse color 적용하기
 		}
 		// *------------------------------------------------------------------
 
 		// (3-2) Add Diffuse ( = Resulting color )
 		final_color = gl_vec3_multiply_scalar(diffuse_final, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
-	}
 
-	// Finally, add Specular.
-	// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
-	// 광원에서 hit_point로 빛을 쏘았을 때 그 반사 방향과, ray_direction간의 각도가 0에 가깝다면 밝게.
-	const t_vec3 spec_reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
-	const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), spec_reflection_dir), 0.0f), hit.obj->material.alpha);
-	const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
-	final_color = gl_vec3_add_vector(final_color, specular_final);  // (4-2) Add Specular color
+		// Finally, add Specular.
+		// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
+		// 광원에서 hit_point로 빛을 쏘았을 때 그 반사 방향과, ray_direction간의 각도가 0에 가깝다면 밝게.
+		const t_vec3 spec_reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
+		const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), spec_reflection_dir), 0.0f), hit.obj->material.alpha);
+		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
+		final_color = gl_vec3_add_vector(final_color, specular_final); // (4-2) Add Specular color
+	}
 
 	return (final_color);
 }
@@ -251,8 +252,6 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 
 
 	// caculate from each light.
-	(void)recursive_level;
-
 	size_t i = 0;
 	while (i < device->point_lights->size)
 	{
@@ -264,8 +263,6 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 
 
 
-
-/*
 	if (hit.obj->material.reflection)
 	{
 		// 여기에 반사 구현
@@ -326,7 +323,7 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
 		// Fresnel 효과는 생략되었습니다.
 	}
-*/
+
 
 
 	return (final_color);

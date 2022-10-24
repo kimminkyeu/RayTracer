@@ -5,13 +5,13 @@ A   0.8            50,50,50
 #   [ Light ]
 #   pos             intensity     color
 L   2.0,1.0,-1.0     0.5           10,0,255
-L   -2.0,1.0,-1.0     0.5           10,0,255
+L   1.0,1.0,-1.0     0.5           255,0,10
 # L   0.0,8.0,4.0     0.5           10,0,255
 
 
 #--[ Multiple light source Set (0.5 reflect) ]-----------------------------------------------------------
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
-sp  0.0,-0.5,4.0     0.5       0,250,0                 255,255,255   0.5   10.0
+sp  0.5,-0.5,4.0     0.5       0,250,0                 255,255,255   0.5   10.0
 
 #   vertex1             vertex2           vertex3           vertex4             diffuseColor(rgb)       specular          ks    alpha
 # sq  -2.0,-1.0,20.0      2.0,-1.0,20.0     2.0,-1.0,0.0      -2.0,-1.0,0.0        128,128,128            255,255,255       0.5    50.0
