@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 18:43:40 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 23:47:10 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,13 +344,15 @@ void	parse_ambient_light(t_device *device, char **line_split)
 void	parse_camera(t_device *device, char **line_split)
 {
 	// if camera is more than 1, or is in wrong format
-	if (device->camera->has_camera == true || get_strs_count(line_split) != 4)
+	if (device->camera->has_camera == true || get_strs_count(line_split) != 5)
 		print_error_and_exit(device, "parse_camera(): .rt file error\n");
 
 	device->camera->pos = parse_3float(device, line_split[1], false);
-	device->camera->dir = parse_3float(device, line_split[2], false);
-	device->camera->fov = atof(line_split[3]);
+	device->camera->look_at = gl_vec3_normalize(parse_3float(device, line_split[2], false));
+	device->camera->up_direction = gl_vec3_normalize(parse_3float(device, line_split[3], false));
+	device->camera->fov = atof(line_split[4]);
 	device->camera->has_camera = true;
+	update_camera_geometry(device);
 }
 
 

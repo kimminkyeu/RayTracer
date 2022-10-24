@@ -8,7 +8,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <math.h>
+#include "camera.h"
 #include "include/main.h"
+#include "gl_vec3.h"
 #include "helper.h"
 #include "libft.h"
 #include "thread.h"
@@ -40,40 +43,37 @@ int input_handler(t_device *device)
 	// below code will be executed only if mouse is pressed
 	bool moved = false;
 
-	t_vec3 right_direction = gl_vec3_cross(camera->dir, gl_vec3_3f(0.0f, 1.0f, 0.0f));
-	t_vec3 up_direction = gl_vec3_3f(0.0f, 1.0f, 0.0f);
-
 	float speed = 0.5f;
 
 	// Movement
 	if (input_is_key_down(device, KEY_W))
 	{
-		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(camera->dir, speed));
+		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(camera->look_at, speed));
 		moved = true;
 	}
 	else if (input_is_key_down(device, KEY_S))
 	{
-		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(camera->dir, speed));
+		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(camera->look_at, speed));
 		moved = true;
 	}
 	if (input_is_key_down(device, KEY_A))
 	{
-		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(right_direction, speed));
+		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(camera->right_direction, speed));
 		moved = true;
 	}
 	else if (input_is_key_down(device, KEY_D))
 	{
-		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(right_direction, speed));
+		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(camera->right_direction, speed));
 		moved = true;
 	}
 	if (input_is_key_down(device, KEY_Q))
 	{
-		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(up_direction, speed));
+		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(camera->up_direction, speed));
 		moved = true;
 	}
 	else if (input_is_key_down(device, KEY_E))
 	{
-		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(up_direction, speed));
+		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(camera->up_direction, speed));
 		moved = true;
 	}
 
@@ -82,6 +82,11 @@ int input_handler(t_device *device)
 	if(moved)
 	{
 		device->is_high_resolution_render_mode = false;
+
+		// if camera has been moved, then recalculate camera datas
+		// TODO:  아래 공식을 parse_camera에서 한번 해줘야 함. (recalculate_camera() 함수로 빼기)
+		update_camera_geometry(device);
+		// modify the U and V vectors to match the size and aspect ratio.
 		update(device);
 	}
 	return (0);

@@ -17,7 +17,10 @@
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
 	(void)device;
-	const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
+
+	// const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
+	const t_vec3 pixel_pos_world = transform_screen_to_camera_world(device->camera, img, gl_vec2_2f(x, y));
+
 	const float	dx = 2.0f / img->img_size.height; // for super sampling. // world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
 
 	t_vec3 trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, ANTI_ALIASING_RECURSIVE_LEVEL); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
@@ -27,6 +30,7 @@ int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y
 }
 
 // screen 좌표계를 world 좌표계로 변환. (-aspect ~ +aspect)
+/*
 t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 {
 
@@ -41,6 +45,7 @@ t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
 	// const float camera_y = (-pos_screen.y * y_scale + 1.0f) * tanf(gl_get_radian(img->device_ptr->camera->fov));
 	// return (gl_vec3_3f(camera_x, camera_y, 0.0f));
 }
+*/
 
 bool	is_pixels_are_same(t_vec3 *colors)
 {

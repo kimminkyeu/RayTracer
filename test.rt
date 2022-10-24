@@ -37,8 +37,8 @@ L   1.0,1.0,-1.0     0.5           255,255,255
 # cy   1.3,-2.0,10.0      0.0,0.5,-0.5       1.0        3.0         10,0,255
 
 #   [ Camera ]
-# .  position     orientation      FOV(0~180)
-C    0.0,0.0,-5.0     0.0,0.0,1.0          90
+# .  position         loot_at (dir)       up_dir             FOV(0~180)
+C    0.0,0.0,-5.0     0.0,0.0,1.0        0.0,1.0,0.0         90
 
 #   [ Sphere ]
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
@@ -50,11 +50,14 @@ C    0.0,0.0,-5.0     0.0,0.0,1.0          90
 # L   -3.0,1.0,-1.0     0.1          0,0,0
 
 #   center          radius    diffuseColor(rgb)        specular      ks   alpha                  diffuse_texture_file                        normal_map_file
-sp  0.5,-0.5,4.0     0.5       0,250,0                 255,255,255   0.5   10.0
-sp  -0.5,-0.5,4.0    0.5       0,0,250                 255,255,255   0.5   10.0                 ./raytracer/image/2k_earth_daymap.xpm        ./raytracer/image/2k_earth_normal_map.xpm
+sp  0.5,-0.5,1.0     0.5       0,250,0                 255,255,255   0.5   10.0
+sp  -0.5,-0.5,1.0    0.5       0,0,250                 255,255,255   0.5   10.0                 ./raytracer/image/2k_earth_daymap.xpm        ./raytracer/image/2k_earth_normal_map.xpm
+
+#   x y z coordinates     Face Normal      diffuseColor(rgb)    specular       ks     alpha
+# pl   0.0,-1.0,0.0         0.0,1.0,0.0      128,128,128
 
 #   vertex1             vertex2           vertex3           vertex4             diffuseColor(rgb)       specular          ks    alpha
-sq  -2.0,-1.0,10.0      2.0,-1.0,10.0     2.0,-1.0,0.0      -2.0,-1.0,0.0        128,128,128            255,255,255       0.5    50.0         checker
+sq  -2.0,-1.0,3.0      2.0,-1.0,3.0     2.0,-1.0,0.0      -2.0,-1.0,0.0        128,128,128            255,255,255       0.5    50.0         checker
 #------------------------------------------------------------------------------------
 
 
