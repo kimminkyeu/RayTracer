@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/20 00:58:00 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 09:43:30 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,36 @@
 #include "trace_ray.h"
 #include "main.h"
 #include "thread.h"
+
+void copy_pixel_buffer_to_screen_image(t_device *device)
+{
+	int x = 0;
+	int y = 0;
+	int k = 0;
+	int j = 0;
+	while (y < device->pixel_image->img_size.height)
+	{
+		x = 0;
+		while (x < device->pixel_image->img_size.width)
+		{
+			int pixel_color = gl_get_pixel_color_int(device->pixel_image, x, y);
+
+			k = 0;
+			while (k < device->resolution_ratio)
+			{
+				j = 0;
+				while (j < device->resolution_ratio)
+				{
+					*gl_get_pixel_addr(device->screen_image, x * device->resolution_ratio + j, y * device->resolution_ratio + k) = pixel_color;
+					j++;
+				}
+				k++;
+			}
+			x++;
+		}
+		y++;
+	}
+}
 
 void *thread_update(void *arg)
 {
@@ -49,7 +79,6 @@ void *thread_update(void *arg)
 	// 	y++;
 	// }
 
-
 	const int num_of_thread = data->info->thread_num;
 	while ((data->id + (y * num_of_thread)) < height)
 	{
@@ -63,28 +92,36 @@ void *thread_update(void *arg)
 		y++;
 	}
 
-
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
 	pthread_mutex_unlock(&(data->info->finished_num_mutex));
 	return (NULL);
 }
 
-int	update(t_device *device, t_image *img)
+int	update(t_device *device)
 {
-	printf("\033[36m\n[THREAD TEST] --> total thread count = %d\033[0m\n", device->thread_info.thread_num);
-	// THREAD TEST (구조는 나중에 개선하기.)
 	int i = 0;
 	while (i < device->thread_info.thread_num)
 	{
 		device->thread_info.thread_group[i].id = i;
 		device->thread_info.thread_group[i].device = device;
-		device->thread_info.thread_group[i].image = img;
+		device->thread_info.thread_group[i].image = device->pixel_image;
 		device->thread_info.thread_group[i].info = &device->thread_info;
 		pthread_create(&(device->thread_info.thread_group[i].thread), NULL, thread_update, &(device->thread_info.thread_group[i]));
-		pthread_detach(device->thread_info.thread_group[i].thread);
+		// pthread_detach(device->thread_info.thread_group[i].thread);
 		i++;
 	}
-	ft_putstr_fd("\033[36m\n[Threads has been created]\033[0m\n", 0);
+	i = -1;
+
+	// wait until every thread is finished.
+	while (++i < device->thread_info.thread_num)
+		pthread_join(device->thread_info.thread_group[i].thread, NULL);
+
+	// copy pixel_image to screen_image
+	copy_pixel_buffer_to_screen_image(device);
+
+	// push screen_image to window
+	engine_push_image_to_window(device, device->screen_image, 0, 0);
+
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/17 14:48:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 09:11:07 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,15 @@ typedef struct s_device {
 	t_thread_info	thread_info;
 
 
-	t_vector		*images; // image 들의 배열.
+	// t_vector		*images; // image 들의 배열.
+
+	int				resolution_ratio; // 1 is higher.
+
+	t_image			*screen_image; // 최종적으로 넘길 이미지.
+	t_image			*pixel_image; // 그림만 그릴 이미지.
+
+	// t_vector		*pixels; // 실제로 그릴 이미지.
+
 	t_input			input; // mouse, keyboard input handler
 
 

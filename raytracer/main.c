@@ -1,12 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:54:43 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 00:13:19 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 09:05:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +12,17 @@
 #include "helper.h"
 #include "libft.h"
 #include "thread.h"
+
+static void draw_render_time(t_device *device, long long time, t_vec2 location, int argb)
+{
+	char	*str;
+
+	mlx_string_put(device->mlx, device->win, location.x, location.y, argb, "Last render(ms)");
+	mlx_string_put(device->mlx, device->win, location.x, location.y + 20, argb, ":");
+	str = ft_itoa(time);
+	mlx_string_put(device->mlx, device->win, location.x + 12, location.y + 20, argb, str);
+	free(str);
+}
 
 int	main(int ac, char **av)
 {
@@ -24,13 +33,12 @@ int	main(int ac, char **av)
 		//... err message
 		return (EXIT_FAILURE);
 	}
-
 	const int WIDTH = 800;
 	const int HEIGHT = 800;
 
+
 	/** (1) Init engine && create image */
-	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing");
-	engine_new_image(device, gl_vec2_2f(WIDTH, HEIGHT), gl_vec2_2f(0,0), update);
+	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 1);
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
 	parse_rt_file_to_device(device, av[1]);
@@ -49,10 +57,17 @@ int	main(int ac, char **av)
 
 
 	/** (3) start rendering */
-	engine_render(device);
+	long long render_start_time;
+	long long render_end_time;
+	render_start_time = get_time_ms();
+
+	// update on pixel_image;
+	update(device);
+
+	render_end_time = get_time_ms();
+	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
 
 	/** (4) loop mlx */
 	mlx_loop(device->mlx);
-
 	return (0);
 }

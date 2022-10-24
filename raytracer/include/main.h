@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 17:21:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:59:32 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 09:08:35 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@
 */
 extern void	parse_rt_file_to_device(t_device *device, char *file);
 
-extern int	update(t_device *device, t_image *img);
+extern int	update(t_device *device);
 
 #endif /* MAIN_H */
