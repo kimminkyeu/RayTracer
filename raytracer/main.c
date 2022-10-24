@@ -15,6 +15,10 @@
 
 int input_handler(t_device *device)
 {
+	// *  NOTE:  https://www.youtube.com/watch?v=lXlXqUEEJ94
+	// * Adding an Interactive 3D Camera System // Ray Tracing series
+
+
 	// t_device *device = param;
 	t_camera *camera = device->camera;
 
