@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 07:21:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 14:47:30 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	input_is_mouse_down(t_device *device, int key_code)
 	key_state = device->input.mouse_state[index];
 	if (key_state == E_INPUT_IS_PRESSED)
 	{
-		printf("input_is_mouse_down() : input is pressed\n");
+		// printf("input_is_mouse_down() : input is pressed\n");
 		return (true);
 	}
 	else
@@ -93,7 +93,7 @@ int input_is_mouse_unpressed(t_device *device, int key_code)
 	key_state = device->input.mouse_state[index];
 	if (key_state == E_INPUT_UN_PRESSED)
 	{
-		printf("input_is_mouse_unpressed() : input is unpressed\n");
+		// printf("input_is_mouse_unpressed() : input is unpressed\n");
 		device->input.mouse_state[index] = E_INPUT_NO_STATE;
 		return (true);
 	}

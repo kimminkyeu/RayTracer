@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/24 14:13:09 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 14:56:58 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_input {
 		};
 		int	mouse_state[5];
 	};
+	t_vec2 last_mouse_pos;
 }	t_input;
 
 typedef struct s_device t_device;

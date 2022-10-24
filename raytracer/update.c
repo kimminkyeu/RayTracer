@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 14:10:31 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 15:17:48 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,23 @@ void *thread_update(void *arg)
 	return (NULL);
 }
 
+static void draw_render_time(t_device *device, long long time, t_vec2 location, int argb)
+{
+	char	*str;
+
+	mlx_string_put(device->mlx, device->win, location.x, location.y, argb, "Last render(ms)");
+	mlx_string_put(device->mlx, device->win, location.x, location.y + 20, argb, ":");
+	str = ft_itoa(time);
+	mlx_string_put(device->mlx, device->win, location.x + 12, location.y + 20, argb, str);
+	free(str);
+}
+
 int	update(t_device *device)
 {
+	long long render_start_time;
+	long long render_end_time;
+	render_start_time = get_time_ms();
+
 	int i = 0;
 	while (i < device->thread_info.thread_num)
 	{
@@ -122,6 +137,10 @@ int	update(t_device *device)
 
 	// push screen_image to window
 	engine_push_image_to_window(device, device->screen_image, 0, 0);
+
+	render_end_time = get_time_ms();
+	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
+
 
 	return (0);
 }

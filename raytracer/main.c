@@ -13,16 +13,75 @@
 #include "libft.h"
 #include "thread.h"
 
-static void draw_render_time(t_device *device, long long time, t_vec2 location, int argb)
+int input_handler(t_device *device)
 {
-	char	*str;
+	// t_device *device = param;
+	t_camera *camera = device->camera;
 
-	mlx_string_put(device->mlx, device->win, location.x, location.y, argb, "Last render(ms)");
-	mlx_string_put(device->mlx, device->win, location.x, location.y + 20, argb, ":");
-	str = ft_itoa(time);
-	mlx_string_put(device->mlx, device->win, location.x + 12, location.y + 20, argb, str);
-	free(str);
+	// t_vec2 mouse_pos = input_get_mouse_pos(device);
+	// t_vec2 delta = gl_vec2_multiply_scalar((gl_vec2_subtract_vector(mouse_pos, device->input.last_mouse_pos)), 0.002f);
+	// device->input.last_mouse_pos = mouse_pos;
+
+	// if (input_is_key_down(device, KEY_R))
+	// {
+		// printf("r pressed\n");
+	// }
+	if (!(input_is_mouse_down(device, MOUSE_RIGHT_CLICK)))
+	{
+		return (0);
+	}
+	// below code will be executed only if mouse is pressed
+
+	bool moved = false;
+
+	t_vec3 right_direction = gl_vec3_cross(camera->dir, gl_vec3_3f(0.0f, 1.0f, 0.0f));
+	t_vec3 up_direction = gl_vec3_3f(0.0f, 1.0f, 0.0f);
+
+	float speed = 0.1f;
+
+	// Movement
+	if (input_is_key_down(device, KEY_W))
+	{
+		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(camera->dir, speed));
+		moved = true;
+	}
+	else if (input_is_key_down(device, KEY_S))
+	{
+		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(camera->dir, speed));
+		moved = true;
+	}
+	if (input_is_key_down(device, KEY_A))
+	{
+		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(right_direction, speed));
+		moved = true;
+	}
+	else if (input_is_key_down(device, KEY_D))
+	{
+		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(right_direction, speed));
+		moved = true;
+	}
+	if (input_is_key_down(device, KEY_Q))
+	{
+		camera->pos = gl_vec3_subtract_vector(camera->pos, gl_vec3_multiply_scalar(up_direction, speed));
+		moved = true;
+	}
+	else if (input_is_key_down(device, KEY_E))
+	{
+		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(up_direction, speed));
+		moved = true;
+	}
+
+
+	// (void)delta;
+	if(moved)
+	{
+		update(device);
+	}
+	return (0);
 }
+
+
+
 
 int	main(int ac, char **av)
 {
@@ -38,7 +97,7 @@ int	main(int ac, char **av)
 
 
 	/** (1) Init engine && create image */
-	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 4);
+	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 8);
 	// device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 1);
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
@@ -58,17 +117,15 @@ int	main(int ac, char **av)
 
 
 	/** (3) start rendering */
-	long long render_start_time;
-	long long render_end_time;
-	render_start_time = get_time_ms();
+
 
 	// update on pixel_image;
 	update(device);
 
-	render_end_time = get_time_ms();
-	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
-
 	/** (4) loop mlx */
+	mlx_loop_hook(device->mlx, input_handler, device);
+
+
 	mlx_loop(device->mlx);
 	return (0);
 }

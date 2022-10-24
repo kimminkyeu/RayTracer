@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 13:40:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/15 14:11:29 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 14:45:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	handle_key_press(int key_code, void *param)
 	int			key_index;
 
 	device = param;
-	printf("handle_key_press(): keycode = %d\n", key_code);
+	// printf("handle_key_press(): keycode = %d\n", key_code);
 	if (key_code == KEY_ESC)
 	{
 		printf("ESC pressed\n");
@@ -46,7 +46,7 @@ int	handle_key_release(int key_code, void *param)
 	int			key_index;
 
 	device = param;
-	printf("handle_key_release(): keycode = %d\n", key_code);
+	// printf("handle_key_release(): keycode = %d\n", key_code);
 	key_index = input_key_get_index(key_code);
 	if (key_index != -1)
 	{
