@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/24 09:11:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 10:29:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ typedef struct s_device {
 	t_vector			*objects;
 	t_camera			*camera;
 	t_ambient_light	 	*ambient_light;
-	t_light				*light;
+	t_vector			*point_lights;
+	// t_light				*light;
 
 
 }	t_device;

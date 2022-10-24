@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 09:32:05 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 10:31:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,40 +56,28 @@ void engine_exit(t_device *device, bool is_error)
 
 	if (device != NULL && device->camera != NULL)
 		free(device->camera);
+
 	if (device != NULL && device->ambient_light != NULL)
 		free(device->ambient_light);
-	if (device != NULL && device->light != NULL)
-		free(device->light);
 
+	if (device != NULL && device->point_lights != NULL)
+		delete_vector(&device->point_lights);
 
-	// if (device != NULL && device->images != NULL)
-	// {
-		// size_t i = 0;
-		// while (i < device->images->size)
-		// {
-			// printf("destroying image %zd\n", i);
 	if (device->screen_image != NULL)
 		mlx_destroy_image(device->mlx, device->screen_image->img_ptr);
+
 	if (device->pixel_image != NULL)
 		mlx_destroy_image(device->mlx, device->pixel_image->img_ptr);
-			// i++;
-		// }
-		// delete_vector(&device->images);
-	// }
+
 	if (device->win != NULL)
 		mlx_destroy_window(device->mlx, device->win);
 
 	if (device != NULL && device->mlx != NULL)
 		free(device->mlx);
 
-
-
 	pthread_mutex_destroy(&(device->thread_info.finished_num_mutex));
 	if (device->thread_info.thread_group != NULL)
 		free(device->thread_info.thread_group);
-
-
-
 
 	if (device != NULL)
 		free(device);
@@ -139,7 +127,8 @@ void	init_camera_and_objects_vector(t_device *device)
 	device->camera->has_camera = false;
 	device->ambient_light = ft_calloc(1, sizeof(*device->ambient_light));
 	device->ambient_light->has_ambient_light = false;
-	device->light = ft_calloc(1, sizeof(*device->light));
+	// device->light = ft_calloc(1, sizeof(*device->light));
+	device->point_lights = new_vector(5);
 	// device->light->has_light = false; // multiple lights enabled.
 	device->objects = new_vector_with_custom_deallocator(8, custom_deallocator_for_object);
 }

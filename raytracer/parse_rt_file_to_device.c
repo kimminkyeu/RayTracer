@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/23 19:04:37 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/24 11:09:35 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	parse_sphere(t_device *device, char **line_split)
 	new_obj->material.ks = 0.5f;
 	new_obj->material.alpha = 9.0f;
 
-	new_obj->material.reflection = 0.5f;
+	// new_obj->material.reflection = 0.5f;
 	/** new_obj->material.transparency = 1.0f; */
 
 	if (strs_count == 7 || strs_count == 8 || strs_count == 9)
@@ -319,13 +319,14 @@ void	parse_cone(t_device *device, char **line_split)
 
 void	parse_light(t_device *device, char **line_split)
 {
+	t_light *new_light = ft_calloc(1, sizeof(*new_light));
 	// if light is more than 1, or is in wrong format
-	if (device->light->has_light == true || get_strs_count(line_split) != 4)
+	if (get_strs_count(line_split) != 4)
 		print_error_and_exit(device, "parse_light(): .rt file error\n");
-	device->light->pos = parse_3float(device, line_split[1], false);
-	device->light->brightness_ratio = atof(line_split[2]);
-	device->light->color = parse_3float(device, line_split[3], true);
-	device->light->has_light = true;
+	new_light->pos = parse_3float(device, line_split[1], false);
+	new_light->brightness_ratio = atof(line_split[2]);
+	new_light->color = parse_3float(device, line_split[3], true);
+	device->point_lights->push_back(device->point_lights, new_light);
 }
 
 

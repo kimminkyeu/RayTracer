@@ -133,6 +133,7 @@ t_vec3 trace_ray(t_device *device, const t_ray *ray, const int recursive_level)
 	// * If ray hit object, then calculate with Phong-Shading-model.
 	if (hit.distance >= 0.0f) // if has hit.
 	{
+		// return (gl_vec3_3f(0, 255, 0));
 		return (phong_shading_model(device, ray, hit, recursive_level));
 	}
 	return (gl_vec3_1f(0.0f)); // return black
@@ -151,6 +152,65 @@ t_vec3 trace_ray(t_device *device, const t_ray *ray, const int recursive_level)
  ---------------------------------------------------------------------------------------------- */
  # include <unistd.h>
  # include <stdio.h>
+
+t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_ray *ray, t_hit hit, t_light* light)
+{
+	t_vec3 final_color = gl_vec3_1f(0.0f);
+	// 그림자 처리. 아주 작은 값만큼 광원을 향해 이동시켜야 hit_point로 부터 충돌처리를 피할 수 있다.
+	const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(light->pos, hit.point));
+
+	// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
+	// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
+
+	// * 그림자 처리. 투명한 물체에 대한 그림자 처리는 어떻게?
+	// https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
+	t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
+	t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
+
+	// * (3) Shadow
+	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
+	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
+	{
+
+
+		// (3-1) Calculate Diffuse color
+		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
+		// * (2) Diffuse Color
+		// *--- [ Diffuse Texture ] -----------------------------------------
+		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
+		t_vec3 diffuse_final = gl_vec3_1f(0.0f);
+		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
+		{
+			t_vec3 sample_diffuse;
+			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
+				sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
+			else
+				sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
+
+			diffuse_final.r = _diff * sample_diffuse.b;
+			diffuse_final.g = _diff * sample_diffuse.g;
+			diffuse_final.b = _diff * sample_diffuse.r;
+		}
+		else // if has no texture
+		{
+			diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+		}
+		// *------------------------------------------------------------------
+
+		// (3-2) Add Diffuse ( = Resulting color )
+		final_color = gl_vec3_multiply_scalar(diffuse_final, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
+	}
+
+	// Finally, add Specular.
+	// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
+	// 광원에서 hit_point로 빛을 쏘았을 때 그 반사 방향과, ray_direction간의 각도가 0에 가깝다면 밝게.
+	const t_vec3 spec_reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
+	const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), spec_reflection_dir), 0.0f), hit.obj->material.alpha);
+	const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
+	final_color = gl_vec3_add_vector(final_color, specular_final);  // (4-2) Add Specular color
+
+	return (final_color);
+}
 
 t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const int recursive_level)
 {
@@ -178,85 +238,45 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 	// * ---------------------------------------------------------------------------------
 
 
-	// 그림자 처리. 아주 작은 값만큼 광원을 향해 이동시켜야 hit_point로 부터 충돌처리를 피할 수 있다.
-	const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(device->light->pos, hit.point));
-
-	// * (3) Shadow
-	// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
-	// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
-
-	// * (2) Diffuse COlor
-	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
-
-
-	// * 그림자 처리. 투명한 물체에 대한 그림자 처리는 어떻게?
-	// https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
-	t_ray shadow_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(hit_point_to_light, 1e-4f)), hit_point_to_light);
-	t_hit shadow_ray_hit = find_closet_collision(device, &shadow_ray);
-
-	t_vec3 hit_normal = hit.normal;
-		if (hit.obj->normal_texture != NULL)
-		{
-			hit_normal = sample_normal_map(&hit);
-		}
-
-	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(device->light->pos, hit.point)))
+	// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
+	if (hit.obj->normal_texture != NULL)
 	{
-		// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
 		// 참고 자료
 		// https://www.youtube.com/watch?v=6_-NNKc4lrk
 		// Normal Map을 이용한다면, _diff 의 값이 달리질 것이다.
 		// hit.normal이 normal_map에 의해 추가적으로 계산되어야 한다.
-
-
-		// * -------------------------------------------------------------------------------------------
-
-		// (3-1) Calculate Diffuse color
-		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
-		const float _diff = max_float(gl_vec3_dot(hit_normal, hit_point_to_light), 0.0f);
-
-		t_vec3 diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
-
-		// *--- [ Diffuse Texture ] -----------------------------------------
-		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
-		{
-			t_vec3 sample_diffuse;
-			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
-				sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
-			else
-				sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
-
-			diffuse_final.r = _diff * sample_diffuse.b;
-			diffuse_final.g = _diff * sample_diffuse.g;
-			diffuse_final.b = _diff * sample_diffuse.r;
-		}
-		// *------------------------------------------------------------------
-
-		// (3-2) Add Diffuse ( = Resulting color )
-		t_vec3 phong_color = diffuse_final;
-
-		// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
-		// 광원에서 hit_point로 빛을 쏘았을 때 그 반사 방향과, ray_direction간의 각도가 0에 가깝다면 밝게.
-		const t_vec3 spec_reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(hit_point_to_light, hit_normal)), 2.0f), hit_point_to_light);
-		const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), spec_reflection_dir), 0.0f), hit.obj->material.alpha);
-		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
-		phong_color = gl_vec3_add_vector(phong_color, specular_final);  // (4-2) Add Specular color
-		final_color = gl_vec3_multiply_scalar(phong_color, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
+		hit.normal = sample_normal_map(&hit);
 	}
+	// * -------------------------------------------------------------------------------------------
 
+
+	// caculate from each light.
+	(void)recursive_level;
+
+	size_t i = 0;
+	while (i < device->point_lights->size)
+	{
+		t_light	*light_each = device->point_lights->data[i];
+		phong_color = gl_vec3_add_vector(phong_color, calculate_diffusse_specular_shadow_from_light(device, ray, hit, light_each));
+		i++;
+	}
+	return (phong_color);
+
+
+
+
+/*
 	if (hit.obj->material.reflection)
 	{
 		// 여기에 반사 구현
 		// 수치 오류 주의
 		// 반사광이 반환해준 색을 더할 때의 비율은 hit.obj->reflection
 		// d - 2( n . d )n
-		const t_vec3 reflected_ray_dir = gl_vec3_subtract_vector(ray->direction, (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit_normal, gl_vec3_dot(ray->direction, hit_normal)), 2.0f)));
-
+		const t_vec3 reflected_ray_dir = gl_vec3_subtract_vector(ray->direction, (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(ray->direction, hit.normal)), 2.0f)));
 		// 살짝 위로 떨궈야 hit 계산시에 충돌처리 되지 않음.
 		const t_vec3 hit_point_offset = gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(reflected_ray_dir, 1e-4f));
 		const t_ray reflected_ray = create_ray(hit_point_offset, reflected_ray_dir);
 		const t_vec3 reflected_color = trace_ray(device, &reflected_ray, recursive_level - 1);
-
 		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(reflected_color, hit.obj->material.reflection));
 	}
 
@@ -306,6 +326,9 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
 		// Fresnel 효과는 생략되었습니다.
 	}
+*/
+
+
 	return (final_color);
 	// return (gl_vec3_1f(0.0f));
 }
