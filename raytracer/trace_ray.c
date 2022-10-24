@@ -257,9 +257,10 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		phong_color = gl_vec3_add_vector(phong_color, calculate_diffusse_specular_shadow_from_light(device, ray, hit, light_each));
 		i++;
 	}
-	return (phong_color);
 
 
+
+	final_color = phong_color;
 
 	if (hit.obj->material.reflection)
 	{

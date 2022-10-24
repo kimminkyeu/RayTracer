@@ -18,7 +18,6 @@ int input_handler(t_device *device)
 	// *  NOTE:  https://www.youtube.com/watch?v=lXlXqUEEJ94
 	// * Adding an Interactive 3D Camera System // Ray Tracing series
 
-
 	// t_device *device = param;
 	t_camera *camera = device->camera;
 
@@ -74,6 +73,10 @@ int input_handler(t_device *device)
 		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(up_direction, speed));
 		moved = true;
 	}
+	if (input_is_key_down(device, KEY_R))
+	{
+		device->is_high_resolution_render_mode = true;
+	}
 
 
 	// (void)delta;
@@ -99,10 +102,9 @@ int	main(int ac, char **av)
 	const int WIDTH = 800;
 	const int HEIGHT = 800;
 
-
 	/** (1) Init engine && create image */
+	// device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 8);
 	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 8);
-	// device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 1);
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
 	parse_rt_file_to_device(device, av[1]);
