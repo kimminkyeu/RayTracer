@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 10:31:46 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 14:19:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ extern void	custom_deallocator_for_object(void *data);
 
 void	init_camera_and_objects_vector(t_device *device)
 {
-	device->camera = ft_calloc(1, sizeof(*device->camera));
+	device->camera = ft_calloc(1, sizeof(t_camera));
 	device->camera->has_camera = false;
-	device->ambient_light = ft_calloc(1, sizeof(*device->ambient_light));
+	device->ambient_light = ft_calloc(1, sizeof(t_ambient_light));
 	device->ambient_light->has_ambient_light = false;
 	// device->light = ft_calloc(1, sizeof(*device->light));
 	device->point_lights = new_vector(5);

@@ -16,11 +16,8 @@
 
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
+	(void)device;
 	const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
-
-	/* NOTE:  Ray 방향 벡터. 현재 코드는 등각투시. (ray가 방향이 모두 같음. 추후 변경 필요) */
-	device->eye_pos = gl_vec3_3f(0.0f, 0.0f, -5.0f);
-
 	const float	dx = 2.0f / img->img_size.height; // for super sampling. // world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
 
 	t_vec3 trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, ANTI_ALIASING_RECURSIVE_LEVEL); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
@@ -57,7 +54,7 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 {
 	if (recursive_level == 0) // recursive_level이 0이면 하던대로 단일 Ray_tracing 진행.
 	{
-		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
+		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->camera->pos));
 		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
 		return (trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL));
 	}
@@ -83,7 +80,7 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 										pixel_pos_world.z);
 
 			// 재귀 호출. (Recursive Super-Sampling)
-			t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(sub_pos, img->device_ptr->eye_pos));
+			t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(sub_pos, img->device_ptr->camera->pos));
 			t_ray pixel_ray = create_ray(sub_pos, ray_dir);
 			sample_color[j * 2 + i] = trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL);
 			i++;
@@ -93,7 +90,7 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 	// (2) 만약 4개의 픽셀이 같다면, return. (supersampling 진행 하지 않기.)
 	if (is_pixels_are_same(sample_color))
 	{
-		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->eye_pos));
+		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->camera->pos));
 		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
 		return (trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL));
 	}
@@ -171,6 +168,26 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
 	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
 	{
+
+		t_vec3 phong_color = gl_vec3_1f(0.0f);
+		phong_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
+
+		// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
+		// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
+		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
+		if (hit.obj->diffuse_texture != NULL) // if has texture + 그림자가 없을 때.
+		{
+			t_vec3 sample_ambient;
+			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
+				sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
+			else
+				sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
+
+			phong_color.r *= sample_ambient.b; // 홍정모
+			phong_color.g *= sample_ambient.g; // 홍정모
+			phong_color.b *= sample_ambient.r; // 홍정모
+		}
+
 		// (3-1) Calculate Diffuse color
 		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
 		// * (2) Diffuse Color
@@ -199,6 +216,7 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 		// *------------------------------------------------------------------
 
 		// (3-2) Add Diffuse ( = Resulting color )
+		diffuse_final = gl_vec3_add_vector(diffuse_final, phong_color);
 		final_color = gl_vec3_multiply_scalar(diffuse_final, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
 
 		// Finally, add Specular.
@@ -207,7 +225,7 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 		const t_vec3 spec_reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
 		const float _spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), spec_reflection_dir), 0.0f), hit.obj->material.alpha);
 		const t_vec3 specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
-		final_color = gl_vec3_add_vector(final_color, specular_final); // (4-2) Add Specular color
+		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(specular_final, light->brightness_ratio)); // (4-2) Add Specular color
 	}
 
 	return (final_color);
@@ -217,28 +235,7 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 {
 	t_vec3 final_color = gl_vec3_1f(0.0f);
 
-	// (1) Start with Ambient Color.
-	t_vec3 phong_color = gl_vec3_1f(0.0f);
-	phong_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
-
-	// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
-	// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
-	// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
-	if (hit.obj->diffuse_texture != NULL) // if has texture + 그림자가 없을 때.
-	{
-		t_vec3 sample_ambient;
-		if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
-			sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
-		else
-			sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
-
-		phong_color.r *= sample_ambient.b;												// 홍정모
-		phong_color.g *= sample_ambient.g; // 홍정모
-		phong_color.b *= sample_ambient.r; // 홍정모
-	}
 	// * ---------------------------------------------------------------------------------
-
-
 	// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
 	if (hit.obj->normal_texture != NULL)
 	{
@@ -252,6 +249,7 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 
 
 	// caculate from each light.
+	t_vec3 phong_color = gl_vec3_1f(0.0f);
 	size_t i = 0;
 	while (i < device->point_lights->size)
 	{

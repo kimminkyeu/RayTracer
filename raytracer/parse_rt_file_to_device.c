@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 11:09:35 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 14:27:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,8 +345,9 @@ void	parse_camera(t_device *device, char **line_split)
 	// if camera is more than 1, or is in wrong format
 	if (device->camera->has_camera == true || get_strs_count(line_split) != 4)
 		print_error_and_exit(device, "parse_camera(): .rt file error\n");
-	device->camera->dir = parse_3float(device, line_split[1], false);
-	device->camera->pos = parse_3float(device, line_split[2], false);
+
+	device->camera->pos = parse_3float(device, line_split[1], false);
+	device->camera->dir = parse_3float(device, line_split[2], false);
 	device->camera->fov = atof(line_split[3]);
 	device->camera->has_camera = true;
 }

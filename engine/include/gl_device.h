@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/24 13:28:17 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 14:13:09 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,16 @@ typedef struct s_device {
 	t_input			input; // mouse, keyboard input handler
 
 
-	t_vec3			eye_pos; // 나중에 camera로 빼기.
+	// t_vec3			eye_pos; // 나중에 camera로 빼기.
 
 	// t_objects			objects;
 
 	t_vector			*objects;
+
 	t_camera			*camera;
+
+	int	is_high_resolution_render_mode;
+
 	t_ambient_light	 	*ambient_light;
 	t_vector			*point_lights;
 	// t_light				*light;

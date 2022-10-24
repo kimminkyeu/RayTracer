@@ -38,7 +38,8 @@ int	main(int ac, char **av)
 
 
 	/** (1) Init engine && create image */
-	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 1);
+	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 4);
+	// device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 1);
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
 	parse_rt_file_to_device(device, av[1]);
