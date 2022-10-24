@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 15:33:23 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 22:39:48 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,16 @@ void engine_exit(t_device *device, bool is_error)
 		delete_vector(&device->point_lights);
 
 	if (device->screen_image != NULL)
+	{
 		mlx_destroy_image(device->mlx, device->screen_image->img_ptr);
+		free(device->screen_image);
+	}
 
 	if (device->pixel_image != NULL)
+	{
 		mlx_destroy_image(device->mlx, device->pixel_image->img_ptr);
+		free(device->pixel_image);
+	}
 
 	if (device->win != NULL)
 		mlx_destroy_window(device->mlx, device->win);
@@ -175,53 +181,6 @@ t_device	*engine_init(int _win_width, int _win_height, char *title, int resoluti
 	return (device);
 }
 
-// void	engine_register_render_func(t_device *device, int (*render_func)())
-// {
-	// device->engine_render_func = render_func;
-// }
-
-/** FIX: Need function testing! (한번만 렌더하는 함수)
- *  * 고친 부분 : update function pointer가 null일 경우를 에러처리 해야 한다!
-*/
-// int	engine_update_images(t_device *device)
-// {
-// 	t_image	*img_ptr;
-// 	size_t i;
-// 	long long render_start_time;
-// 	long long render_end_time;
-
-// 	i = 0;
-// 	// NOTE: images 배열을 순회하면서, 각각 이미지마다 멤버로서 연결된 함수 포인터를 호출한다. (ex.update_func)
-// 	render_start_time = get_time_ms();
-// 	while (i < device->images->size)
-// 	{
-// 		img_ptr = device->images->data[i];
-// 		if (img_ptr->img_update_func != NULL) // FIX:  이 부분 수정됨.
-// 			img_ptr->img_update_func(device, img_ptr);
-
-// 		// WARN:  Thread test (쓰레드가 모두 끝날 때 까지 계속 이미지 push)
-// 		ft_putstr_fd("\n\nWaiting for each thread to finish...\n\n", STDOUT_FILENO);
-// 		// printf("thread_num %d / finished_thread_num %d\n", device->thread_info.finished_thread_num, device->thread_info.thread_num);
-// 		// while (device->thread_info.finished_thread_num != device->thread_info.thread_num)
-// 		// {
-// 		// 	engine_push_image_to_window(device, img_ptr, img_ptr->img_location.x, img_ptr->img_location.y);
-// 		// }
-// 		i++;
-// 		ft_putstr_fd("\033[36m\n[Every thread is finished]\033[0m\n\n", STDOUT_FILENO);
-// 	}
-// 	render_end_time = get_time_ms();
-// 	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
-// 	return (0);
-// }
-
-// /* TODO: change it's name to engine_render_loop() */
-// void	engine_render(t_device *device)
-// {
-// 	// (1) 1장만 렌더
-// 	engine_update_images(device);
-// 	// (2) 무한 렌더 (애니메이션)
-// 	// mlx_loop_hook(device->mlx, engine_update_images, device);
-// }
 
 /** TODO: if handler changes, reset engine */
 void		engine_set_key_event(t_device *device, int (*f_key_press)(), int (*f_key_release)())

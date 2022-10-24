@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 19:01:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 22:40:39 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,13 @@ int	update(t_device *device)
 {
 	long long render_start_time;
 	long long render_end_time;
+
 	render_start_time = get_time_ms();
+	device->thread_info.finished_thread_num = 0;
 
 	int i = 0;
 	while (i < device->thread_info.thread_num)
 	{
-		device->thread_info.finished_thread_num = 0;
 		device->thread_info.thread_group[i].id = i;
 		device->thread_info.thread_group[i].device = device;
 
@@ -138,19 +139,7 @@ int	update(t_device *device)
 	else
 	{   // if high_res mode, then push image to screen every time.
 		while (device->thread_info.finished_thread_num != device->thread_info.thread_num)
-		{
-			// if user turn off high_res render mode, then kill every ongoing threads.
-			if (device->is_high_resolution_render_mode == false)
-			{
-				// *  WARN:  push_image를 하는  monitoring_thread를 하나 만들어야 함. 안그러면 중간에 취소가 안됨
-				i = -1;
-				while (++i < device->thread_info.thread_num)
-					pthread_cancel(device->thread_info.thread_group[i].thread);
-				return (-1);
-			}
-			// else, just keep pushing image
 			engine_push_image_to_window(device, device->screen_image, 0, 0);
-		}
 	}
 	render_end_time = get_time_ms();
 	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
