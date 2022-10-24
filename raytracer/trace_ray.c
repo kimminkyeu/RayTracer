@@ -52,7 +52,8 @@ bool	is_pixels_are_same(t_vec3 *colors)
 
 t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const float dx, const int recursive_level)
 {
-	if (recursive_level == 0) // recursive_level이 0이면 하던대로 단일 Ray_tracing 진행.
+	// HIGH_RES mode가 아니거나 recursive_level이 0이면 하던대로 단일 Ray_tracing 진행.
+	if (img->device_ptr->is_high_resolution_render_mode == false || recursive_level == 0)
 	{
 		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->camera->pos));
 		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
@@ -90,9 +91,8 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 	// (2) 만약 4개의 픽셀이 같다면, return. (supersampling 진행 하지 않기.)
 	if (is_pixels_are_same(sample_color))
 	{
-		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->camera->pos));
-		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-		return (trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL));
+		// 어차피 다 같은 색이니 한가지 color 사용.
+		return (sample_color[0]);
 	}
 
 	// (3) 만약 4개의 픽셀이 하나라도 다르다면, super_sampling 진행.
@@ -130,7 +130,6 @@ t_vec3 trace_ray(t_device *device, const t_ray *ray, const int recursive_level)
 	// * If ray hit object, then calculate with Phong-Shading-model.
 	if (hit.distance >= 0.0f) // if has hit.
 	{
-		// return (gl_vec3_3f(0, 255, 0));
 		return (phong_shading_model(device, ray, hit, recursive_level));
 	}
 	return (gl_vec3_1f(0.0f)); // return black
@@ -246,8 +245,6 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		hit.normal = sample_normal_map(&hit);
 	}
 	// * -------------------------------------------------------------------------------------------
-
-
 	// caculate from each light.
 	t_vec3 phong_color = gl_vec3_1f(0.0f);
 	size_t i = 0;
@@ -257,9 +254,6 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		phong_color = gl_vec3_add_vector(phong_color, calculate_diffusse_specular_shadow_from_light(device, ray, hit, light_each));
 		i++;
 	}
-
-
-
 	final_color = phong_color;
 
 	if (hit.obj->material.reflection)
@@ -322,11 +316,7 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		final_color = gl_vec3_add_vector(final_color, gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
 		// Fresnel 효과는 생략되었습니다.
 	}
-
-
-
 	return (final_color);
-	// return (gl_vec3_1f(0.0f));
 }
 
 

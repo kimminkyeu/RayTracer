@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 16:10:41 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/24 17:45:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,19 +66,6 @@ void *thread_update(void *arg)
 	int y = 0;
 	int x = 0;
 
-	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
-	// while (data->id == 1 && y < height)
-	// {
-	// 	x = -1;
-	// 	while (x < width)
-	// 	{
-	// 		const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
-	// 		gl_draw_pixel(img, x, y, final_color);
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
-
 	const int num_of_thread = data->info->thread_num;
 	while ((data->id + (y * num_of_thread)) < height)
 	{
@@ -109,6 +96,14 @@ static void draw_render_time(t_device *device, long long time, t_vec2 location, 
 	free(str);
 }
 
+bool is_high_resolution_mode(t_device *device)
+{
+	if (device->is_high_resolution_render_mode == false && device->resolution_ratio != 1)
+		return (false);
+	else
+		return (true);
+}
+
 int	update(t_device *device)
 {
 	long long render_start_time;
@@ -118,29 +113,46 @@ int	update(t_device *device)
 	int i = 0;
 	while (i < device->thread_info.thread_num)
 	{
+		device->thread_info.finished_thread_num = 0;
 		device->thread_info.thread_group[i].id = i;
 		device->thread_info.thread_group[i].device = device;
-		device->thread_info.thread_group[i].image = device->pixel_image;
+
+		if (!is_high_resolution_mode(device))
+			device->thread_info.thread_group[i].image = device->pixel_image;
+		else // if not High_Res mode
+			device->thread_info.thread_group[i].image = device->screen_image;
+
 		device->thread_info.thread_group[i].info = &device->thread_info;
 		pthread_create(&(device->thread_info.thread_group[i].thread), NULL, thread_update, &(device->thread_info.thread_group[i]));
-		// pthread_detach(device->thread_info.thread_group[i].thread);
 		i++;
 	}
-	i = -1;
 
-	// wait until every thread is finished.
-	while (++i < device->thread_info.thread_num)
-		pthread_join(device->thread_info.thread_group[i].thread, NULL);
-
-	// copy pixel_image to screen_image
-	copy_pixel_buffer_to_screen_image(device);
-
-	// push screen_image to window
-	engine_push_image_to_window(device, device->screen_image, 0, 0);
-
+	if (!is_high_resolution_mode(device)) // if Low-res mode, wait until every thread is finished.
+	{
+		i = -1;
+		while (++i < device->thread_info.thread_num)
+			pthread_join(device->thread_info.thread_group[i].thread, NULL);
+		copy_pixel_buffer_to_screen_image(device); // copy pixel_image_buffer to screen_image
+		engine_push_image_to_window(device, device->screen_image, 0, 0);
+	}
+	else
+	{   // if high_res mode, then push image to screen every time.
+		while (device->thread_info.finished_thread_num != device->thread_info.thread_num)
+		{
+			// if user turn off high_res render mode, then kill every ongoing threads.
+			if (device->is_high_resolution_render_mode == false)
+			{
+				// *  WARN:  push_image를 하는  monitoring_thread를 하나 만들어야 함. 안그러면 중간에 취소가 안됨
+				i = -1;
+				while (++i < device->thread_info.thread_num)
+					pthread_cancel(device->thread_info.thread_group[i].thread);
+				return (-1);
+			}
+			// else, just keep pushing image
+			engine_push_image_to_window(device, device->screen_image, 0, 0);
+		}
+	}
 	render_end_time = get_time_ms();
 	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
-
-
 	return (0);
 }

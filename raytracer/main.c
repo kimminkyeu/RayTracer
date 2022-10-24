@@ -29,6 +29,15 @@ int input_handler(t_device *device)
 	// {
 		// printf("r pressed\n");
 	// }
+
+	if (device->is_high_resolution_render_mode == false && input_is_key_down(device, KEY_R))
+	{
+		printf("[change to High Resolution mode]\n");
+		device->is_high_resolution_render_mode = true;
+		update(device);
+		return (0);
+	}
+
 	if (!(input_is_mouse_down(device, MOUSE_RIGHT_CLICK)))
 	{
 		return (0);
@@ -73,21 +82,17 @@ int input_handler(t_device *device)
 		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(up_direction, speed));
 		moved = true;
 	}
-	if (input_is_key_down(device, KEY_R))
-	{
-		device->is_high_resolution_render_mode = true;
-	}
 
 
-	// (void)delta;
+
 	if(moved)
 	{
+		printf("[change to Lower Resolution mode]\n");
+		device->is_high_resolution_render_mode = false;
 		update(device);
 	}
 	return (0);
 }
-
-
 
 
 int	main(int ac, char **av)
@@ -96,36 +101,29 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		//... err message
+		// TODO:  ... err message
 		return (EXIT_FAILURE);
 	}
 	const int WIDTH = 800;
 	const int HEIGHT = 800;
+	const int LOW_RESOLUTION_RATIO = 8; // max is 1
+	const int THREAD_NUM = 24;
 
 	/** (1) Init engine && create image */
-	// device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 8);
-	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", 8);
+	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", LOW_RESOLUTION_RATIO);
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
 	parse_rt_file_to_device(device, av[1]);
 
-	// TODO:  Delete later. just for parse check.
-	// print_rt_data(device);
-
-	// THREAD TEST
+	/** (3) start rendering via threads */
 	t_thread_info *info = &device->thread_info;
-	const int THREAD_NUM = 24;
 	info->thread_group = ft_calloc(1, sizeof(t_thread) * THREAD_NUM);
 	info->thread_num = THREAD_NUM;
 	info->finished_thread_num = 0;
 	if (pthread_mutex_init(&(info->finished_num_mutex), NULL) != 0)
 		print_error_and_exit(device, "error in pthread_mutex_init()\n");
 
-
-	/** (3) start rendering */
-
-
-	// update on pixel_image;
+	/** (4) update image; */
 	update(device);
 
 	/** (4) loop mlx */
