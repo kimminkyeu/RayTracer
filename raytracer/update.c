@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 22:40:39 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 05:19:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ void copy_pixel_buffer_to_screen_image(t_device *device)
 	}
 }
 
+#include <unistd.h>
+
 void *thread_update(void *arg)
 {
 	t_thread *data = arg;
@@ -65,6 +67,19 @@ void *thread_update(void *arg)
 	const int height = img->img_size.height;
 	int y = 0;
 	int x = 0;
+
+	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
+	// while (data->id == 0 && y < height)
+	// {
+	// 	x = 0;
+	// 	while (x < width)
+	// 	{
+	// 		const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
+	// 		gl_draw_pixel(img, x, y, final_color);
+	// 		x++;
+	// 	}
+	// 	y++;
+	// }
 
 	const int num_of_thread = data->info->thread_num;
 	while ((data->id + (y * num_of_thread)) < height)
@@ -78,6 +93,7 @@ void *thread_update(void *arg)
 		}
 		y++;
 	}
+
 
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
@@ -111,6 +127,9 @@ int	update(t_device *device)
 
 	render_start_time = get_time_ms();
 	device->thread_info.finished_thread_num = 0;
+
+	if (is_high_resolution_mode(device)) // 배경 초기화
+		gl_draw_background(device->screen_image, BLACK);
 
 	int i = 0;
 	while (i < device->thread_info.thread_num)

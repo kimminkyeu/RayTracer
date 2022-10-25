@@ -6,11 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 03:10:47 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 05:32:02 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gl_vec3.h"
+
+# include <stdio.h>
+# include "gl_vec3.h"
 # include "helper.h"
 # include "objects.h"
 # include "ray.h"
@@ -75,6 +77,12 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 */
 
 	*face_normal = gl_vec3_normalize(gl_vec3_cross(v2v0, v1v0));
+
+	// printf("tr : v0(%f,%f,%f), v1(%f,%f,%f), v2(%f,%f,%f)\n", v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+	// printf("v2v0 : x(%f) y(%f) z(%f)\n", v2v0.x, v2v0.y, v2v0.z);
+	// printf("v1v0 : x(%f) y(%f) z(%f)\n", v1v0.x, v1v0.y, v1v0.z);
+	// printf("face normal of triangle : x(%f) y(%f) z(%f)\n", face_normal->x, face_normal->y, face_normal->z);
+	// printf("ray_direction           : x(%f) y(%f) z(%f)\n", ray_dir.x, ray_dir.y, ray_dir.z);
 	//  WARN:  주의! 삼각형의 넓이가 0일 경우에는 계산할 수 없음 (normalize에서 0으로 나누는 에러 발생)
 
 	// 삼각형 뒷면을 그리고 싶지 않은 경우 (Backface bulling)
@@ -97,19 +105,15 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	// 작은 삼각형들 3개의 normal 계산. 이때, ( WARN:  cross-product는 오른손 좌표계)
 	// 이때, 방향만 알면 되기 때문에 normalize를 할 필요가 없음.
 	// const t_vec3 normal0 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2)));
-	const t_vec3 cross0 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v2, v0));
-	const t_vec3 cross1 = gl_vec3_cross(gl_vec3_subtract_vector(v1, v0), gl_vec3_subtract_vector(*point, v0));
-	const t_vec3 cross2 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2));
+	const t_vec3 cross0 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v1, v0));
+	const t_vec3 cross1 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v1), gl_vec3_subtract_vector(v2, v1));
+	const t_vec3 cross2 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v0, v2));
 
 	// 방향만 확인하면 되기 때문에 normalize() 생략 가능
 	// 아래에서 cross product의 절대값으로 작은 삼각형들의 넓이 계산
 	if (gl_vec3_dot(cross0, *face_normal) < 0.0f) return false;
 	if (gl_vec3_dot(cross1, *face_normal) < 0.0f) return false;
 	if (gl_vec3_dot(cross2, *face_normal) < 0.0f) return false;
-
-	// Barycentric coordinates 계산
-	// 텍스춰링(texturing)에서 사용
-	// printf("cross0 %f/%f/%f\n", cross0.x, cross0.y, cross0.z);
 
 	const float area0 = gl_vec3_get_magnitude(cross0) * 0.5f;
 	const float area1 = gl_vec3_get_magnitude(cross1) * 0.5f;
@@ -122,6 +126,8 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	return (true);
 }
 
+// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
+// (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
 t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 {
 	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
@@ -138,30 +144,14 @@ t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 		hit.point = point; // ray.start + ray.dir * t;
 		hit.normal = face_normal;
 
-		// NOTE:  텍스춰링(texturing)에서 사용 (for Sampling)
-		// (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
-		// printf("hit_point uv's barycentric coord : w0 %f w1 %f w2 %f\n", w0, w1, 1.0f - w0 - w1);
-
 		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
 
+		// printf("hit.uv.x %f  hit.uv.y %f\n", hit.uv.x, hit.uv.y);
 
 		// t1 과 t2의 tangent가 서로 반대방향인 문제가 발생함.
 		hit.tangent = gl_vec3_normalize(gl_vec3_subtract_vector(triangle->v2, triangle->v1));
-
-/*
-	#*        v1            v2
-	#*	       *------------*
-	#*	       |          . |
-	#*	       |       .    |
-	#*	       |    .       |
-	#*	       | .          |
-	#*	       *------------*
-	#*	      v0            v3
-*/
-
-
 	}
 
 	return (hit);

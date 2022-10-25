@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 02:56:28 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 05:51:37 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  *       Intensity	    Color
  * A     0.3            50,50,50
 */
-void	parse_ambient_light_2(t_device *device, char *line)
+void	parse_ambient_light(t_device *device, char *line)
 {
 	t_ambient_light	*p;
 	int				cnt;
@@ -34,7 +34,7 @@ void	parse_ambient_light_2(t_device *device, char *line)
  *     position         loot_at (dir)       up_dir             FOV(0~180)
  * C   0.0,0.0,-1.0     0.0,0.0,1.0        0.0,1.0,0.0         90
 */
-void	parse_camera_2(t_device *device, char *line)
+void	parse_camera(t_device *device, char *line)
 {
 	t_camera	*p;
 	int			cnt;
@@ -57,7 +57,7 @@ void	parse_camera_2(t_device *device, char *line)
  *     pos             intensity     color
  * L   1.0,1.0,-1.0     0.5           255,255,255
 */
-void	parse_light_2(t_device *device, char *line)
+void	parse_light(t_device *device, char *line)
 {
 	t_light	*p;
 	int		cnt;
@@ -115,7 +115,7 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 #   [ Sphere ]                                  | --> optional
 #   center          radius   diffuseColor(rgb)   alpha    reflection  transparency  IOR(glass=1.5|water=1.3)  |   textureM   normalM
 */
-void	parse_sphere_2(t_device *device, char *line)
+void	parse_sphere(t_device *device, char *line)
 {
 	t_object	*obj;
 	t_material	*mat;
@@ -147,7 +147,7 @@ void	parse_sphere_2(t_device *device, char *line)
  * # pl   0.0,-1.0,0.0      0.0,1.0,0.0      128,128,128
 */
 
-void	parse_plane_2(t_device *device, char *line)
+void	parse_plane(t_device *device, char *line)
 {
 	t_object	*obj;
 	t_material	*mat;
@@ -172,7 +172,7 @@ void	parse_plane_2(t_device *device, char *line)
 	device->objects->push_back(device->objects, obj);
 }
 
-void	parse_cylinder_2(t_device *device, char *line)
+void	parse_cylinder(t_device *device, char *line)
 {
 	t_object	*obj;
 	t_material	*mat;
@@ -198,7 +198,7 @@ void	parse_cylinder_2(t_device *device, char *line)
 	device->objects->push_back(device->objects, obj);
 }
 
-void parse_cone_2(t_device *device, char *line)
+void parse_cone(t_device *device, char *line)
 {
 	t_object	*obj;
 	t_material	*mat;
@@ -224,7 +224,7 @@ void parse_cone_2(t_device *device, char *line)
 	device->objects->push_back(device->objects, obj);
 }
 
-void	parse_triangle_2(t_device *device, char *line)
+void	parse_triangle(t_device *device, char *line)
 {
 	t_object	*obj;
 	t_material	*mat;
@@ -248,16 +248,52 @@ void	parse_triangle_2(t_device *device, char *line)
 	if (cnt < 9 || mat->transparency + mat->reflection > 1.0f)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
-	tr->uv0 = gl_vec2_2f(0.0f, 1.0f);
-	tr->uv1 = gl_vec2_2f(0.0f, 0.0f);
+	// *   FIX:  UV 좌표계 고치기. (checker 텍스쳐 기준으로 작업 진행)
+	tr->uv0 = gl_vec2_2f(0.0f, 0.0f);
+	tr->uv1 = gl_vec2_2f(0.0f, 1.0f);
 	tr->uv2 = gl_vec2_2f(1.0f, 1.0f);
-
 
 	parse_texture(device, obj, line);
 	device->objects->push_back(device->objects, obj);
 }
 
-// void	parse_square_2(t_device *device, char *line)
-// {
-// }
+void	parse_square(t_device *device, char *line)
+{
+	t_object	*obj;
+	t_material	*mat;
+	t_square	*sq;
+	t_vec3		v[4];
+	int			cnt;
 
+	printf("Parsing square\n");
+	obj = custom_allocator_for_object(TYPE_SQUARE);
+	sq = obj->obj_data;
+	mat = &(obj->material);
+	cnt = ft_lscanf(line, "sq%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
+					&v[0].x, &v[0].y, &v[0].z,\
+					&v[1].x, &v[1].y, &v[1].z,\
+					&v[2].x, &v[2].y, &v[2].z,\
+					&v[3].x, &v[3].y, &v[3].z,\
+					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
+					&mat->alpha,\
+					&mat->reflection,\
+					&mat->transparency,\
+					&mat->ior);
+
+	if (cnt < 12 || mat->transparency + mat->reflection > 1.0f)
+		print_error_and_exit(device, "parse_square(): .rt file error\n");
+
+	// *   FIX:  UV 좌표계 고치기. (checker 텍스쳐 기준으로 작업 진행)
+	sq->tri_1 = create_triangle(v[0], v[1], v[2]);
+	sq->tri_1.uv0 = gl_vec2_2f(0.0f, 0.0f);
+	sq->tri_1.uv1 = gl_vec2_2f(1.0f, 0.0f);
+	sq->tri_1.uv2 = gl_vec2_2f(1.0f, 1.0f);
+
+	sq->tri_2 = create_triangle(v[0], v[2], v[3]);
+	sq->tri_2.uv0 = gl_vec2_2f(0.0f, 0.0f);
+	sq->tri_2.uv1 = gl_vec2_2f(1.0f, 1.0f);
+	sq->tri_2.uv2 = gl_vec2_2f(0.0f, 1.0f);
+
+	parse_texture(device, obj, line);
+	device->objects->push_back(device->objects, obj);
+}

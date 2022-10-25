@@ -81,9 +81,9 @@ int input_handler(t_device *device)
 	{
 		t_vec4 cam_orientation = gl_vec4_4f(camera->look_at.x, camera->look_at.y, camera->look_at.z, 0.0f);
 		t_vec4 cam_up = gl_vec4_4f(camera->up_direction.x, camera->up_direction.y, camera->up_direction.z, 0.0f);
-		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_orientation);
+		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(-delta.y),cam_orientation);
 		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_y_axis(delta.x),cam_orientation);
-		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_up);
+		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(-delta.y),cam_up);
 		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_y_axis(delta.x),cam_up);
 		camera->look_at.x = cam_orientation.x;
 		camera->look_at.y = cam_orientation.y;
@@ -91,8 +91,8 @@ int input_handler(t_device *device)
 		camera->up_direction.x = cam_up.x;
 		camera->up_direction.y = cam_up.y;
 		camera->up_direction.z = cam_up.z;
-		printf("camera Look-At  (%f | %f | %f)\t", camera->look_at.x, camera->look_at.y, camera->look_at.z);
-		printf("Up (%f | %f | %f)\n", camera->up_direction.x, camera->up_direction.y, camera->up_direction.z);
+		// printf("camera Look-At  (%f | %f | %f)\t", camera->look_at.x, camera->look_at.y, camera->look_at.z);
+		// printf("Up (%f | %f | %f)\n", camera->up_direction.x, camera->up_direction.y, camera->up_direction.z);
 		moved = true;
 	}
 
@@ -143,7 +143,7 @@ int	main(int ac, char **av)
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
 	// parse_rt_file_to_device(device, av[1]);
-	parse_rt_file_to_device2(device, av[1]);
+	parse_rt_file_to_device(device, av[1]);
 
 	/** (3) start rendering via threads */
 	t_thread_info *info = &device->thread_info;
