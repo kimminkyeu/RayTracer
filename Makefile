@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/24 23:22:22 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/25 17:41:23 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,7 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 
 # MYAPP-DIRECTORY
 MINIRT_DIR					= raytracer
-MINIRT_SRC					= main helper parse_rt_file_to_device\
+MINIRT_SRC					= main helper\
 							  update trace_ray\
 
 
@@ -82,8 +82,14 @@ MINIRT_OBJECTS_SRC          = camera hit ray\
 							  triangle square plane sphere cone cylinder\
 
 
+MINIRT_PARSER_DIR		    = $(MINIRT_DIR)/parser
+MINIRT_PARSER_SRC           = ft_atof ft_lscanf ft_lscanf_utils\
+                              parse_rt_file_to_device
+
+
 # MYAPP-SOURCE AL
 MINIRT_SRCS  = $(addsuffix .c, $(addprefix $(MINIRT_DIR)/, $(MINIRT_SRC))) \
+               $(addsuffix .c, $(addprefix $(MINIRT_PARSER_DIR)/, $(MINIRT_PARSER_SRC))) \
                $(addsuffix .c, $(addprefix $(MINIRT_OBJECTS_DIR)/, $(MINIRT_OBJECTS_SRC))) \
 
 SRC = $(ENGINE_SRCS) $(MINIRT_SRCS)

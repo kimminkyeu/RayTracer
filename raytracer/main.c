@@ -16,11 +16,11 @@
 #include "libft.h"
 #include "thread.h"
 
+
+// *  NOTE:  https://www.youtube.com/watch?v=lXlXqUEEJ94
+// * Adding an Interactive 3D Camera System // Ray Tracing series
 int input_handler(t_device *device)
 {
-	// *  NOTE:  https://www.youtube.com/watch?v=lXlXqUEEJ94
-	// * Adding an Interactive 3D Camera System // Ray Tracing series
-
 	t_camera *camera = device->camera;
 
 	t_vec2 mouse_pos = input_get_mouse_pos(device);
@@ -42,7 +42,6 @@ int input_handler(t_device *device)
 	}
 	// below code will be executed only if mouse is pressed
 	bool moved = false;
-
 	float speed = 0.2f;
 
 	// Movement
