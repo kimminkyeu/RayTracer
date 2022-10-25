@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lscanf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 16:07:33 by sungjpar          #+#    #+#             */
-/*   Updated: 2022/10/23 16:07:37 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/10/25 19:02:43 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	read_float_line(float *dest, char **line)
 	buf[buf_idx] = 0;
 	if (buf_idx == 0)
 		return (FAILED);
-	*dest = ft_atof(buf);
+	*dest = atof(buf);
 	(*line)--;
 	return (SUCCESS);
 }

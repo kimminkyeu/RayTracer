@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 23:47:10 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/25 21:12:09 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,47 +21,6 @@
 #include "gl_engine.h"
 #include "main.h"
 #include "texture.h"
-
-t_object *custom_allocator_for_object(int obj_type)
-{
-	t_object *new_obj;
-
-	new_obj = ft_calloc(1, sizeof(*new_obj));
-	new_obj->type = obj_type;
-	if (obj_type == TYPE_SPHERE)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_sphere));
-	else if (obj_type == TYPE_TRIANGLE)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_triangle));
-	else if (obj_type == TYPE_SQUARE)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_square));
-	else if (obj_type == TYPE_PLAIN)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_plane));
-	else if (obj_type == TYPE_CYLINDER)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_cylinder));
-	else if (obj_type == TYPE_CONE)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_cone));
-	else
-		new_obj->obj_data = NULL;
-	return (new_obj);
-}
-
-// delete texture image
-void	custom_deallocator_for_object(void *data)
-{
-	t_object *obj_ptr = data;
-	if (obj_ptr->obj_data != NULL)
-		free(obj_ptr->obj_data);
-	if (obj_ptr->diffuse_texture != NULL)
-	{
-		mlx_destroy_image(obj_ptr->diffuse_texture->image.mlx_ptr, obj_ptr->diffuse_texture->image.img_ptr);
-		free(obj_ptr->diffuse_texture);
-	}
-	if (obj_ptr->normal_texture != NULL)
-	{
-		mlx_destroy_image(obj_ptr->normal_texture->image.mlx_ptr, obj_ptr->normal_texture->image.img_ptr);
-		free(obj_ptr->normal_texture);
-	}
-}
 
 void	print_error_and_exit(t_device *device, char *str)
 {
@@ -425,6 +384,7 @@ void	parse_rt_file_to_device(t_device *device, char *file)
 	char	*pa_line;
 	char	**pa_line_split;
 
+
 	printf("File Name : %s\n", file);
 	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
 		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
@@ -450,3 +410,71 @@ void	parse_rt_file_to_device(t_device *device, char *file)
 	}
 };
 
+// ----------------------------------------------------------------------------
+extern void	parse_each2(t_device *device, char *line);
+
+extern void	parse_ambient_light_2(t_device *device, char *line);
+extern void	parse_light_2(t_device *device, char *line);
+extern void	parse_camera_2(t_device *device, char *line);
+
+extern void	parse_sphere_2(t_device *device, char *line);
+extern void	parse_cylinder_2(t_device *device, char *line);
+extern void	parse_plane_2(t_device *device, char *line);
+extern void	parse_cone_2(t_device *device, char *line);
+extern void	parse_triangle_2(t_device *device, char *line);
+extern void	parse_square_2(t_device *device, char *line);
+
+
+
+
+void	parse_rt_file_to_device2(t_device *device, char *file)
+{
+	int	fd;
+	char	*pa_line;
+
+
+	printf("File Name : %s\n", file);
+	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
+		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
+	pa_line = get_next_line(fd);
+	while (pa_line != NULL)
+	{
+		// Skip empty line
+		if (pa_line[0] == '#' || (ft_strlen(pa_line) == 1 && pa_line[0] == '\n'))
+		{
+			free(pa_line);
+			pa_line = get_next_line(fd);
+			continue ;
+		}
+		parse_each2(device, pa_line);
+		free(pa_line);
+		pa_line = get_next_line(fd);
+	}
+};
+
+void	parse_each2(t_device *device, char *line)
+{
+	if (ft_strncmp(line, "C ", 2) == 0)
+		parse_camera_2(device, line);
+	else if (ft_strncmp(line, "A ", 2) == 0)
+		parse_ambient_light_2(device, line);
+	else if (ft_strncmp(line, "L ", 2) == 0)
+		parse_light_2(device, line);
+	else if (ft_strncmp(line, "sp ", 3) == 0)
+		parse_sphere_2(device, line);
+	// else if (ft_strncmp(line, "pl ", 3) == 0)
+		// parse_plane_2(device, line);
+	// else if (ft_strncmp(line, "cy ", 3) == 0)
+		// parse_cylinder_2(device, line);
+	// else if (ft_strncmp(line, "co ", 3) == 0)
+		// parse_cone_2(device, line);
+	// else if (ft_strncmp(line, "tr ", 3) == 0)
+		// parse_triangle_2(device, line);
+	// else if (ft_strncmp(line, "sq ", 3) == 0)
+		// parse_square_2(device, line);
+	else
+		print_error_and_exit(device, "parse_each(): .rt format error\n");
+}

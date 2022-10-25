@@ -5,7 +5,6 @@
 // #include "vector.h"
 #include "gl_vec3.h"
 #include "gl_vec2.h"
-// #include "texture.h"
 
 #include "triangle.h"
 #include "square.h"
@@ -39,8 +38,10 @@ typedef struct s_material {
 	t_vec3	specular;
 	float	ks;
 	float	alpha;
+
 	float	reflection;
 	float	transparency;
+	float 	ior; // Index of refraction
 
 }	t_material;
 
@@ -57,5 +58,9 @@ typedef struct s_object {
 	t_texture	*normal_texture;  // normal_map
 
 }	t_object;
+
+extern t_object *custom_allocator_for_object(int obj_type);
+
+extern void	custom_deallocator_for_object(void *data);
 
 #endif /* objects.h */

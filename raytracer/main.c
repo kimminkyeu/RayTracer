@@ -15,6 +15,7 @@
 #include "helper.h"
 #include "libft.h"
 #include "thread.h"
+#include "parser.h"
 
 
 // *  NOTE:  https://www.youtube.com/watch?v=lXlXqUEEJ94
@@ -79,13 +80,17 @@ int input_handler(t_device *device)
 	if (delta.x != 0.0f || delta.y != 0.0f)
 	{
 		t_vec4 cam_orientation = gl_vec4_4f(camera->look_at.x, camera->look_at.y, camera->look_at.z, 0.0f);
+		t_vec4 cam_up = gl_vec4_4f(camera->up_direction.x, camera->up_direction.y, camera->up_direction.z, 0.0f);
 		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_orientation);
 		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_y_axis(delta.x),cam_orientation);
+		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_up);
+		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.x),cam_up);
 		camera->look_at.x = cam_orientation.x;
 		camera->look_at.y = cam_orientation.y;
+		camera->up_direction.x = cam_up.x;
+		camera->up_direction.y = cam_up.y;
 		moved = true;
 	}
-
 
 
 	if(moved)
@@ -116,11 +121,25 @@ int	main(int ac, char **av)
 	const int LOW_RESOLUTION_RATIO = 8; // max is 1
 	const int THREAD_NUM = 24;
 
+
+
+
+
+	// int i;
+	// char c;
+	// printf("i:%d c:%c\n", i, c);
+
+
+
+
+
+
 	/** (1) Init engine && create image */
 	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", LOW_RESOLUTION_RATIO);
 
 	/** (2) Load files. (Map data etc...) then store data to [t_device] structure */
-	parse_rt_file_to_device(device, av[1]);
+	// parse_rt_file_to_device(device, av[1]);
+	parse_rt_file_to_device2(device, av[1]);
 
 	/** (3) start rendering via threads */
 	t_thread_info *info = &device->thread_info;

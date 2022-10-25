@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:47:45 by sungjpar          #+#    #+#             */
-/*   Updated: 2022/10/25 17:44:55 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/25 20:53:59 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,16 @@ int	read_int_line(int *dest, char **line);
 int	read_float_line(float *dest, char **line);
 int	skip_white_space(char **line);
 
-static int	read_format(char **line, char format_char, va_list *ap)
+static int	read_format(char **line, char format_char, va_list ap)
 {
 	char	c;
 
 	if (format_char == 'c')
-		return (read_char_line(va_arg(*ap, char *), line));
+		return (read_char_line(va_arg(ap, char *), line));
 	if (format_char == 'd' || format_char == 'i')
-		return (read_int_line(va_arg(*ap, int *), line));
+		return (read_int_line(va_arg(ap, int *), line));
 	if (format_char == 'f')
-		return (read_float_line(va_arg(*ap, float *), line));
+		return (read_float_line(va_arg(ap, float *), line));
 	if (format_char == 'w')
 		return (skip_white_space(line));
 	if (format_char == '%')
@@ -62,7 +62,7 @@ static int	scan_format(char *line, char *fmt, va_list ap)
 		if (*fmt == '%')
 		{
 			format_char = *(++fmt);
-			if (read_format(&line, format_char, &ap) == -1)
+			if (read_format(&line, format_char, ap) == -1)
 				return (count_success_read);
 			if (format_char != 'w')
 				++count_success_read;
