@@ -84,11 +84,15 @@ int input_handler(t_device *device)
 		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_orientation);
 		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_y_axis(delta.x),cam_orientation);
 		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_up);
-		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.x),cam_up);
+		cam_up = gl_vec4_multiply_matrix(gl_mat4x4_rotate_y_axis(delta.x),cam_up);
 		camera->look_at.x = cam_orientation.x;
 		camera->look_at.y = cam_orientation.y;
+		camera->look_at.z = cam_orientation.z;
 		camera->up_direction.x = cam_up.x;
 		camera->up_direction.y = cam_up.y;
+		camera->up_direction.z = cam_up.z;
+		printf("camera Look-At  (%f | %f | %f)\t", camera->look_at.x, camera->look_at.y, camera->look_at.z);
+		printf("Up (%f | %f | %f)\n", camera->up_direction.x, camera->up_direction.y, camera->up_direction.z);
 		moved = true;
 	}
 

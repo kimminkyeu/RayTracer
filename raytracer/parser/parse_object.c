@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/25 21:33:01 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/25 23:25:56 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,32 @@ void	set_default_material(t_material *m)
 	m->ior = 1.5f;
 }
 
+void	parse_texture(t_device *device, t_object *object, char *line)
+{
+	char	*str;
+	char	**split;
+
+	str = ft_strchr(line, '|');
+	if (str == NULL)
+		return ;
+	str += 1;
+	str = ft_strtrim(str, "\n");
+	split = ft_split(str, ' ');
+	free(str);
+	if (split[0] == NULL)
+		return ;
+	if (ft_strncmp("checker", split[0], 7) == 0)
+		object->diffuse_texture = new_texture_checkerboard(device, 32, 32);
+	else
+		object->diffuse_texture = new_texture(device, split[0]);
+	if (get_strs_count(split) == 2)
+		object->normal_texture = new_texture(device, split[1]);
+	free_split_char(split);
+}
+
 /*
-#   [ Sphere ]
-#   center        radius  diffuseColor(rgb)  |  alpha   textureM  normalM  |  reflection  transparency  IOR(glass=1.5|water=1.3)
-sp  0.5,-0.5,1.0   0.5    0,250,0               10.0                          0.0         0.0           10.0
+#   [ Sphere ]                                  | --> optional
+#   center          radius   diffuseColor(rgb)  |  alpha   |  reflection  transparency  IOR(glass=1.5|water=1.3)  |   textureM   normalM
 */
 void	parse_sphere_2(t_device *device, char *line)
 {
@@ -108,39 +130,31 @@ void	parse_sphere_2(t_device *device, char *line)
 					&m->alpha,\
 					&m->reflection,\
 					&m->transparency,\
-					&m->ior\
-					);
+					&m->ior);
 
-	printf("cnt: %d\n", cnt);
-
-	if (cnt < 4)
-		print_error_and_exit(device, "parse_sphere(): .rt file error [1]\n");
-	if (m->transparency + m->reflection > 1.0f)
-		print_error_and_exit(device, "parse_sphere(): .rt file error [2]\n");
-
-	printf("center : %f %f %f\n", s->center.x, s->center.y, s->center.z);
-	printf("reflection : %f\n", m->reflection);
-	printf("transparency : %f\n", m->transparency);
-	printf("alpha : %f\n", m->alpha);
-	printf("ior : %f\n", m->ior);
-
-	// NOTE: read texture info
-
-
-
+	if (cnt < 4 || m->transparency + m->reflection > 1.0f)
+		print_error_and_exit(device, "parse_sphere(): .rt file error\n");
+	printf("center : %f %f %f\nreflection : %f\ntransparency : %f\nalpha : %f\nior : %f\n", s->center.x, s->center.y, s->center.z, m->reflection, m->transparency, m->alpha, m->ior);
+	parse_texture(device, p, line);
 	device->objects->push_back(device->objects, p);
 }
 
+void	parse_plane_2(t_device *device, char *line)
+{
+}
 
+void	parse_cylinder_2(t_device *device, char *line)
+{
+}
 
+void	parse_cone_2(t_device *device, char *line)
+{
+}
 
+void	parse_triangle_2(t_device *device, char *line)
+{
+}
 
-
-
-
-
-
-
-
-
-
+void	parse_square_2(t_device *device, char *line)
+{
+}

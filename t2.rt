@@ -4,7 +4,7 @@ A   0.3            50,50,50
 
 #   [ Camera ]
 #   position         loot_at (dir)       up_dir             FOV(0~180)
-C    0.0,0.0,-1.0     0.0,0.0,1.0        0.0,1.0,0.0         90
+C    0.0,0.0,-2.0     0.0,0.0,1.0        0.0,1.0,0.0         90
 
 #   [ Light ]
 #   pos             intensity     color
@@ -12,5 +12,5 @@ L   1.0,1.0,-1.0     0.5           255,255,255
 
 #   [ Sphere ]
 #   center          radius   diffuseColor(rgb)  |  alpha   |  reflection  transparency  IOR(glass=1.5|water=1.3)  |   textureM   normalM
-sp  1,-0.5,2.0      1.0      0,250,0                10.0       0.5         0.0           1.5                          abT        abN
-sp  -1,-0.5,2.0     1.0      250,0,0                10.0       0.5         0.0           1.5                          abT        abN
+sp  1,-0.5,2.0      1.0      0,250,0                10.0       0.5         0.0           1.5                      |   checker
+sp  -1,-0.5,2.0     1.0      250,0,0                10.0       0.5         0.0           1.5                      |   abT        abN
