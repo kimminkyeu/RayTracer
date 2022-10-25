@@ -21,12 +21,12 @@ int input_handler(t_device *device)
 	// *  NOTE:  https://www.youtube.com/watch?v=lXlXqUEEJ94
 	// * Adding an Interactive 3D Camera System // Ray Tracing series
 
-	// t_device *device = param;
 	t_camera *camera = device->camera;
 
-	// t_vec2 mouse_pos = input_get_mouse_pos(device);
-	// t_vec2 delta = gl_vec2_multiply_scalar((gl_vec2_subtract_vector(mouse_pos, device->input.last_mouse_pos)), 0.002f);
-	// device->input.last_mouse_pos = mouse_pos;
+	t_vec2 mouse_pos = input_get_mouse_pos(device);
+	t_vec2 delta = gl_vec2_multiply_scalar((gl_vec2_subtract_vector(mouse_pos, device->input.last_mouse_pos)), 0.1f);
+	device->input.last_mouse_pos = mouse_pos;
+
 
 	if (device->is_high_resolution_render_mode == false && input_is_key_down(device, KEY_R))
 	{
@@ -43,7 +43,7 @@ int input_handler(t_device *device)
 	// below code will be executed only if mouse is pressed
 	bool moved = false;
 
-	float speed = 0.5f;
+	float speed = 0.2f;
 
 	// Movement
 	if (input_is_key_down(device, KEY_W))
@@ -74,6 +74,16 @@ int input_handler(t_device *device)
 	else if (input_is_key_down(device, KEY_E))
 	{
 		camera->pos = gl_vec3_add_vector(camera->pos, gl_vec3_multiply_scalar(camera->up_direction, speed));
+		moved = true;
+	}
+
+	if (delta.x != 0.0f || delta.y != 0.0f)
+	{
+		t_vec4 cam_orientation = gl_vec4_4f(camera->look_at.x, camera->look_at.y, camera->look_at.z, 0.0f);
+		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_x_axis(delta.y),cam_orientation);
+		cam_orientation = gl_vec4_multiply_matrix(gl_mat4x4_rotate_y_axis(delta.x),cam_orientation);
+		camera->look_at.x = cam_orientation.x;
+		camera->look_at.y = cam_orientation.y;
 		moved = true;
 	}
 
