@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:51:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 05:58:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ void	parse_light(t_device *device, char *line)
 		print_error_and_exit(device, "parse_ambient_light(): .rt file error\n");
 	device->point_lights->push_back(device->point_lights, p);
 }
-
-#define IMAGE_FILE_LOACATION ("./raytracer/image/")
 
 void	parse_texture(t_device *device, t_object *object, char *line)
 {
