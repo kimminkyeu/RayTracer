@@ -25,7 +25,7 @@ typedef struct s_texture t_texture;
 
 #define TYPE_NO_HIT		(0)
 #define TYPE_SPHERE		(1)
-#define TYPE_PLAIN		(2)
+#define TYPE_PLANE		(2)
 #define TYPE_CYLINDER	(3)
 #define TYPE_CONE		(4)
 #define TYPE_TRIANGLE   (5)

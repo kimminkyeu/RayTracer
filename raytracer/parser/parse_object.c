@@ -6,15 +6,15 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/25 23:25:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 02:56:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-/**   [ Ambient Light ]
- *           Intensity	    Color
- *     A     0.3            50,50,50
+/**       NOTE:  [ Ambient Light ]
+ *       Intensity	    Color
+ * A     0.3            50,50,50
 */
 void	parse_ambient_light_2(t_device *device, char *line)
 {
@@ -30,10 +30,9 @@ void	parse_ambient_light_2(t_device *device, char *line)
 	p->has_ambient_light = true;
 }
 
-/**
- * #    [ Camera ]
- * #    position         loot_at (dir)       up_dir             FOV(0~180)
- * C    0.0,0.0,-1.0     0.0,0.0,1.0        0.0,1.0,0.0         90
+/**     NOTE:   [ Camera ]
+ *     position         loot_at (dir)       up_dir             FOV(0~180)
+ * C   0.0,0.0,-1.0     0.0,0.0,1.0        0.0,1.0,0.0         90
 */
 void	parse_camera_2(t_device *device, char *line)
 {
@@ -54,6 +53,10 @@ void	parse_camera_2(t_device *device, char *line)
 	update_camera_geometry(device);
 }
 
+/**    NOTE:  [ Light ]
+ *     pos             intensity     color
+ * L   1.0,1.0,-1.0     0.5           255,255,255
+*/
 void	parse_light_2(t_device *device, char *line)
 {
 	t_light	*p;
@@ -71,17 +74,7 @@ void	parse_light_2(t_device *device, char *line)
 	device->point_lights->push_back(device->point_lights, p);
 }
 
-
-void	set_default_material(t_material *m)
-{
-	m->diffuse = gl_vec3_1f(255.0f);
-	m->specular = gl_vec3_1f(255.0f);
-	m->alpha = 10.0f;
-	m->ks = 0.7f;
-	m->transparency = 0.0f;
-	m->reflection = 0.0f;
-	m->ior = 1.5f;
-}
+#define IMAGE_FILE_LOACATION ("./raytracer/image/")
 
 void	parse_texture(t_device *device, t_object *object, char *line)
 {
@@ -91,70 +84,180 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 	str = ft_strchr(line, '|');
 	if (str == NULL)
 		return ;
-	str += 1;
+	str++;
 	str = ft_strtrim(str, "\n");
-	split = ft_split(str, ' ');
-	free(str);
-	if (split[0] == NULL)
+	if (str == NULL)
 		return ;
-	if (ft_strncmp("checker", split[0], 7) == 0)
-		object->diffuse_texture = new_texture_checkerboard(device, 32, 32);
-	else
-		object->diffuse_texture = new_texture(device, split[0]);
-	if (get_strs_count(split) == 2)
-		object->normal_texture = new_texture(device, split[1]);
+
+	split = ft_split(str, ' ');
+
+	if (get_strs_count(split) > 0)
+	{
+		if (ft_strncmp("checker", split[0], 7) == 0)
+			object->diffuse_texture = new_texture_checkerboard(device, 32, 32);
+		else
+		{
+			str = ft_strjoin(IMAGE_FILE_LOACATION, split[0]);
+			object->diffuse_texture = new_texture(device, str);
+			free(str);
+		}
+		if (get_strs_count(split) == 2)
+		{
+			str = ft_strjoin(IMAGE_FILE_LOACATION, split[1]);
+			object->normal_texture = new_texture(device, str);
+			free(str);
+		}
+	}
 	free_split_char(split);
 }
 
 /*
 #   [ Sphere ]                                  | --> optional
-#   center          radius   diffuseColor(rgb)  |  alpha   |  reflection  transparency  IOR(glass=1.5|water=1.3)  |   textureM   normalM
+#   center          radius   diffuseColor(rgb)   alpha    reflection  transparency  IOR(glass=1.5|water=1.3)  |   textureM   normalM
 */
 void	parse_sphere_2(t_device *device, char *line)
 {
-	t_object	*p;
-	t_material	*m;
-	t_sphere	*s;
+	t_object	*obj;
+	t_material	*mat;
+	t_sphere	*sp;
 	int			cnt;
 
 	printf("Parsing sphere\n");
-	p = custom_allocator_for_object(TYPE_SPHERE);
-	set_default_material(&p->material);
+	obj = custom_allocator_for_object(TYPE_SPHERE);
+	sp = obj->obj_data;
+	mat = &(obj->material);
+	cnt = ft_lscanf(line, "sp%w%f,%f,%f%w%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
+					&sp->center.x, &sp->center.y, &sp->center.z,\
+					&sp->radius,\
+					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
+					&mat->alpha,\
+					&mat->reflection,\
+					&mat->transparency,\
+					&mat->ior);
 
-	s = p->obj_data;
-	m = &(p->material);
-	cnt = ft_lscanf(line, "sp%w%f,%f,%f%w%f%w%f,%f,%f%w%f%w%f%w%f%w%f",\
-					&s->center.x, &s->center.y, &s->center.z,\
-					&s->radius,\
-					&m->diffuse.r, &m->diffuse.g, &m->diffuse.b,\
-					&m->alpha,\
-					&m->reflection,\
-					&m->transparency,\
-					&m->ior);
-
-	if (cnt < 4 || m->transparency + m->reflection > 1.0f)
+	if (cnt < 4 || mat->transparency + mat->reflection > 1.0f)
 		print_error_and_exit(device, "parse_sphere(): .rt file error\n");
-	printf("center : %f %f %f\nreflection : %f\ntransparency : %f\nalpha : %f\nior : %f\n", s->center.x, s->center.y, s->center.z, m->reflection, m->transparency, m->alpha, m->ior);
-	parse_texture(device, p, line);
-	device->objects->push_back(device->objects, p);
+	parse_texture(device, obj, line);
+	device->objects->push_back(device->objects, obj);
 }
+
+/**
+ * #      [ Plain ]
+ * #      xyzCoordinates     FaceNormal      diffuseColor(rgb)    |   alpha    reflection  transparency  IOR(glass=1.5|water=1.3)
+ * # pl   0.0,-1.0,0.0      0.0,1.0,0.0      128,128,128
+*/
 
 void	parse_plane_2(t_device *device, char *line)
 {
+	t_object	*obj;
+	t_material	*mat;
+	t_plane		*pl;
+	int			cnt;
+
+	printf("Parsing plane\n");
+	obj = custom_allocator_for_object(TYPE_PLANE);
+	pl = obj->obj_data;
+	mat = &(obj->material);
+	cnt = ft_lscanf(line, "pl%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
+					&pl->pos.x, &pl->pos.y, &pl->pos.z,\
+					&pl->normal.x,&pl->normal.y,&pl->normal.z,\
+					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
+					&mat->alpha,\
+					&mat->reflection,\
+					&mat->transparency,\
+					&mat->ior);
+
+	if (cnt < 6)
+		print_error_and_exit(device, "parse_plane(): .rt file error\n");
+	device->objects->push_back(device->objects, obj);
 }
 
 void	parse_cylinder_2(t_device *device, char *line)
 {
+	t_object	*obj;
+	t_material	*mat;
+	t_cylinder	*cy;
+	int			cnt;
+
+	printf("Parsing cylinder\n");
+	obj = custom_allocator_for_object(TYPE_CYLINDER);
+	cy = obj->obj_data;
+	mat = &(obj->material);
+	cnt = ft_lscanf(line, "cy%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
+					&cy->pos.x, &cy->pos.y, &cy->pos.z,\
+					&cy->orientation.x, &cy->orientation.y, &cy->orientation.z,\
+					&cy->radius, &cy->height,\
+					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
+					&mat->alpha,\
+					&mat->reflection,\
+					&mat->transparency,\
+					&mat->ior);
+
+	if (cnt < 8)
+		print_error_and_exit(device, "parse_cylinder(): .rt file error\n");
+	device->objects->push_back(device->objects, obj);
 }
 
-void	parse_cone_2(t_device *device, char *line)
+void parse_cone_2(t_device *device, char *line)
 {
+	t_object	*obj;
+	t_material	*mat;
+	t_cone		*co;
+	int 		cnt;
+
+	printf("Parsing cone\n");
+	obj = custom_allocator_for_object(TYPE_CONE);
+	co = obj->obj_data;
+	mat = &(obj->material);
+	cnt = ft_lscanf(line, "co%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",
+					&co->pos.x, &co->pos.y, &co->pos.z,
+					&co->orientation.x, &co->orientation.y, &co->orientation.z,
+					&co->radius, &co->height,
+					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,
+					&mat->alpha,
+					&mat->reflection,
+					&mat->transparency,
+					&mat->ior);
+
+	if (cnt < 8)
+		print_error_and_exit(device, "parse_cone(): .rt file error\n");
+	device->objects->push_back(device->objects, obj);
 }
 
 void	parse_triangle_2(t_device *device, char *line)
 {
+	t_object	*obj;
+	t_material	*mat;
+	t_triangle	*tr;
+	int			cnt;
+
+	printf("Parsing triangle\n");
+	obj = custom_allocator_for_object(TYPE_TRIANGLE);
+	tr = obj->obj_data;
+	mat = &(obj->material);
+	cnt = ft_lscanf(line, "tr%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
+					&tr->v0.x, &tr->v0.y, &tr->v0.z,\
+					&tr->v1.x, &tr->v1.y, &tr->v1.z,\
+					&tr->v2.x, &tr->v2.y, &tr->v2.z,\
+					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
+					&mat->alpha,\
+					&mat->reflection,\
+					&mat->transparency,\
+					&mat->ior);
+
+	if (cnt < 9 || mat->transparency + mat->reflection > 1.0f)
+		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
+
+	tr->uv0 = gl_vec2_2f(0.0f, 1.0f);
+	tr->uv1 = gl_vec2_2f(0.0f, 0.0f);
+	tr->uv2 = gl_vec2_2f(1.0f, 1.0f);
+
+
+	parse_texture(device, obj, line);
+	device->objects->push_back(device->objects, obj);
 }
 
-void	parse_square_2(t_device *device, char *line)
-{
-}
+// void	parse_square_2(t_device *device, char *line)
+// {
+// }
+

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 21:11:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/25 21:16:40 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 01:58:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,23 @@ typedef struct s_texture {
 
 }	t_texture;
 
+void	set_default_material(t_material *m)
+{
+	m->diffuse = gl_vec3_1f(255.0f);
+	m->specular = gl_vec3_1f(255.0f);
+	m->alpha = 10.0f;
+	m->ks = 0.8f;
+	m->transparency = 0.0f;
+	m->reflection = 0.0f;
+	m->ior = 1.5f;
+}
+
 t_object *custom_allocator_for_object(int obj_type)
 {
 	t_object *new_obj;
 
 	new_obj = ft_calloc(1, sizeof(*new_obj));
+	set_default_material(&new_obj->material);
 	new_obj->type = obj_type;
 	if (obj_type == TYPE_SPHERE)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_sphere));
@@ -34,7 +46,7 @@ t_object *custom_allocator_for_object(int obj_type)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_triangle));
 	else if (obj_type == TYPE_SQUARE)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_square));
-	else if (obj_type == TYPE_PLAIN)
+	else if (obj_type == TYPE_PLANE)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_plane));
 	else if (obj_type == TYPE_CYLINDER)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_cylinder));

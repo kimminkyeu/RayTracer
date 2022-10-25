@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 16:43:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 10:50:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 01:19:16 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,13 @@
 #include <stdio.h>
 #include "objects.h"
 #include "texture.h"
+#include "gl_engine.h"
 
+void	print_error_and_exit(t_device *device, char *str)
+{
+	ft_putstr_fd(str, 2);
+	engine_exit(device, EXIT_FAILURE);
+}
 
 // return w0, w1, w2 weights
 t_vec3 get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point)

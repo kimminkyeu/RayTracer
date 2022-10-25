@@ -364,7 +364,7 @@ t_hit check_ray_collision(const t_ray *ray, t_object *obj)
 		return (sphere_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_TRIANGLE)
 		return (triangle_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_PLAIN)
+	else if (obj->type == TYPE_PLANE)
 		return (plane_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_SQUARE)
 		return (square_intersect_ray_collision(ray, obj->obj_data));
