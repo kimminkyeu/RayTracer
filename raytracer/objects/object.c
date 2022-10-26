@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 21:11:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 01:58:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 17:30:11 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	set_default_material(t_material *m)
 {
 	m->diffuse = gl_vec3_1f(255.0f);
 	m->specular = gl_vec3_1f(255.0f);
-	m->alpha = 10.0f;
-	m->ks = 0.8f;
+	m->alpha = 20.0f;
+	m->ks = 0.5f;
 	m->transparency = 0.0f;
 	m->reflection = 0.0f;
 	m->ior = 1.5f;

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:58:49 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 17:40:48 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	parse_ambient_light(t_device *device, char *line)
 	t_ambient_light	*p;
 	int				cnt;
 
-	printf("Parsing ambient light\n");
 	p = device->ambient_light;
 	cnt = ft_lscanf(line, "A%w%f%w%f,%f,%f\n", &p->brightness_ratio, &p->color.r, &p->color.g, &p->color.b);
+	printf("Parsing ambient light %d\n", cnt);
 
 	if (!(p->has_ambient_light == false && cnt == 4))
 		print_error_and_exit(device, "parse_ambient_light(): .rt file error\n");
@@ -62,15 +62,15 @@ void	parse_light(t_device *device, char *line)
 	t_light	*p;
 	int		cnt;
 
-	printf("Parsing light\n");
 	p = ft_calloc(1, sizeof(*p));
 	cnt = ft_lscanf(line, "L%w%f,%f,%f%w%f%w%f,%f,%f\n",\
 					&p->pos.x, &p->pos.y, &p->pos.z,\
 					&p->brightness_ratio,\
 					&p->color.r, &p->color.g, &p->color.b);
 
+	printf("Parsing light %d\n", cnt);
 	if (cnt != 7)
-		print_error_and_exit(device, "parse_ambient_light(): .rt file error\n");
+		print_error_and_exit(device, "parse_light(): .rt file error\n");
 	device->point_lights->push_back(device->point_lights, p);
 }
 
@@ -91,6 +91,7 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 
 	if (get_strs_count(split) > 0)
 	{
+		printf("Loading Texture...\n");
 		if (ft_strncmp("checker", split[0], 7) == 0)
 			object->diffuse_texture = new_texture_checkerboard(device, 32, 32);
 		else

@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/26 12:22:58 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/26 17:02:03 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,7 +79,7 @@ MINIRT_SRC					= main helper\
 
 
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
-MINIRT_OBJECTS_SRC          = object camera hit ray\
+MINIRT_OBJECTS_SRC          = object camera ray\
                               texture\
                               disk\
 							  triangle square plane sphere cone cylinder\
@@ -87,8 +87,7 @@ MINIRT_OBJECTS_SRC          = object camera hit ray\
 
 MINIRT_PARSER_DIR		    = $(MINIRT_DIR)/parser
 MINIRT_PARSER_SRC           = ft_atof ft_lscanf ft_lscanf_utils\
-                              parse_rt_file_to_device parse_object
-
+                              parse_rt_file_to_device parse_setting parse_object
 
 # MYAPP-SOURCE AL
 MINIRT_SRCS  = $(addsuffix .c, $(addprefix $(MINIRT_DIR)/, $(MINIRT_SRC))) \

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 11:10:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:17:46 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:25:31 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ t_image	*engine_new_image(t_device *device, t_vec2 img_size, \
 		new_image->img_location = img_location;
 		new_image->device_ptr = device;
 	}
+	printf("engine_new_image() : W(%f) H(%f)\n", new_image->img_size.width, new_image->img_size.height);
 	return (new_image);
 }
 
@@ -86,8 +87,8 @@ void	destory_images(t_device *device)
 
 static bool	is_inside_window(t_device *device, int _x, int _y)
 {
-	if (_x < device->win_width && _x >= 0 && \
-			_y < device->win_height && _y >= 0)
+	if (_x < device->renderer_settings.win_width && _x >= 0 && \
+			_y < device->renderer_settings.win_height && _y >= 0)
 	{
 		return (true);
 	}

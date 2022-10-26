@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:28:24 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:53:26 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 15:40:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,16 @@ extern int	ft_lscanf(char *line, char *format, ...);
 */
 extern void	parse_rt_file_to_device(t_device *device, char *file);
 
-void	parse_ambient_light(t_device *device, char *line);
-
-void	parse_camera(t_device *device, char *line);
-
-void	parse_light(t_device *device, char *line);
-
-void	parse_texture(t_device *device, t_object *object, char *line);
-
-void	parse_sphere(t_device *device, char *line);
-
-void	parse_plane(t_device *device, char *line);
-
-void	parse_cylinder(t_device *device, char *line);
-
-void	parse_cone(t_device *device, char *line);
-
-void	parse_triangle(t_device *device, char *line);
-
-void	parse_square(t_device *device, char *line);
+extern void	parse_renderer_setting(t_device *device, char *line);
+extern void	parse_ambient_light(t_device *device, char *line);
+extern void	parse_camera(t_device *device, char *line);
+extern void	parse_light(t_device *device, char *line);
+extern void	parse_texture(t_device *device, t_object *object, char *line);
+extern void	parse_sphere(t_device *device, char *line);
+extern void	parse_plane(t_device *device, char *line);
+extern void	parse_cylinder(t_device *device, char *line);
+extern void	parse_cone(t_device *device, char *line);
+extern void	parse_triangle(t_device *device, char *line);
+extern void	parse_square(t_device *device, char *line);
 
 #endif /** Parser.h */

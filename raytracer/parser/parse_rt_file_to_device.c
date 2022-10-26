@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:56:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 15:30:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void	parse_each(t_device *device, char *line)
 {
-	if (ft_strncmp(line, "C ", 2) == 0)
+	if (ft_strncmp(line, "Setting ", 8) == 0)
+		parse_renderer_setting(device, line);
+	else if (ft_strncmp(line, "C ", 2) == 0)
 		parse_camera(device, line);
 	else if (ft_strncmp(line, "A ", 2) == 0)
 		parse_ambient_light(device, line);

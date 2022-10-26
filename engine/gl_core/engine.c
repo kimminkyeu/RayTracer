@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:55:08 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:14:30 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,9 @@ void	init_camera_and_objects_vector(t_device *device)
 								custom_deallocator_for_object);
 }
 
-t_device	*engine_init(int _win_width, int _win_height, \
-							char *title, int resolution_ratio)
+extern void	parse_rt_file_to_device(t_device *device, char *file);
+
+t_device	*engine_init(char *title, char *rt_file)
 {
 	t_device	*device;
 
@@ -86,19 +87,22 @@ t_device	*engine_init(int _win_width, int _win_height, \
 	device->mlx = mlx_init();
 	if (device->mlx == NULL)
 		engine_exit(device, ERROR);
-	device->win_width = _win_width;
-	device->win_height = _win_height;
-	device->win = mlx_new_window(device->mlx, device->win_width, \
-									device->win_height, title);
+
+	init_camera_and_objects_vector(device);
+	parse_rt_file_to_device(device, rt_file);
+
+	// device->win_width = _win_width;
+	// device->win_height = _win_height;
+	device->win = mlx_new_window(device->mlx, device->renderer_settings.win_width, \
+									device->renderer_settings.win_height, title);
 	if (device->win == NULL)
 		engine_exit(device, ERROR);
 	device->screen_image = engine_new_image(device, \
-		gl_vec2_2f(_win_width, _win_height), gl_vec2_2f(0, 0));
+		gl_vec2_2f(device->renderer_settings.win_width, device->renderer_settings.win_height), gl_vec2_2f(0, 0));
 	device->pixel_image = engine_new_image(device, \
-		gl_vec2_2f(_win_width / resolution_ratio, \
-					_win_height / resolution_ratio), gl_vec2_2f(0, 0));
-	device->resolution_ratio = resolution_ratio;
-	init_camera_and_objects_vector(device);
+		gl_vec2_2f(device->renderer_settings.win_width * device->renderer_settings.resolution_ratio, \
+					device->renderer_settings.win_height * device->renderer_settings.resolution_ratio), gl_vec2_2f(0, 0));
+	// device->resolution_ratio = resolution_ratio;
 	mlx_hook(device->win, ON_DESTROY, 0, handle_exit, device);
 	engine_set_key_event(device, handle_key_press, handle_key_release);
 	engine_set_mouse_event(device, handle_mouse_press, handle_mouse_release);

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:48:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:38:29 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 16:15:17 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,8 @@
 
 /** #src/engine_core/engine.c.
  * Create and return Engine-instance.
- * @ _win_width : Width of X11 window.
- * @ _win_height : Height of X11 window.
  * @ title : Title of X11, window which will be displayed at top-bar.*/
-extern t_device	*engine_init(int _win_width, int _win_height, \
-								char *title, int resolution_ratio);
+extern t_device	*engine_init(char *title, char *rt_file);
 
 /** #src/engine_core/engine.c.
  * Close Engine. (Shut down X-window)

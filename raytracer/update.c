@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:19:59 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 17:37:32 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,37 +25,45 @@
 #include "main.h"
 #include "thread.h"
 
+static void fill_low_resolution_pixel(t_device *device, int x, int y, int argb)
+{
+	int		k;
+	int 	j;
+	float	dx;
+
+	dx = 1.0f / device->renderer_settings.resolution_ratio;
+	k = 0;
+	while (k < dx)
+	{
+		j = 0;
+		while (j < dx)
+		{
+			*gl_get_pixel_addr(device->screen_image, x * dx + j, y * dx + k) = argb;
+			j++;
+		}
+		k++;
+	}
+}
+
 void copy_pixel_buffer_to_screen_image(t_device *device)
 {
-	int x = 0;
-	int y = 0;
-	int k = 0;
-	int j = 0;
+	int	x;
+	int	y;
+	int	pixel_color;
+
+	y = 0;
 	while (y < device->pixel_image->img_size.height)
 	{
 		x = 0;
 		while (x < device->pixel_image->img_size.width)
 		{
-			int pixel_color = gl_get_pixel_color_int(device->pixel_image, x, y);
-
-			k = 0;
-			while (k < device->resolution_ratio)
-			{
-				j = 0;
-				while (j < device->resolution_ratio)
-				{
-					*gl_get_pixel_addr(device->screen_image, x * device->resolution_ratio + j, y * device->resolution_ratio + k) = pixel_color;
-					j++;
-				}
-				k++;
-			}
+			pixel_color = gl_get_pixel_color_int(device->pixel_image, x, y);
+			fill_low_resolution_pixel(device, x, y, pixel_color);
 			x++;
 		}
 		y++;
 	}
 }
-
-#include <unistd.h>
 
 void *thread_update(void *arg)
 {
@@ -93,8 +101,6 @@ void *thread_update(void *arg)
 		}
 		y++;
 	}
-
-
 	pthread_mutex_lock(&(data->info->finished_num_mutex));
 	data->info->finished_thread_num += 1;
 	pthread_mutex_unlock(&(data->info->finished_num_mutex));
@@ -114,7 +120,7 @@ static void draw_render_time(t_device *device, long long time, t_vec2 location, 
 
 bool is_high_resolution_mode(t_device *device)
 {
-	if (device->is_high_resolution_render_mode == false && device->resolution_ratio != 1)
+	if (device->is_high_resolution_render_mode == false && device->renderer_settings.resolution_ratio != 1)
 		return (false);
 	else
 		return (true);
@@ -157,8 +163,10 @@ int	update(t_device *device)
 	}
 	else
 	{   // if high_res mode, then push image to screen every time.
+		printf("# Rendering...\n\n");
 		while (device->thread_info.finished_thread_num != device->thread_info.thread_num)
 			engine_push_image_to_window(device, device->screen_image, 0, 0);
+		printf("# Total %d threads has finished it's work\n\n", device->thread_info.finished_thread_num);
 	}
 	render_end_time = get_time_ms();
 	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);

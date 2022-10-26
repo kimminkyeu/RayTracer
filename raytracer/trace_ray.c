@@ -11,41 +11,18 @@
 
 #include "trace_ray.h"
 
-#define ANTI_ALIASING_RECURSIVE_LEVEL 	(0) // best option is 3
-#define REFLECTION_RECURSIVE_LEVEL		(5)
-
 int do_ray_tracing_and_return_color(t_device *device, t_image *img, int x, int y)
 {
 	(void)device;
 
 	// const t_vec3 pixel_pos_world = transform_screen_to_world(img, gl_vec2_2f(x, y));
 	const t_vec3 pixel_pos_world = transform_screen_to_camera_world(device->camera, img, gl_vec2_2f(x, y));
-
 	const float	dx = 2.0f / img->img_size.height; // for super sampling. // world_coordinate 의 세로길이 / 이미지 세로 =  1pixel당 세로 길이 = 1pixel당 가로 길이.
-
-	t_vec3 trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, ANTI_ALIASING_RECURSIVE_LEVEL); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
+	t_vec3 trace_result = super_sampling_anti_aliasing(img, pixel_pos_world, dx, device->renderer_settings.antialiasing_level); // 마지막 정수가 0이면 픽셀 하나당 한 번 샘플링
 	trace_result = gl_vec3_clamp(trace_result, gl_vec3_1f(0.0f), gl_vec3_1f(255.0f));
 	int final_color = gl_get_color_from_vec4(gl_vec4_4f(trace_result.b, trace_result.g, trace_result.r, 0.0f));
 	return (final_color);
 }
-
-// screen 좌표계를 world 좌표계로 변환. (-aspect ~ +aspect)
-/*
-t_vec3 transform_screen_to_world(t_image *img, t_vec2 pos_screen)
-{
-
-	const float x_scale = 2.0f / img->img_size.width;
-	const float y_scale = 2.0f / img->img_size.height;
-	const float aspect_ratio = (float)img->img_size.width / img->img_size.height;
-
-	// 3차원 공간으로 확장.
-	return (gl_vec3_3f((pos_screen.x * x_scale - 1.0f) * aspect_ratio, -pos_screen.y * y_scale + 1.0f, 0.0f));
-
-	// const float camera_x = (pos_screen.x * x_scale - 1.0f * aspect_ratio) * tanf(gl_get_radian(img->device_ptr->camera->fov));
-	// const float camera_y = (-pos_screen.y * y_scale + 1.0f) * tanf(gl_get_radian(img->device_ptr->camera->fov));
-	// return (gl_vec3_3f(camera_x, camera_y, 0.0f));
-}
-*/
 
 bool	is_pixels_are_same(t_vec3 *colors)
 {
@@ -67,7 +44,7 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 	{
 		t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(pixel_pos_world, img->device_ptr->camera->pos));
 		t_ray pixel_ray = create_ray(pixel_pos_world, ray_dir);
-		return (trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL));
+		return (trace_ray(img->device_ptr, &pixel_ray, img->device_ptr->renderer_settings.reflection_level));
 	}
 
 	const float sub_dx = 0.5f * dx;
@@ -93,7 +70,7 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 			// 재귀 호출. (Recursive Super-Sampling)
 			t_vec3 ray_dir = gl_vec3_normalize(gl_vec3_subtract_vector(sub_pos, img->device_ptr->camera->pos));
 			t_ray pixel_ray = create_ray(sub_pos, ray_dir);
-			sample_color[j * 2 + i] = trace_ray(img->device_ptr, &pixel_ray, REFLECTION_RECURSIVE_LEVEL);
+			sample_color[j * 2 + i] = trace_ray(img->device_ptr, &pixel_ray, img->device_ptr->renderer_settings.reflection_level);
 			i++;
 		}
 		j++;
@@ -156,8 +133,8 @@ t_vec3 trace_ray(t_device *device, const t_ray *ray, const int recursive_level)
  --> 그림자를 처리하는 다른 방법이 있는 걸까?
 
  ---------------------------------------------------------------------------------------------- */
- # include <unistd.h>
- # include <stdio.h>
+//  # include <unistd.h>
+//  # include <stdio.h>
 
 t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_ray *ray, t_hit hit, t_light* light)
 {
@@ -165,8 +142,31 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 	// 그림자 처리. 아주 작은 값만큼 광원을 향해 이동시켜야 hit_point로 부터 충돌처리를 피할 수 있다.
 	const t_vec3 hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(light->pos, hit.point));
 
+
+
+	// if (gl_vec3_dot(hit_point_to_light, hit.normal) < 0.0f) return (gl_vec3_3f(255, 0, 0));
+
+
 	// 만약 [hit_point+살짝 이동한 지점] 에서  shadow_ray를 광원을 향해 쐈는데, 충돌이 감지되면 거긴 그림자로 처리.
 	// WARN:  아래 그림자에서 사용된 1e-4f는 반사/반투명 물체에서 문제가 발생 할 수 있음.
+	t_vec3 phong_color = gl_vec3_1f(0.0f);
+	phong_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
+
+	// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
+	// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
+	if (hit.obj->diffuse_texture != NULL) // if has texture + 그림자가 없을 때.
+	{
+		t_vec3 sample_ambient;
+		if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
+			sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
+		else
+			sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
+
+		phong_color.r *= sample_ambient.b; // 홍정모
+		phong_color.g *= sample_ambient.g; // 홍정모
+		phong_color.b *= sample_ambient.r; // 홍정모
+	}
+	final_color = phong_color;
 
 	// * 그림자 처리. 투명한 물체에 대한 그림자 처리는 어떻게?
 	// https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
@@ -178,30 +178,11 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
 	{
 
-		t_vec3 phong_color = gl_vec3_1f(0.0f);
-		phong_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
-
-		// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
-		// Add texture to color (ambient texture) // 이 부분은 그림자로 가려질 경우에도 나타난다.
-		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
-		if (hit.obj->diffuse_texture != NULL) // if has texture + 그림자가 없을 때.
-		{
-			t_vec3 sample_ambient;
-			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
-				sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
-			else
-				sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
-
-			phong_color.r *= sample_ambient.b; // 홍정모
-			phong_color.g *= sample_ambient.g; // 홍정모
-			phong_color.b *= sample_ambient.r; // 홍정모
-		}
-
 		// (3-1) Calculate Diffuse color
 		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
 		// * (2) Diffuse Color
 		// *--- [ Diffuse Texture ] -----------------------------------------
-		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f) * light->brightness_ratio;
+		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
 
 		t_vec3 diffuse_final = gl_vec3_1f(0.0f);
 		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
@@ -211,22 +192,21 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 				sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
 			else
 				sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, true); // texture sampling (linear)
-
 			diffuse_final.r = _diff * sample_diffuse.b;
 			diffuse_final.g = _diff * sample_diffuse.g;
 			diffuse_final.b = _diff * sample_diffuse.r;
 		}
 		else // if has no texture
 		{
-			diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
-			diffuse_final = gl_vec3_add_vector(diffuse_final, gl_vec3_multiply_scalar(light->color, _diff));
+			diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, (1.0f - light->brightness_ratio) * _diff);
+			diffuse_final = gl_vec3_add_vector(diffuse_final, gl_vec3_multiply_scalar(light->color, light->brightness_ratio * _diff));
 			// 빛의 색상값을 이용해서 diffuse color 적용하기
 		}
 		// *------------------------------------------------------------------
 
 		// (3-2) Add Diffuse ( = Resulting color )
-		diffuse_final = gl_vec3_add_vector(diffuse_final, phong_color);
-		final_color = gl_vec3_multiply_scalar(diffuse_final, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
+		final_color = gl_vec3_add_vector(diffuse_final, final_color);
+		final_color = gl_vec3_multiply_scalar(final_color, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
 
 		// Finally, add Specular.
 		// (4-1) Calculate Specular [ 2 * (N . L)N - L ]
@@ -355,22 +335,4 @@ t_hit find_closet_collision(t_device *device, const t_ray *ray)
 		i++;
 	}
 	return (closest_hit);
-}
-
-// 물체의 타입에 따라 다르게 체크.
-t_hit check_ray_collision(const t_ray *ray, t_object *obj)
-{
-	if (obj->type == TYPE_SPHERE)
-		return (sphere_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_TRIANGLE)
-		return (triangle_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_PLANE)
-		return (plane_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_SQUARE)
-		return (square_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_CYLINDER)
-		return (cylinder_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_CONE)
-		return (cone_intersect_ray_collision(ray, obj->obj_data));
-	return (create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
 }

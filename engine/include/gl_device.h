@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/26 11:29:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 15:48:19 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,23 @@ typedef struct s_ambient_light	t_ambient_light;
 typedef struct s_light			t_light;
 typedef struct s_camera			t_camera;
 
+typedef struct s_setting {
+	int		win_width;
+	int		win_height;
+	float	resolution_ratio;
+	int		num_of_threads;
+	int		antialiasing_level;
+	int		reflection_level;
+}	t_setting;
+
 typedef struct s_device {
 	void				*mlx;
 	void				*win;
-	int					win_width;
-	int					win_height;
+	// int					win_width;
+	// int					win_height;
+	// int					resolution_ratio;
+	t_setting			renderer_settings;
 	float				aspect_ratio;
-	int					resolution_ratio;
 	int					is_high_resolution_render_mode;
 	t_thread_info		thread_info;
 	t_image				*screen_image;
