@@ -91,11 +91,8 @@ int input_handler(t_device *device)
 		camera->up_direction.x = cam_up.x;
 		camera->up_direction.y = cam_up.y;
 		camera->up_direction.z = cam_up.z;
-		// printf("camera Look-At  (%f | %f | %f)\t", camera->look_at.x, camera->look_at.y, camera->look_at.z);
-		// printf("Up (%f | %f | %f)\n", camera->up_direction.x, camera->up_direction.y, camera->up_direction.z);
 		moved = true;
 	}
-
 
 	if(moved)
 	{
@@ -145,7 +142,6 @@ int	main(int ac, char **av)
 
 	/** (4) loop mlx */
 	mlx_loop_hook(device->mlx, input_handler, device);
-
 
 	mlx_loop(device->mlx);
 	return (0);

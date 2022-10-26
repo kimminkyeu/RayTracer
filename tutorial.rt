@@ -1,3 +1,31 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    tutorial.rt                                        :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
+#    Updated: 2022/10/26 13:48:14 by minkyeki         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#  TODO:  Cube-map 구현, 텍스쳐링 uv 수정, Low_res에서 반사랑 Specular랑 그림자 투명 끄기, R버튼 렌더모드 글자 추가
+
+# * Screen width & height
+W 1200   H 800
+
+# * Resolution_Ratio [ low 0.0 < RR <= 1.0 (maximum Resolution) ]
+RR 0.1
+
+# * Number Of Threads [ default:1, max:24 ]
+TH 24
+
+# * AntialiasingLevel [ default:0, max:3 ]
+AA 0
+
+# * ReflectionLevel [ default:5, 0 if no reflection ]
+RF 5
 
 #*------------------------------------------------------------------
 #*   NOTE:  Forward direction is -1 [ Right Hand Rule - OpenGL ]   |
