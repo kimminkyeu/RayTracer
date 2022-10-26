@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:52:09 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:48:04 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 20:49:37 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@
 # include <X11/Xutil.h>
 # include <X11/X.h>
 
-/* NOTE: (1) https://tronche.com/gui/x/xlib/events/types.html
+/* NOTE: (1) https://tronche.com/gui/x/xlib/events/types.html 
+ * */
 
 /* ================================
  * |       X11/X.h Xevent         |
  * ================================ */
+
 /* Defined in X.h */
 # ifndef _XEVENT_
 #  define _XEVENT_

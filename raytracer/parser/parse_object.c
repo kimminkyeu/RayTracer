@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 17:40:48 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 21:24:18 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 		{
 			str = ft_strjoin(IMAGE_FILE_LOACATION, split[0]);
 			object->diffuse_texture = new_texture(device, str);
-			free(str);
 		}
+		free(str);
 		if (get_strs_count(split) == 2)
 		{
 			str = ft_strjoin(IMAGE_FILE_LOACATION, split[1]);
@@ -248,9 +248,9 @@ void	parse_triangle(t_device *device, char *line)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
 	// *   FIX:  UV 좌표계 고치기. (checker 텍스쳐 기준으로 작업 진행)
-	tr->uv0 = gl_vec2_2f(0.0f, 0.0f);
+	tr->uv0 = gl_vec2_2f(1.0f, 0.0f);
 	tr->uv1 = gl_vec2_2f(0.0f, 1.0f);
-	tr->uv2 = gl_vec2_2f(1.0f, 1.0f);
+	tr->uv2 = gl_vec2_2f(0.0f, 0.0f);
 
 	parse_texture(device, obj, line);
 	device->objects->push_back(device->objects, obj);
@@ -284,14 +284,14 @@ void	parse_square(t_device *device, char *line)
 
 	// *   FIX:  UV 좌표계 고치기. (checker 텍스쳐 기준으로 작업 진행)
 	sq->tri_1 = create_triangle(v[0], v[1], v[2]);
-	sq->tri_1.uv0 = gl_vec2_2f(0.0f, 0.0f);
-	sq->tri_1.uv1 = gl_vec2_2f(1.0f, 0.0f);
-	sq->tri_1.uv2 = gl_vec2_2f(1.0f, 1.0f);
+	sq->tri_1.uv0 = gl_vec2_2f(1.0f, 1.0f);
+	sq->tri_1.uv1 = gl_vec2_2f(0.0f, 0.0f);
+	sq->tri_1.uv2 = gl_vec2_2f(1.0f, 0.0f);
 
 	sq->tri_2 = create_triangle(v[0], v[2], v[3]);
-	sq->tri_2.uv0 = gl_vec2_2f(0.0f, 0.0f);
-	sq->tri_2.uv1 = gl_vec2_2f(1.0f, 1.0f);
-	sq->tri_2.uv2 = gl_vec2_2f(0.0f, 1.0f);
+	sq->tri_2.uv0 = gl_vec2_2f(0.0f, 1.0f);
+	sq->tri_2.uv1 = gl_vec2_2f(0.0f, 0.0f);
+	sq->tri_2.uv2 = gl_vec2_2f(1.0f, 1.0f);
 
 	parse_texture(device, obj, line);
 	device->objects->push_back(device->objects, obj);
