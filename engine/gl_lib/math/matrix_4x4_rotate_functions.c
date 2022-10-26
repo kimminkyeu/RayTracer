@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_4x4_rotate_functions.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 23:10:50 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:31:20 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/10/26 12:14:56 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,3 @@ t_mat4x4	gl_mat4x4_rotate_z_axis(float _degree)
 	mat.m[3][3] = 1.0f;
 	return (mat);
 }
-

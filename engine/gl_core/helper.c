@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input.c                                            :+:      :+:    :+:   */
+/*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 06:23:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:17:40 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,68 +47,6 @@ int	input_key_get_index(int key_code)
 		return (6);
 	else
 		return (-1);
-}
-
-int	input_is_key_down(t_device *device, int key_code)
-{
-	int	key_state;
-	int	index;
-
-	index = input_key_get_index(key_code);
-	key_state = device->input.key_state[index];
-	if (key_state == E_INPUT_IS_PRESSED)
-	{
-		return (true);
-	}
-	else
-		return (false);
-}
-
-int	input_is_key_unpressed(t_device *device, int key_code)
-{
-	int	key_state;
-	int	index;
-
-	index = input_key_get_index(key_code);
-	key_state = device->input.key_state[index];
-	if (key_state == E_INPUT_UN_PRESSED)
-	{
-		device->input.key_state[index] = E_INPUT_NO_STATE;
-		return (true);
-	}
-	else
-		return (false);
-}
-
-int	input_is_mouse_down(t_device *device, int key_code)
-{
-	int	key_state;
-	int	index;
-
-	index = input_mouse_get_index(key_code);
-	key_state = device->input.mouse_state[index];
-	if (key_state == E_INPUT_IS_PRESSED)
-	{
-		return (true);
-	}
-	else
-		return (false);
-}
-
-int	input_is_mouse_unpressed(t_device *device, int key_code)
-{
-	int	key_state;
-	int	index;
-
-	index = input_mouse_get_index(key_code);
-	key_state = device->input.mouse_state[index];
-	if (key_state == E_INPUT_UN_PRESSED)
-	{
-		device->input.mouse_state[index] = E_INPUT_NO_STATE;
-		return (true);
-	}
-	else
-		return (false);
 }
 
 /*  NOTE:  for LINUX

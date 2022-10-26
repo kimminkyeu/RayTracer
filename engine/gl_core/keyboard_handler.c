@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 13:40:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:59:56 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:16:02 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,48 @@ int	handle_key_release(int key_code, void *param)
 		device->input.key_state[key_index] = E_INPUT_UN_PRESSED;
 	}
 	return (0);
+}
+
+void	engine_set_key_event(t_device *device, int (*f_key_press)(), \
+								int (*f_key_release)())
+{
+	if (device == NULL)
+		return ;
+	if (f_key_press != NULL)
+		mlx_hook(device->win, ON_KEY_PRESS, KeyPressMask, \
+					f_key_press, device);
+	if (f_key_release != NULL)
+		mlx_hook(device->win, ON_KEY_RELEASE, KeyReleaseMask, \
+					f_key_release, device);
+}
+
+int	input_is_key_down(t_device *device, int key_code)
+{
+	int	key_state;
+	int	index;
+
+	index = input_key_get_index(key_code);
+	key_state = device->input.key_state[index];
+	if (key_state == E_INPUT_IS_PRESSED)
+	{
+		return (true);
+	}
+	else
+		return (false);
+}
+
+int	input_is_key_unpressed(t_device *device, int key_code)
+{
+	int	key_state;
+	int	index;
+
+	index = input_key_get_index(key_code);
+	key_state = device->input.key_state[index];
+	if (key_state == E_INPUT_UN_PRESSED)
+	{
+		device->input.key_state[index] = E_INPUT_NO_STATE;
+		return (true);
+	}
+	else
+		return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:41:10 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/16 21:00:01 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 12:01:19 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	gl_draw_pixel(t_image *_image, int _x, int _y, int _argb)
 
 	if (is_inside_image(_image, _x, _y))
 	{
-		pixel = _image->addr + (_y * _image->line_length) + (_x * (_image->bits_per_pixel / 8));
+		pixel = _image->addr + (_y * _image->line_length) \
+				+ (_x * (_image->bits_per_pixel / 8));
 		*(unsigned int *)pixel = _argb;
 	}
 }

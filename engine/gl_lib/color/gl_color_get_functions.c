@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 21:52:02 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/16 20:42:36 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:58:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,24 +40,4 @@ t_vec4	gl_get_vec4_from_color(int argb)
 	color.g = gl_color_get_green(argb);
 	color.b = gl_color_get_blue(argb);
 	return (color);
-}
-
-unsigned char	gl_color_get_alpha(int argb)
-{
-	return (((unsigned char *)&argb)[3]);
-}
-
-unsigned char	gl_color_get_red(int argb)
-{
-	return (((unsigned char *)&argb)[2]);
-}
-
-unsigned char	gl_color_get_green(int argb)
-{
-	return (((unsigned char *)&argb)[1]);
-}
-
-unsigned char	gl_color_get_blue(int argb)
-{
-	return (((unsigned char *)&argb)[0]);
 }

@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/16 15:31:26 by minkyeki          #+#    #+#              #
-#    Updated: 2022/09/12 14:05:02 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/26 12:30:19 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,8 +53,7 @@ PRINTF_SRC      = ft_printf ft_printf_hex ft_printf_info ft_printf_parse \
 STRING_SRC      = string_create string_modify string_modify2 string_utils
 
 # VECTOR_SRC      = vector_create vector_modify vector_iterate vector
-VECTOR_VOID_SRC      = vector_create vector_modify vector_iterate vector_func_ptr
-VECTOR_UCHAR_SRC     = vector_create vector_modify vector_iterate vector_func_ptr
+VECTOR_VOID_SRC      = vector_create vector_create2 vector_modify vector_iterate
 
 # NOTE : Add to SRC here
 # ------------------------------------------------------ #
@@ -63,7 +62,6 @@ SRC = $(addsuffix .c, $(addprefix $(LIBC_DIR)/,   $(LIBC_SRC)))        \
 	  $(addsuffix .c, $(addprefix $(PRINF_DIR)/,  $(PRINTF_SRC)))      \
 	  $(addsuffix .c, $(addprefix $(STRING_DIR)/, $(STRING_SRC)))      \
 	  $(addsuffix .c, $(addprefix $(VECTOR_VOID_DIR)/, $(VECTOR_VOID_SRC))) \
-	  $(addsuffix .c, $(addprefix $(VECTOR_UCHAR_DIR)/, $(VECTOR_UCHAR_SRC))) \
 # ------------------------------------------------------ #
 
 OBJ = $(SRC:c=o)

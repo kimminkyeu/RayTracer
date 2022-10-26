@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 21:37:28 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 17:08:05 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:52:40 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ extern t_mat4x4	gl_mat4x4_shear_z_axis(float _degree);
 /* scale from origin (0,0,0) */
 extern t_mat4x4	gl_mat4x4_scale_from_origin(float _scale_rate);
 /* scale from point (x, y, z) */
-extern t_mat4x4	gl_mat4x4_scale_from_point(float _x, float _y, float _z, float _scale_rate);
+extern t_mat4x4	gl_mat4x4_scale_from_point(float _x, float _y, \
+											float _z, float _scale_rate);
 
 #endif /* GL_MATRIX_H */

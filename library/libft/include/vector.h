@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 22:25:45 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 15:31:52 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 12:27:45 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,8 @@ typedef struct s_vector	t_vector;
 typedef struct s_vector {
 	size_t		size;
 	size_t		capacity;
-
-	// array of data pointers.
 	void		**data;
-
-
-	// ex. 데이터 멤버에 자체 malloc 이 있을 경우 이 basic_deallocator를 사용해야 한다.
-	// NOTE:  basic data deallocator function
 	void		(*deallocator_func)(void *data);
-
-
 	void		(*push_back)(t_vector *vec, void *new_elem);
 	void		(*pop_back)(t_vector *vec);
 	void		(*reset)(t_vector *vec);
@@ -77,8 +69,8 @@ extern t_vector	*new_vector(size_t init_capacity);
  * @Default Constructor with custom-deallocator.
  * [ Ex. t_vector *arr = new_vector(20, your_deallocate_func) ];
  * --> Returns NULL on error! */
-extern t_vector	*new_vector_with_custom_deallocator(size_t init_capacity, void (*custom_deallocator)(void *data));
-
+extern t_vector	*new_vector_with_custom_deallocator(size_t init_capacity, \
+								void (*custom_deallocator)(void *data));
 
 /* ============================
  * @Default Destructor.

@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gl_get_pixel_addr.c                                :+:      :+:    :+:   */
+/*   gl_color_get_functions2.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/08 19:29:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 12:01:31 by minkyeki         ###   ########.fr       */
+/*   Created: 2022/10/26 11:58:42 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/10/26 11:59:05 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "gl_draw.h"
-
-int	*gl_get_pixel_addr(t_image *_image, int _x, int _y)
+unsigned char	gl_color_get_alpha(int argb)
 {
-	char	*pixel;
+	return (((unsigned char *)&argb)[3]);
+}
 
-	pixel = _image->addr + (_y * _image->line_length) \
-			+ (_x * (_image->bits_per_pixel / 8));
-	return ((int *)pixel);
+unsigned char	gl_color_get_red(int argb)
+{
+	return (((unsigned char *)&argb)[2]);
+}
+
+unsigned char	gl_color_get_green(int argb)
+{
+	return (((unsigned char *)&argb)[1]);
+}
+
+unsigned char	gl_color_get_blue(int argb)
+{
+	return (((unsigned char *)&argb)[0]);
 }

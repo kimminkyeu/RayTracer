@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_4x4_scale_functions.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 23:13:06 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/05 23:31:22 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/10/26 12:02:37 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ t_mat4x4	gl_mat4x4_scale_from_origin(float _scale_rate)
 }
 
 /* sclae from (x, y, z) */
-t_mat4x4	gl_mat4x4_scale_from_point(float _x, float _y, float _z, float _scale_rate)
+t_mat4x4	gl_mat4x4_scale_from_point(float _x, float _y, float _z, \
+										float _scale_rate)
 {
 	static t_mat4x4	mat;
 

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/24 16:18:56 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/13 15:28:42 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 12:29:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ t_vector	*new_vector(size_t init_capacity)
 	return (vec);
 }
 
-t_vector	*new_vector_with_custom_deallocator(size_t init_capacity, void (*custom_deallocator)(void* data))
+t_vector	*new_vector_with_custom_deallocator(size_t init_capacity, \
+								void (*custom_deallocator)(void *data))
 {
 	t_vector	*vec;
 
@@ -53,38 +54,4 @@ void	delete_vector(t_vector **vec)
 	(*vec)->data = NULL;
 	free(*vec);
 	*vec = NULL;
-}
-
-void	vector_reset(t_vector *vec)
-{
-	size_t	idx;
-
-	idx = 0;
-	while (idx < vec->size)
-	{
-		vector_set_data(vec, idx, NULL);
-		++idx;
-	}
-	vec->size = 0;
-}
-
-/** WARN:  if there is malloc-allocated data,
- * then use _deallocator() to free each data component.  */
-void	vector_set_data(t_vector *vec, size_t index, void *data)
-{
-	if (vec->data[index] != NULL)
-	{
-		if (vec->_deallocator_func != NULL)
-			vec->_deallocator_func(vec->data[index]);
-		free(vec->data[index]);
-	}
-	vec->data[index] = data;
-}
-
-void	*new_data_malloc(size_t init_capacity)
-{
-	void	*data;
-
-	data = ft_calloc(init_capacity, sizeof(size_t));
-	return (data);
 }

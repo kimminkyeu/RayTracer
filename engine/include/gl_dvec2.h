@@ -6,12 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 18:23:18 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:33:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_DVECTOR2
-# define GL_DVECTOR2
+#ifndef GL_DVEC2_H
+# define GL_DVEC2_H
 
 # include <math.h>
 
@@ -67,4 +67,4 @@ extern double	gl_dvec2_get_magnitude(t_dvec2 v);
 
 extern t_dvec2	gl_dvec2_normalize(t_dvec2 v);
 
-#endif /* VECTOR2 */
+#endif

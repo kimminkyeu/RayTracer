@@ -6,12 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/11 18:23:12 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:34:06 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_DVECTOR3_H
-# define GL_DVECTOR3_H
+#ifndef GL_DVEC3_H
+# define GL_DVEC3_H
 
 # include <math.h>
 # include "gl_matrix.h"
@@ -71,7 +71,5 @@ extern t_dvec3	gl_dvec3_cross(t_dvec3 v1, t_dvec3 v2);
 
 /* Returns magnitude result [v.v] */
 extern double	gl_dvec3_get_magnitude(t_dvec3 v);
-
-
 
 #endif /* VECTOR3_H */

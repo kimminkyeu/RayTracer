@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:57:40 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/15 00:37:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:31:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@
 extern int		*gl_get_pixel_addr(t_image *image, int x, int y);
 
 /* Returns [int argb] color-value of pixel:(x, y).
- NOTE: if (x, y) is off-range of image_width/height, clamped (x', y') pixel color is returned.
+ if (x, y) is off-range of image_width/height,
+ clamped (x', y') pixel color is returned.
  for example, color of (-1, -1) becomes color of (0, 0). */
 extern int		gl_get_pixel_color_int(t_image *image, int x, int y);
 
@@ -46,6 +47,7 @@ extern void		gl_draw_pixel(t_image *image, int x, int y, int argb);
 extern void		gl_draw_background(t_image *image, int argb);
 
 /* Draw line from Point v1(x1, y1) to Point v2(x2, y2) */
-extern void		gl_draw_line(t_image *image, t_vec2 point_1, t_vec2 point_2, int argb);
+extern void		gl_draw_line(t_image *image, t_vec2 point_1, \
+								t_vec2 point_2, int argb);
 
 #endif /* GL_DRAW_H */

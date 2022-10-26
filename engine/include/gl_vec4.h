@@ -6,12 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/12 13:35:18 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/26 11:53:16 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_VECTOR4_H
-# define GL_VECTOR4_H
+#ifndef GL_VEC4_H
+# define GL_VEC4_H
 
 # include <math.h>
 # include "gl_matrix.h"
@@ -29,17 +29,18 @@ typedef union s_vec4 {
 		float	w;
 	};
 	struct {
-		float	b; // blue
-		float	g; // green
-		float	r; // red
-		float	a; // alpha
+		float	b;
+		float	g;
+		float	r;
+		float	a;
 	};
 	float	v[4];
 }	t_vec4;
 
 /* Create r-value vec4 and Return.
 NOTE: you can use vec4 for color system in reversed order. (int argb)*/
-extern t_vec4	gl_vec4_4f(float x_or_b, float y_or_g, float z_or_r, float w_or_a);
+extern t_vec4	gl_vec4_4f(float x_or_b, float y_or_g, \
+							float z_or_r, float w_or_a);
 
 /* Create and Return R-value from single float argument.
 - : functions sets every value to (float _k) */

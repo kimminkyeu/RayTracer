@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrix_util_functions.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sungjpar <sungjpar@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 23:12:19 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/09/06 17:13:25 by sungjpar         ###   ########seoul.kr  */
+/*   Updated: 2022/10/26 12:02:18 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

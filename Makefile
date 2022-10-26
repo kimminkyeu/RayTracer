@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/25 21:14:11 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/26 12:22:58 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ ENGINE_DIR					= $(SRC_DIR)/.
 # (1) Core System Directory
 # ------------------------------------------------------
 ENGINE_CORE_DIR				= $(ENGINE_DIR)/gl_core
-ENGINE_CORE_SRC				= engine input keyboard_handler mouse_handler
+ENGINE_CORE_SRC				= engine image keyboard_handler mouse_handler helper
 
 # (2) Graphics Library Directory
 # ------------------------------------------------------ #
@@ -34,7 +34,7 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 
 #  NOTE:  Color library
 	ENGINE_GL_COLOR_DIR			= $(ENGINE_GL_DIR)/color
-	ENGINE_GL_COLOR_SRC			= gl_color_functions gl_color_get_functions
+	ENGINE_GL_COLOR_SRC			= gl_color_functions gl_color_get_functions gl_color_get_functions2
 
 #  NOTE:  Math library
 	ENGINE_GL_MATH_DIR			= $(ENGINE_GL_DIR)/math
@@ -45,9 +45,12 @@ ENGINE_GL_DIR				= $(ENGINE_DIR)/gl_lib
 									matrix_4x4_translate\
 									matrix_projection_functions\
 									matrix_util_functions\
-									vector2 dvector2\
-									vector3 dvector3\
-									vector4 dvector4\
+									vector2__a vector2__b vector2__c\
+									dvector2__a dvector2__b dvector2__c\
+									vector3__a vector3__b vector3__c\
+									dvector3__a dvector3__b dvector3__c\
+									vector4__a vector4__b vector4__c\
+									dvector4__a dvector4__b dvector4__c\
 
 #  NOTE:  Draw-functions library
 	ENGINE_GL_DRAW_DIR			= $(ENGINE_GL_DIR)/draw
