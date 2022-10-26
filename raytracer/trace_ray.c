@@ -182,7 +182,7 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
 		// * (2) Diffuse Color
 		// *--- [ Diffuse Texture ] -----------------------------------------
-		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f);
+		const float _diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f) * light->brightness_ratio;
 
 		t_vec3 diffuse_final = gl_vec3_1f(0.0f);
 		if (hit.obj->diffuse_texture != NULL) // if has diffuse texture
@@ -198,8 +198,8 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 		}
 		else // if has no texture
 		{
-			diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, (1.0f - light->brightness_ratio) * _diff);
-			diffuse_final = gl_vec3_add_vector(diffuse_final, gl_vec3_multiply_scalar(light->color, light->brightness_ratio * _diff));
+			diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+			diffuse_final = gl_vec3_add_vector(diffuse_final, gl_vec3_multiply_scalar(light->color, _diff));
 			// 빛의 색상값을 이용해서 diffuse color 적용하기
 		}
 		// *------------------------------------------------------------------
