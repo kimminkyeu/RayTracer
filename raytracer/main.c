@@ -120,23 +120,10 @@ int	main(int ac, char **av)
 		// TODO:  ... err message
 		return (EXIT_FAILURE);
 	}
-	const int WIDTH = 800;
+	const int WIDTH = 1600;
 	const int HEIGHT = 800;
-	const int LOW_RESOLUTION_RATIO = 8; // max is 1
+	const int LOW_RESOLUTION_RATIO = 20; // max is 1
 	const int THREAD_NUM = 24;
-
-
-
-
-
-	// int i;
-	// char c;
-	// printf("i:%d c:%c\n", i, c);
-
-
-
-
-
 
 	/** (1) Init engine && create image */
 	device = engine_init(WIDTH, HEIGHT, "42 Mini-RayTracing", LOW_RESOLUTION_RATIO);
