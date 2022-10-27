@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 05:32:02 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/27 18:53:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,23 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	*point = gl_vec3_add_vector(ray_origin, gl_vec3_multiply_scalar(ray_dir, *t));
 
 	/* 3. 그 충돌 위치가 삼각형 안에 들어 있는 지 확인 */
+	/*
+#*---------------------------------*
+#*  NOTE:   Vertax Clockwise Order |
+#*---------------------------------*
+#*                                 |
+#*        v1            v2         |
+#*	       *------------*          |
+#*	       |          . |          |
+#*	       |   p   .    |          |
+#*	       |    .       |          |
+#*	       | .          |          |
+#*	       *------------*          |
+#*	      v0            v3         |
+#*                                 |
+#*---------------------------------*
+	*/
 
-	// 작은 삼각형들 3개의 normal 계산. 이때, ( WARN:  cross-product는 오른손 좌표계)
-	// 이때, 방향만 알면 되기 때문에 normalize를 할 필요가 없음.
-	// const t_vec3 normal0 = gl_vec3_normalize(gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v1, v2)));
 	const t_vec3 cross0 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v1, v0));
 	const t_vec3 cross1 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v1), gl_vec3_subtract_vector(v2, v1));
 	const t_vec3 cross2 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v0, v2));
@@ -122,6 +135,11 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	const float area_sum = area0 + area1 + area2;
 	*w0 = area0 / area_sum;
 	*w1 = area1 / area_sum;
+
+	if (point->x == 0.0f && point->y == 0.0f)
+	{
+		printf("x:%f y:%f | w0:%f w1:%f w2:%f\n", point->x, point->y, *w0, *w1, 1.0f - *w0 - *w1);
+	}
 
 	return (true);
 }
