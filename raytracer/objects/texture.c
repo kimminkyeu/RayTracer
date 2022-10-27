@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/27 19:06:07 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/27 22:05:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,6 @@ t_vec3 sample_point(t_texture *texture, const t_vec2 uv, int is_raw)
 	// (3) x y로 부터 2차원 인덱스 구하기
 	int i = (int)round(xy.x);
 	int j = (int)round(xy.y);
-	// int i = (int)xy.x;
-	// int j = (int)xy.y;
 
 	if (is_raw != true)
 		return (get_clamped(texture, i, j));
@@ -218,15 +216,9 @@ t_vec3 get_wrapped(t_texture *texture, int i, int j)
 		j += texture->height;
 
 	t_vec4 point = gl_get_pixel_color_vec4(&texture->image, i, j);
-	// const float r = image[(i + width * j) * channels + 0] / 255.0f;
 	const float r = point.r / 255.0f;
-	// const float r = point.r;
-	// const float g = image[(i + width * j) * channels + 1] / 255.0f;
 	const float g = point.g / 255.0f;
-	// const float g = point.g;
-	// const float b = image[(i + width * j) * channels + 2] / 255.0f;
 	const float b = point.b / 255.0f;
-	// const float b = point.b;
 
 	return gl_vec3_3f(r, g, b);
 }
@@ -242,13 +234,9 @@ t_vec3 get_wrapped_raw(t_texture *texture, int i, int j)
 		j += texture->height;
 
 	t_vec4 point = gl_get_pixel_color_vec4(&texture->image, i, j);
-	// const float r = image[(i + width * j) * channels + 0] / 255.0f;
 	const float r = point.r;
-	// const float g = image[(i + width * j) * channels + 1] / 255.0f;
 	const float g = point.g;
-	// const float b = image[(i + width * j) * channels + 2] / 255.0f;
 	const float b = point.b;
-
 	return gl_vec3_3f(r, g, b);
 }
 
@@ -262,9 +250,7 @@ t_vec3 interpolate_bilinear(
 		const t_vec3 c11)
 {
 	const t_vec3 color_x0 = gl_vec3_add_vector(gl_vec3_multiply_scalar(c00, 1.0f - dx), gl_vec3_multiply_scalar(c10, dx));
-	// const t_vec3 color_x0 = gl_vec3_add_vector(gl_vec3_multiply_scalar(c10, 1.0f - dx), gl_vec3_multiply_scalar(c00, dx));
 	const t_vec3 color_x1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(c01, 1.0f - dx), gl_vec3_multiply_scalar(c11, dx));
-	// const t_vec3 color_x1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(c11, 1.0f - dx), gl_vec3_multiply_scalar(c01, dx));
 	const t_vec3 color_y = gl_vec3_add_vector(gl_vec3_multiply_scalar(color_x0, 1.0f - dy), gl_vec3_multiply_scalar(color_x1, dy));
 	return (color_y);
 }
@@ -293,25 +279,12 @@ t_vec3 sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 		return (interpolate_bilinear(dx, dy, get_wrapped_raw(texture, i, j), get_wrapped_raw(texture, i + 1, j), get_wrapped_raw(texture, i, j + 1), get_wrapped_raw(texture, i + 1, j + 1)));
 }
 
-// t_vec3 abs_vec3(t_vec3 vec)
-// {
-// 	t_vec3 v;
-
-// 	v.x = absf(vec.x);
-// 	v.y = absf(vec.y);
-//  v.z = absf(vec.z);
-// 	return (v);
-// }
-
 // 노말맵을 읽어서 hit.normal 값을 변조한다.
 t_vec3	sample_normal_map(const t_hit *hit)
 {
 	// (1) read normal map, get hit_point's uv data
 	// get data rgb each, from (-1.0f,-1.0f,-1.0f ~ 1.0f, 1.0f, 1.0f)
 	const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, false); // color range from (0.0f ~ 1.0f)
-	// const t_vec3 rgb = sample_point(hit->obj->normal_texture, hit->uv, true); // color range from (0.0f ~ 1.0f)
-	// const t_vec3 rgb = sample_linear(hit->obj->normal_texture, hit->uv, true); // color range from (0.0f ~ 1.0f)
-	// const t_vec3 rgb = sample_linear(hit->obj->normal_texture, hit->uv, false); // color range from (0.0f ~ 1.0f)
 
 	// (1) Change rgb to (-1.0f ~ 1.0f range.)
 	t_vec3 derivative;
@@ -335,15 +308,5 @@ t_vec3	sample_normal_map(const t_hit *hit)
 	final_normal = gl_vec3_add_vector(final_normal, bitangent_result);
 	final_normal = gl_vec3_normalize(gl_vec3_add_vector(final_normal, bitangent_result));
 
-
-	// printf("Before_normal : x(%f) y(%f) z(%f)\t-->\t", hit->normal.x, hit->normal.y, hit->normal.z);
-	// printf("normal_result : x(%f) y(%f) z(%f)\t-->\t", normal_result.x, normal_result.y, normal_result.z);
-	// printf("Derivative : x(%f) y(%f) z(%f)\t-->\t", derivative.x, derivative.y, derivative.z);
-	// printf("Final_normal : x(%f) y(%f) z(%f)\n", final_normal.x, final_normal.y, final_normal.z);
-	// usleep(10000);
-
-
 	return (final_normal);
-	// return (hit->normal);
-	// return (rgb);
 }

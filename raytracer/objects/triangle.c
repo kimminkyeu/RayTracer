@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:09:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/27 18:53:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/27 22:03:58 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,11 +136,6 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	*w0 = area0 / area_sum;
 	*w1 = area1 / area_sum;
 
-	if (point->x == 0.0f && point->y == 0.0f)
-	{
-		printf("x:%f y:%f | w0:%f w1:%f w2:%f\n", point->x, point->y, *w0, *w1, 1.0f - *w0 - *w1);
-	}
-
 	return (true);
 }
 
@@ -153,7 +148,6 @@ t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 	t_vec3 point, face_normal;
 	float t, w0, w1;
 
-	// intersect ray_triangle 에서 point, face_normal, t, uv 값을 계산해서 대입해준다.
 	if (intersect_ray_triangle(ray->origin, ray->direction,
 								triangle->v0, triangle->v1, triangle->v2,
 								&point, &face_normal, &t, &w0, &w1))
@@ -166,10 +160,10 @@ t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
 		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
 
-		// printf("hit.uv.x %f  hit.uv.y %f\n", hit.uv.x, hit.uv.y);
-
 		// t1 과 t2의 tangent가 서로 반대방향인 문제가 발생함.
-		hit.tangent = gl_vec3_normalize(gl_vec3_subtract_vector(triangle->v2, triangle->v1));
+		// * .  FIX:    아래 부분 반드시 고치기!
+		const t_vec3 t0 = gl_vec3_subtract_vector(triangle->v1, triangle->v0);
+		hit.tangent = gl_vec3_normalize(gl_vec3_cross(hit.normal,t0));
 	}
 
 	return (hit);

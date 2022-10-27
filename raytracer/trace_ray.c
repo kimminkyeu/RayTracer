@@ -226,8 +226,25 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 
 	// * ---------------------------------------------------------------------------------
 	// * 1017. Normal Map 구현 (내가 생각하는 normal_map 구현기. 정말 이게 맞는지는 해보고 체크. ----------------
-	if (hit.obj->normal_texture != NULL)
+	if (hit.obj->normal_texture != NULL && device->is_high_resolution_render_mode == true)
 	{
+	// 	static int lock1 = 0;
+	// 	if (lock1 == 0)
+	// 	{
+	// 		if (hit.distance > 0.0f && hit.point.x < -0.1f && hit.point.y > 0.1f)
+	// 		{
+	// 			printf("=== x%f y%f tangent:%f/%f/%f\n", hit.point.x, hit.point.y, hit.tangent.x, hit.tangent.y, hit.tangent.z);
+	// 			lock1 = 1;
+	// 		}
+	// 	}
+	// 	if (lock1 == 1)
+	// 	{
+	// 		if (hit.distance > 0.0f && hit.point.x > 0.1f && hit.point.y < -0.1f)
+	// 		{
+	// 			printf("=== x%f y%f tangent:%f/%f/%f\n", hit.point.x, hit.point.y, hit.tangent.x, hit.tangent.y, hit.tangent.z);
+	// 			lock1 = 3;
+	// 		}
+	// 	}
 		// 참고 자료
 		// https://www.youtube.com/watch?v=6_-NNKc4lrk
 		// Normal Map을 이용한다면, _diff 의 값이 달리질 것이다.
@@ -245,6 +262,7 @@ t_vec3 phong_shading_model(t_device *device, const t_ray *ray, t_hit hit, const 
 		i++;
 	}
 	final_color = phong_color;
+	return (phong_color);
 
 	if (hit.obj->material.reflection)
 	{
@@ -328,9 +346,6 @@ t_hit find_closet_collision(t_device *device, const t_ray *ray)
 			closest_distance = hit.distance;
 			closest_hit = hit;
 			closest_hit.obj = device->objects->data[i];
-
-			// 텍스쳐 좌표
-			closest_hit.uv = hit.uv;
 		}
 		i++;
 	}

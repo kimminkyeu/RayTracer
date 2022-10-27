@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:17:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 05:01:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/27 22:09:36 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,8 @@
 t_hit square_intersect_ray_collision(const t_ray *ray, t_square *square)
 {
 	// Create two triangle. check each.
-	// t_triangle t1 = create_triangle(square->v0, square->v1, square->v2);
 	t_hit h1 = triangle_intersect_ray_collision(ray, &square->tri_1);
-
-	// t_triangle t2 = create_triangle(square->v0, square->v2, square->v3);
 	t_hit h2 = triangle_intersect_ray_collision(ray, &square->tri_2);
-
 	t_hit hit_result;
 
 	/**    v0           v1
@@ -36,7 +32,6 @@ t_hit square_intersect_ray_collision(const t_ray *ray, t_square *square)
 	 *    v3            v2
 	 */
 
-
 	if (h1.distance >= 0.0f && h2.distance >= 0.0f) // 만약 둘다 충돌했을 경우 (삼각형이 맞닿는 지점.)
 	{
 		if (h1.distance < h2.distance)
@@ -48,12 +43,6 @@ t_hit square_intersect_ray_collision(const t_ray *ray, t_square *square)
 		hit_result = h1;
 	else // if h2
 		hit_result = h2;
-
-
-	if (hit_result.normal.y >= 0.0f)
-		hit_result.tangent = h2.tangent;
-	else
-		hit_result.tangent = h1.tangent;
 	return (hit_result);
 }
 
