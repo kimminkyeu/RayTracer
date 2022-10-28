@@ -6,21 +6,10 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 17:37:32 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 21:31:20 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include <pthread.h>
-// #include <unistd.h>
-// #include "gl_engine.h"
-// #include "objects.h"
-// #include "gl_color.h"
-// #include "gl_draw.h"
-// #include "gl_dvec3.h"
-// #include "gl_vec4.h"
-// #include "gl_vec3.h"
-// #include "gl_vec2.h"
-// #include "libft.h"
 #include "trace_ray.h"
 #include "main.h"
 #include "thread.h"
@@ -38,7 +27,8 @@ static void fill_low_resolution_pixel(t_device *device, int x, int y, int argb)
 		j = 0;
 		while (j < dx)
 		{
-			*gl_get_pixel_addr(device->screen_image, x * dx + j, y * dx + k) = argb;
+			*gl_get_pixel_addr(device->screen_image, x * dx + j, y * dx + k) \
+				= argb;
 			j++;
 		}
 		k++;
@@ -73,31 +63,18 @@ void *thread_update(void *arg)
 
 	const int width = img->img_size.width;
 	const int height = img->img_size.height;
-	int y = 0;
+	int y = -1;
 	int x = 0;
-
-	/* NOTE: 디버깅을 위해서 일단 싱글쓰레드로 변경함.*/
-	// while (data->id == 0 && y < height)
-	// {
-	// 	x = 0;
-	// 	while (x < width)
-	// 	{
-	// 		const int final_color = do_ray_tracing_and_return_color(device, img, x, y);
-	// 		gl_draw_pixel(img, x, y, final_color);
-	// 		x++;
-	// 	}
-	// 	y++;
-	// }
 
 	const int num_of_thread = data->info->thread_num;
 	while ((data->id + (y * num_of_thread)) < height)
 	{
-		x = 0;
-		while (x < width) // draw each row
+		x = -1;
+		while (++x < width)
 		{
-			const int final_color = do_ray_tracing_and_return_color(device, img, x, (data->id + (y * num_of_thread)));
-			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), final_color);
-			x++;
+			gl_draw_pixel(img, x, (data->id + (y * num_of_thread)), \
+				do_ray_tracing_and_return_color(device, img, x, \
+								(data->id + (y * num_of_thread))));
 		}
 		y++;
 	}
@@ -126,17 +103,8 @@ bool is_high_resolution_mode(t_device *device)
 		return (true);
 }
 
-int	update(t_device *device)
+void create_thread_and_update_each(t_device *device)
 {
-	long long render_start_time;
-	long long render_end_time;
-
-	render_start_time = get_time_ms();
-	device->thread_info.finished_thread_num = 0;
-
-	if (is_high_resolution_mode(device)) // 배경 초기화
-		gl_draw_background(device->screen_image, BLACK);
-
 	int i = 0;
 	while (i < device->thread_info.thread_num)
 	{
@@ -145,30 +113,38 @@ int	update(t_device *device)
 
 		if (!is_high_resolution_mode(device))
 			device->thread_info.thread_group[i].image = device->pixel_image;
-		else // if not High_Res mode
+		else
 			device->thread_info.thread_group[i].image = device->screen_image;
-
 		device->thread_info.thread_group[i].info = &device->thread_info;
 		pthread_create(&(device->thread_info.thread_group[i].thread), NULL, thread_update, &(device->thread_info.thread_group[i]));
 		i++;
 	}
+}
 
-	if (!is_high_resolution_mode(device)) // if Low-res mode, wait until every thread is finished.
+int	update(t_device *device)
+{
+	const long long render_start_time = get_time_ms();
+	int				i;
+
+	device->thread_info.finished_thread_num = 0;
+	if (is_high_resolution_mode(device))
+		gl_draw_background(device->screen_image, BLACK);
+	create_thread_and_update_each(device);
+	if (!is_high_resolution_mode(device))
 	{
 		i = -1;
 		while (++i < device->thread_info.thread_num)
 			pthread_join(device->thread_info.thread_group[i].thread, NULL);
-		copy_pixel_buffer_to_screen_image(device); // copy pixel_image_buffer to screen_image
+		copy_pixel_buffer_to_screen_image(device);
 		engine_push_image_to_window(device, device->screen_image, 0, 0);
 	}
 	else
-	{   // if high_res mode, then push image to screen every time.
+	{
 		printf("# Rendering...\n\n");
 		while (device->thread_info.finished_thread_num != device->thread_info.thread_num)
 			engine_push_image_to_window(device, device->screen_image, 0, 0);
 		printf("# Total %d threads has finished it's work\n\n", device->thread_info.finished_thread_num);
 	}
-	render_end_time = get_time_ms();
-	draw_render_time(device, render_end_time - render_start_time, gl_vec2_2f(30, 30), WHITE);
+	draw_render_time(device, get_time_ms() - render_start_time, gl_vec2_2f(30, 30), WHITE);
 	return (0);
 }
