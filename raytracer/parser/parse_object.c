@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 16:32:10 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/28 16:36:46 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,9 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 		return ;
 
 	printf("After ft_strtrim : %s\n", str);
-
 	split = ft_split(str, ' ');
-	free(str);
 
+	free(str);
 	if (get_strs_count(split) > 0)
 	{
 		printf("Loading Texture...\n");
@@ -107,7 +106,6 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 			str = ft_strjoin(IMAGE_FILE_LOACATION, split[0]);
 			object->diffuse_texture = new_texture(device, str);
 		}
-		free(str);
 		if (get_strs_count(split) == 2)
 		{
 			str = ft_strjoin(IMAGE_FILE_LOACATION, split[1]);
