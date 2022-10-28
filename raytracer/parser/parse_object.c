@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 16:07:15 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/28 16:32:10 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,14 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 	if (str == NULL)
 		return ;
 	str++;
+
+	printf("Before ft_strtrim : %s\n", str);
+	// Fix :  here. double free!
 	str = ft_strtrim(str, "\n");
 	if (str == NULL)
 		return ;
+
+	printf("After ft_strtrim : %s\n", str);
 
 	split = ft_split(str, ' ');
 	free(str);
