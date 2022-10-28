@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 23:18:58 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/27 20:21:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:14:42 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@
 void update_camera_geometry(t_device *device)
 {
 	t_camera *camera = device->camera;
+
+	camera->look_at = gl_vec3_normalize(camera->look_at);
+	camera->up_direction = gl_vec3_normalize((camera->up_direction));
 
 	camera->right_direction = gl_vec3_cross(camera->look_at, camera->up_direction);
 	camera->camera_length = 1.0f / tanf(gl_get_radian(camera->fov / 2.0f));

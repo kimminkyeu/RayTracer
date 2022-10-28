@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/27 20:26:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:05:22 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ t_vec2	input_get_mouse_pos(const t_device *device)
 
 	x = 0;
 	y = 0;
-	// mlx_mouse_get_pos(device->mlx, device->win, &x, &y);
+	mlx_mouse_get_pos(device->mlx, device->win, &x, &y);
 
-	mlx_mouse_get_pos(device->win, &x, &y);
+	// mlx_mouse_get_pos(device->win, &x, &y);
 	pos.x = (float)x;
 	pos.y = (float)y;
 	return (pos);

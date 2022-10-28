@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/27 20:49:33 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:07:15 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 		return ;
 
 	split = ft_split(str, ' ');
+	free(str);
 
 	if (get_strs_count(split) > 0)
 	{
