@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    tutorial.rt                                        :+:      :+:    :+:    #
+#    bump_map.rt                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/26 18:39:05 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/28 16:23:08 by kyeu             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@
 # * AA : AntialiasingLevel [ default:0, max:3 ]                              |
 # * RF : ReflectionLevel [ default:5, 0 if no reflection ]                   |
 #*---------------------------------------------------------------------------*
-Setting W:1200 H:800 RR:0.1 | TH:24 | AA:0 RF:5
+Setting W:800 H:800 RR:0.1 | TH:24 | AA:1 RF:5
 
 
 #*---------------------------------------------------------------------------*
@@ -45,26 +45,16 @@ L   1.0,1.0,2.0       1.0           0,255,0
 
 #*  [ Sphere ]
 #   center            radius                           +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
-sp  0.0,0.5,-2.0      1.0                                    250,0,10
-# sp  5.0,-0.5,-2.0      1.0                                 250,0,0             10.0     0.0         0.0            1.5                       |
-# sp  3.0,-0.5,-2.0      1.0                                 250,0,0             10.0     0.5         0.0            1.5                       |
-# sp  1.0,-0.5,-2.0      1.0                                 0,250,0             10.0     0.5         0.0            1.5                       |   checker
-
-# sp  -1.0,-0.5,-2.0     1.0                                 250,0,0             10.0     0.5         0.0            1.5                       |   2k_earth_daymap.xpm   2k_earth_normal_map.xpm
-# sp  -3.0,-0.5,-2.0     1.0                                 250,0,0             10.0     0.1         0.9            1.1                       |
-# sp  -5.0,-0.5,-2.0     1.0                                 250,0,0             10.0     0.0         1.0            1.5                       |
+sp  0.0,0.0,-2.0      1.0                                 0,250,0             10.0     0.5         0.0            1.5                       |   checker
 
 #*  [ Plain ]
 #   xyzCoord          FaceNormal                       +  diffuseColor(rgb)   alpha    reflection  transparency  IOR(glass=1.5|water=1.3)   |  [X]
-# pl  0.0,-1.5,0.0      0.0,1.0,0.0                         255,255,255         50.0     0.3
 
 #*  [ Cylinder ]
 #   pos               orientation     radius   height  +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
-# cy  0.0,-1.5,-5.0      0.0,1.0,0.0     1.0      1.0        0,0,255
 
 #*  [ Cone ]
 #   pos               orientation     radius   height  +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
-# co  0.0,-1.5,-5.0      0.0,1.0,0.0     1.0      1.0        0,0,255
 
 #*---------------------------------*
 #*  NOTE:   Vertax Clockwise Order |
@@ -83,9 +73,7 @@ sp  0.0,0.5,-2.0      1.0                                    250,0,10
 
 #*  [ Triangle ]
 #   vertex_0           vertax_1         vertax_2       +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM                       normalM
-# tr  -1.0,-1.0,0.0      -1.0,1.0,0.0     1.0,1.0,0.0       0,0,255             10.0     0.0         0.0            0.0                       |  checker
 
 #*  [ Square ]
 #   vertex_0           vertax_1         vertax_2          vertax_3          +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM                       normalM
-# sq  -1.0,-1.0,0.0      -1.0,1.0,0.0     1.0,1.0,0.0       1.0,-1.0,0.0          0,0,255            10.0     0.0         0.0            0.0                       |  checker
 
