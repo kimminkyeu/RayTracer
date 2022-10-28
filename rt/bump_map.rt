@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/28 16:31:13 by kyeu             ###   ########.fr        #
+#    Updated: 2022/10/28 19:08:19 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ Setting W:800 H:800 RR:0.1 | TH:24 | AA:1 RF:5
 
 #*  [ Ambient Light ]
 #   intensity	      color
-A   0.2               100,100,100
+A   0.3               50,50,50
 
 #*  [ Camera ]
 #   position          loot_at(dir)       up_dir           FOV(0~180)
@@ -41,11 +41,14 @@ C   0.0,0.0,8.0       0.0,0.0,-1.0       0.0,1.0,0.0      45
 #*  [ Light ]
 #   pos               intensity     color
 # L   2.0,2.0,2.0       0.5           255,255,255
-L   1.0,1.0,2.0       1.0           0,255,0
+# L   2.0,5.0,0.0       1.0           0,255,0
+# L   -2.0,5.0,0.0       1.0           0,255,0
+L   0.0,5.0,2.0       1.0           0,255,0
+# L   0.0,5.0,-2.0       1.0           0,255,0
 
 #*  [ Sphere ]
 #   center            radius                           +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
-sp  0.0,0.0,-2.0      1.0                                 0,250,0             10.0     0.5         0.0            1.5                       |  checker  
+sp  0.0,0.0,-2.0      1.0                                 0,250,0             10.0     0.5         0.0            1.5                       |  cobblestone_diffuse.xpm
 
 
 #*  [ Plain ]

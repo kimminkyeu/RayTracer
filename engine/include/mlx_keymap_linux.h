@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gl_keymap_linux.h                                  :+:      :+:    :+:   */
+/*   mlx_keymap_linux.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:52:09 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 20:49:37 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/28 19:24:02 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_KEYMAP_LINUX_H
-# define GL_KEYMAP_LINUX_H
+#ifndef MLX_KEYMAP_LINUX_H
+# define MLX_KEYMAP_LINUX_H
 
 # include <X11/Xlib.h>
 # include <X11/Xutil.h>
 # include <X11/X.h>
 
-/* NOTE: (1) https://tronche.com/gui/x/xlib/events/types.html 
+/* NOTE: (1) https://tronche.com/gui/x/xlib/events/types.html
  * */
 
 /* ================================

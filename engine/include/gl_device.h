@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/26 15:48:19 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:20:50 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,6 @@ typedef struct s_setting {
 typedef struct s_device {
 	void				*mlx;
 	void				*win;
-	// int					win_width;
-	// int					win_height;
-	// int					resolution_ratio;
 	t_setting			renderer_settings;
 	float				aspect_ratio;
 	int					is_high_resolution_render_mode;

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gl_keymap_macos.h                                  :+:      :+:    :+:   */
+/*   mlx_keymap_macos.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 17:52:09 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:56:53 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:23:56 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GL_KEYMAP_MACOS_H
-# define GL_KEYMAP_MACOS_H
+#ifndef MLX_KEYMAP_MACOS_H
+# define MLX_KEYMAP_MACOS_H
 
 /* NOTE : this header is a partial copied version of X11/X.h header,
  * since minilibx_mms doesn't support all key maps */

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 16:14:30 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:19:14 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ extern int		handle_key_release(int key_code, void *param);
 extern int		handle_mouse_press(int key_code, int x, int y, void *param);
 extern int		handle_mouse_release(int key_code, int x, int y, void *param);
 extern void		destory_images(t_device *device);
+extern void		parse_rt_file_to_device(t_device *device, char *file);
 
 void	engine_exit(t_device *device, bool is_error)
 {
@@ -64,7 +65,7 @@ int	handle_exit(t_device *device)
 	return (0);
 }
 
-void	init_camera_and_objects_vector(t_device *device)
+void	init_camera_and_objects_vector(t_device *device, char *rt_file)
 {
 	device->camera = ft_calloc(1, sizeof(t_camera));
 	device->camera->has_camera = false;
@@ -73,37 +74,33 @@ void	init_camera_and_objects_vector(t_device *device)
 	device->point_lights = new_vector(5);
 	device->objects = new_vector_with_custom_deallocator(8, \
 								custom_deallocator_for_object);
+	parse_rt_file_to_device(device, rt_file);
 }
-
-extern void	parse_rt_file_to_device(t_device *device, char *file);
 
 t_device	*engine_init(char *title, char *rt_file)
 {
-	t_device	*device;
+	t_device *const	device = ft_calloc(1, sizeof(*device));
 
-	device = ft_calloc(1, sizeof(*device));
 	if (device == NULL)
 		engine_exit(device, ERROR);
 	device->mlx = mlx_init();
 	if (device->mlx == NULL)
 		engine_exit(device, ERROR);
-
-	init_camera_and_objects_vector(device);
-	parse_rt_file_to_device(device, rt_file);
-
-	// device->win_width = _win_width;
-	// device->win_height = _win_height;
-	device->win = mlx_new_window(device->mlx, device->renderer_settings.win_width, \
-									device->renderer_settings.win_height, title);
+	init_camera_and_objects_vector(device, rt_file);
+	device->win = mlx_new_window(device->mlx, \
+								device->renderer_settings.win_width, \
+								device->renderer_settings.win_height, title);
 	if (device->win == NULL)
 		engine_exit(device, ERROR);
 	device->screen_image = engine_new_image(device, \
-		gl_vec2_2f(device->renderer_settings.win_width, device->renderer_settings.win_height), gl_vec2_2f(0, 0));
+		gl_vec2_2f(device->renderer_settings.win_width, \
+					device->renderer_settings.win_height), gl_vec2_2f(0, 0));
 	device->pixel_image = engine_new_image(device, \
-		gl_vec2_2f(device->renderer_settings.win_width * device->renderer_settings.resolution_ratio, \
-					device->renderer_settings.win_height * device->renderer_settings.resolution_ratio), gl_vec2_2f(0, 0));
-	// device->resolution_ratio = resolution_ratio;
-	mlx_hook(device->win, ON_DESTROY, 0, handle_exit, device);
+		gl_vec2_2f(device->renderer_settings.win_width \
+					* device->renderer_settings.resolution_ratio, \
+					device->renderer_settings.win_height \
+					* device->renderer_settings.resolution_ratio), \
+						gl_vec2_2f(0, 0));
 	engine_set_key_event(device, handle_key_press, handle_key_release);
 	engine_set_mouse_event(device, handle_mouse_press, handle_mouse_release);
 	return (device);

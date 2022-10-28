@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/27 22:05:46 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:09:25 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,55 +25,6 @@ static void fill_checker_board(t_texture *texture)
 	int x = 0;
 	int y = 0;
 
-
-	/**
-	 *  -----------
-	 *  |  B | G  |
-	 *  |---------|
-	 *  |  R | W  |
-	 *  -----------
-	 */
-
-	while (y < texture->height)
-	{
-		x = 0;
-		while (x < texture->width)
-		{
-			if (x < texture->width * 0.5f && y < texture->height * 0.5f)
-			{
-				gl_draw_pixel(&texture->image, x, y, BLUE);
-			}
-			else if (x > texture->width * 0.5f && y < texture->height * 0.5f)
-			{
-				gl_draw_pixel(&texture->image, x, y, GREEN);
-			}
-			else if (x < texture->width * 0.5f && y > texture->height * 0.5f)
-			{
-				gl_draw_pixel(&texture->image, x, y, RED);
-			}
-			else if (x < texture->width * 0.5f && y > texture->height * 0.5f)
-			{
-				gl_draw_pixel(&texture->image, x, y, MAGENTA);
-			}
-			else
-			{
-				gl_draw_pixel(&texture->image, x, y, WHITE);
-			}
-			x++;
-		}
-		y++;
-	}
-
-
-
-
-
-
-
-
-
-	// NOTE:  Sample checker board. 나중에 복구할 것.
-	/*
 	while (y < texture->height)
 	{
 		x = 0;
@@ -87,7 +38,6 @@ static void fill_checker_board(t_texture *texture)
 		}
 		y++;
 	}
-	*/
 }
 
 t_texture	*new_texture_checkerboard(t_device *device, int width, int height)

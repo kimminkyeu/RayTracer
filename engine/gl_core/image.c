@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 11:10:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 16:25:31 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:12:06 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ t_image	*engine_new_image(t_device *device, t_vec2 img_size, \
 		new_image->img_location = img_location;
 		new_image->device_ptr = device;
 	}
-	printf("engine_new_image() : W(%f) H(%f)\n", new_image->img_size.width, new_image->img_size.height);
+	printf("engine_new_image() : W(%f) H(%f)\n", \
+			new_image->img_size.width, new_image->img_size.height);
 	return (new_image);
 }
 

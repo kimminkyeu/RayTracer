@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 16:18:34 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/28 19:06:04 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,13 @@ t_hit sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere)
 		// * (3) https://en.wikipedia.org/wiki/UV_mapping
 		const t_vec3 d = gl_vec3_reverse(hit.normal);
 		// hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f;
-		// hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f;
 		// 원리 :  간단함. 구의 xz축 평면의 각도를 구하고 (-PI ~ PI), 이를 2PI로 나누면 -0.5~0.5까지 범위가 되고, 다시 0.5를 더해서 0~1.0 범위로 조정한 것이다. (텍스쳐 기준으로 x축)
-		hit.uv.x = atan2(d.x, d.z) / (PI) + 0.5f; // 해상도 조정을 위해 값을 살짝 바꾸었음.
-		hit.uv.x *= -1.0f;
+		// hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f; // 해상도 조정을 위해 값을 살짝 바꾸었음.
+		// hit.uv.x *= -1.0f;
 		// 원리 :  텍스쳐 기준으로 y축. y축의 각도를 구한다.
+		hit.uv.x = atan2(d.x, d.z) / (2 * PI) + 0.5f;
 		hit.uv.y = asin(d.y) / (PI) + 0.5f;
 		// * -----------------------------------------------------------
-
 
 		// *  NOTE:  Bump Map( = Normal Map) 에서 사용하기 위한 변수 계산.
 		// * (1) http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/

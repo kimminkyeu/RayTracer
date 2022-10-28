@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/01 13:40:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:16:02 by minkyeki         ###   ########.fr       */
+/*   Created: 2022/10/28 19:20:14 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/10/28 19:20:15 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "gl_input.h"
 
 extern int	input_key_get_index(int key_code);
+extern int	handle_exit(t_device *device);
 
 int	handle_key_press(int key_code, void *param)
 {
@@ -58,6 +59,7 @@ void	engine_set_key_event(t_device *device, int (*f_key_press)(), \
 {
 	if (device == NULL)
 		return ;
+	mlx_hook(device->win, ON_DESTROY, 0, handle_exit, device);
 	if (f_key_press != NULL)
 		mlx_hook(device->win, ON_KEY_PRESS, KeyPressMask, \
 					f_key_press, device);

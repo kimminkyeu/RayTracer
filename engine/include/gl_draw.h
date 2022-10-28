@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 16:57:40 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:31:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 19:22:39 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@
 
 # if defined (__linux__)
 #  define PLATFORM_NAME (__LINUX__)
-#  include "gl_keymap_linux.h"
+#  include "mlx_keymap_linux.h"
 # elif defined (__APPLE__)
 #  define PLATFORM_NAME (__OSX__)
-#  include "gl_keymap_macos.h"
+#  include "mlx_keymap_macos.h"
 # endif
 
 /* Returns integer pointer of target Pixel(x, y) */

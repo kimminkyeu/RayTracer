@@ -152,21 +152,6 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 	t_vec3 phong_color = gl_vec3_1f(0.0f);
 	phong_color = gl_vec3_multiply_scalar(device->ambient_light->color, device->ambient_light->brightness_ratio);
 
-	// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
-	// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
-	if (hit.obj->diffuse_texture != NULL) // if has texture + 그림자가 없을 때.
-	{
-		t_vec3 sample_ambient;
-		if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
-			sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
-		else
-			sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
-
-		phong_color.r *= sample_ambient.b; // 홍정모
-		phong_color.g *= sample_ambient.g; // 홍정모
-		phong_color.b *= sample_ambient.r; // 홍정모
-	}
-	final_color = phong_color;
 
 	// * 그림자 처리. 투명한 물체에 대한 그림자 처리는 어떻게?
 	// https://blog.imaginationtech.com/implementing-fast-ray-traced-soft-shadows-in-a-game-engine/
@@ -177,6 +162,21 @@ t_vec3 calculate_diffusse_specular_shadow_from_light(t_device *device, const t_r
 	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
 	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
 	{
+		// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
+		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
+		if (hit.obj->diffuse_texture != NULL) // if has texture + 그림자가 없을 때.
+		{
+			t_vec3 sample_ambient;
+			if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
+				sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
+			else
+				sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false); // texture sampling
+
+			phong_color.r *= sample_ambient.b; // 홍정모
+			phong_color.g *= sample_ambient.g; // 홍정모
+			phong_color.b *= sample_ambient.r; // 홍정모
+		}
+		final_color = phong_color;
 
 		// (3-1) Calculate Diffuse color
 		// FIX:  삼각형 라인이 티나는 이유는 _diff 변수가 삼각형의 외각으로 갔을 때 값이 바뀌는 것 외에는 답이 없다.
