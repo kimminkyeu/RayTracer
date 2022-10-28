@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/28 19:20:50 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 20:07:49 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_input {
 			int	key_w_state;
 			int	key_e_state;
 			int	key_r_state;
+			int key_1_state;
 		};
 		int	key_state[7];
 	};

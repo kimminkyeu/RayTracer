@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 16:46:26 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 19:12:31 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/28 20:07:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	input_key_get_index(int key_code)
 		return (5);
 	else if (key_code == KEY_R)
 		return (6);
+	else if (key_code == KEY_1)
+		return (7);
 	else
 		return (-1);
 }
