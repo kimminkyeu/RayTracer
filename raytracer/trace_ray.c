@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 22:57:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/29 23:59:54 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 00:14:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ t_vec3 calculate_phong(t_device *device, const t_ray *ray, t_hit hit, t_light* l
 
 	// * (3) Shadow
 	// TODO:  물체보다 광원이 더 가까운 경우, 그 경우는 그림자가 생기면 안된다. (우측 조건문이 이에 해당.)
-	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
+	if (shadow_ray_hit.distance < 0.0f || shadow_ray_hit.obj->material.transparency > 0.0f || shadow_ray_hit.distance > gl_vec3_get_magnitude(gl_vec3_subtract_vector(light->pos, hit.point)))
 	{
 		// *  WARN:  Ambient Texture는 계산에서 제외하였음 ---------------------------------------
 		// NOTE:  ambient와 diffuse 둘 다 sample_linear 이용하였음.
