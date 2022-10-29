@@ -37,6 +37,7 @@ extern int	ft_lscanf(char *line, char *format, ...);
 */
 extern void	parse_rt_file_to_device(t_device *device, char *file);
 
+/* parser for each object */
 extern void	parse_renderer_setting(t_device *device, char *line);
 extern void	parse_ambient_light(t_device *device, char *line);
 extern void	parse_camera(t_device *device, char *line);

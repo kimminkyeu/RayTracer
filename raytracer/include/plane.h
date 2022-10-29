@@ -17,10 +17,11 @@
 # include "ray.h"
 
 typedef struct s_plane {
-	t_vec3 pos; // position
-	t_vec3 normal; // surface-normal
+	t_vec3	pos;
+	t_vec3	normal;
 }	t_plane;
 
-extern t_hit plane_intersect_ray_collision(const t_ray *ray, t_plane *plane);
+extern t_hit	plane_intersect_ray_collision(const t_ray *ray, \
+												t_plane *plane);
 
 #endif /** plane.h */

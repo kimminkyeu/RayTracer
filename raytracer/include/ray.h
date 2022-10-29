@@ -17,10 +17,10 @@
 #include "hit.h"
 
 typedef struct s_ray {
-	t_vec3	origin; // ray origin
-	t_vec3	direction; // ray direction
+	t_vec3	origin;
+	t_vec3	direction;
 }	t_ray;
 
-extern t_ray create_ray(t_vec3 origin, t_vec3 direction);
+extern t_ray	create_ray(t_vec3 origin, t_vec3 direction);
 
 #endif /** Ray.h */

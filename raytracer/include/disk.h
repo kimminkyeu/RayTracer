@@ -19,14 +19,11 @@
 #include "helper.h"
 
 typedef struct s_disk {
-
-	// center, orientation, radius
-	t_vec3 center;
-	t_vec3 orientation;
-	float	radius; // 반지름.
-
+	t_vec3	center;
+	t_vec3	orientation;
+	float	radius;
 } t_disk;
 
-extern t_hit disk_intersect_ray_collision(const t_ray *ray, t_disk *disk);
+extern t_hit	disk_intersect_ray_collision(const t_ray *ray, t_disk *disk);
 
 #endif /** Disk.h */

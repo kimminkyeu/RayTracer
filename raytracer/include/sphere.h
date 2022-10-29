@@ -15,13 +15,11 @@
 
 # include "ray.h"
 
-
-
 typedef struct s_sphere {
 	t_vec3	center;
 	float	radius;
 }	t_sphere;
 
-extern t_hit sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere);
+extern t_hit	sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere);
 
 #endif /** sphere.h */

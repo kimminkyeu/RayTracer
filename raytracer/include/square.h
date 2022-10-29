@@ -16,10 +16,10 @@
 #include "triangle.h"
 
 typedef struct s_square {
-	t_triangle tri_1;
-	t_triangle tri_2;
+	t_triangle	tri_1;
+	t_triangle	tri_2;
 }	t_square;
 
-extern t_hit square_intersect_ray_collision(const t_ray *ray, t_square *square);
+extern t_hit	square_intersect_ray_collision(const t_ray *ray, t_square *square);
 
 #endif /** square.h */

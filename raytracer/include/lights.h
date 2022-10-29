@@ -17,18 +17,15 @@
 # include "gl_vec3.h"
 
 typedef struct s_ambient_light {
-	bool 	has_ambient_light; // light 중복 체크용
+	bool 	has_ambient_light;
 	float	brightness_ratio;
 	t_vec3	color;
-
 }	t_ambient_light;
 
 typedef struct s_light {
-
-	t_vec3	pos; // 아주 단순화된 형태의 위치만 있는 점조명.
+	t_vec3	pos;
 	float	brightness_ratio;
 	t_vec3	color;
-
 }	t_light;
 
 #endif /** lights.h */

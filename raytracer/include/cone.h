@@ -16,7 +16,6 @@
 # include "hit.h"
 # include "ray.h"
 
-//#    pos                orientation       radius     height      diffuse color
 typedef struct s_cone {
 	t_vec3	pos;
 	t_vec3	orientation;
@@ -24,6 +23,6 @@ typedef struct s_cone {
 	float	height;
 }	t_cone;
 
-extern t_hit cone_intersect_ray_collision(const t_ray *ray, t_cone *cone);
+extern t_hit	cone_intersect_ray_collision(const t_ray *ray, t_cone *cone);
 
 #endif /** cone.h */

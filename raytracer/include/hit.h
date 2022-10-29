@@ -15,20 +15,15 @@
 
 #include "gl_vec3.h"
 #include "gl_vec2.h"
-// #include "objects.h"
 
 typedef struct s_object t_object;
+
 typedef struct s_hit {
-
-	float		distance; 	// hit distance;
-	t_vec3		point;		// 충돌 위치
-	t_vec3		normal; 	// 충돌 위치의 표면의 수직 벡터.
-	t_object	*obj; // hit object pointer
-
-	// for texture sampling
-	t_vec2		uv; 		// 텍스쳐 좌표
-
-	// for bump map calculation.
+	float		distance;
+	t_vec3		point;
+	t_vec3		normal;
+	t_object	*obj;
+	t_vec2		uv;
 	t_vec3		tangent;
 
 }	t_hit;

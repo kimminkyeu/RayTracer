@@ -15,16 +15,13 @@
 
 # include "gl_vec3.h"
 
-//#    pos              orientation       diameter   height      diffuse color
-//cy   50.0,0.0,20.6    0.0,0.0,1.0        14.2      21.42       10,0,255
-
 typedef struct s_cylinder {
-	t_vec3	pos; // 바닥 지점
+	t_vec3	pos;
 	t_vec3	orientation;
-	float	radius; // 반지름
-	float	height; // 높이
+	float	radius;
+	float	height;
 }	t_cylinder;
 
-extern t_hit cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder);
+extern t_hit	cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder);
 
 #endif /** cylinder.h */

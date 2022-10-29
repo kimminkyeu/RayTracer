@@ -19,22 +19,19 @@
 #include "gl_device.h"
 
 typedef struct s_camera {
-
 	bool 	has_camera;
-
-	t_vec3	pos; // position of camera (x, y, z)
-	t_vec3	look_at; // orientation of camera (normalized vector)
-	float	fov; // FOV (range from 0 to 180)
-
-	t_vec3	up_direction; // up direction
-	t_vec3	right_direction; // up direction
-	t_vec3  projection_screen_center; // center of projection screen
+	t_vec3	pos;
+	t_vec3	look_at;
+	float	fov;
+	t_vec3	up_direction;
+	t_vec3	right_direction;
+	t_vec3  projection_screen_center;
 	float   camera_length;
-
 }	t_camera;
 
-void update_camera_geometry(t_device *device);
+void	update_camera_geometry(t_device *device);
 
-t_vec3 transform_screen_to_camera_world(t_camera *camera, t_image *img, t_vec2 pos_screen);
+t_vec3	transform_screen_to_camera_world(t_camera *camera, t_image *img, \
+										t_vec2 pos_screen);
 
 #endif /** camera.h */

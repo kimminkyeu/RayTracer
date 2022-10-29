@@ -15,14 +15,14 @@
 
 # include "gl_engine.h"
 
-t_vec3 get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point);
+t_vec3	get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point);
 
-// helper for min max abs
-float min_float(float f1, float f2);
-float max_float(float f1, float f2);
-float abs_float(float f);
+/** helper for min max abs */
+float	min_float(float f1, float f2);
+float	max_float(float f1, float f2);
+float	abs_float(float f);
 
-int clamp_int(int i, int min, int max);
+int 	clamp_int(int i, int min, int max);
 
 /** helper function. */
 void	print_error_and_exit(t_device *device, char *str);
@@ -32,10 +32,5 @@ size_t	get_strs_count(char **split);
 
 /** helper function. free char** strings */
 void	free_split_char(char **split);
-
-void print_rt_data(t_device *device);
-void print_objs_iter(void *data);
-
-
 
 #endif /** helper.h */
