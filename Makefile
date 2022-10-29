@@ -75,7 +75,8 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 # MYAPP-DIRECTORY
 MINIRT_DIR					= raytracer
 MINIRT_SRC					= main helper_1 helper_2 input_helper\
-							  update trace_ray\
+							  update thread_update\
+							  trace_ray\
 
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
 MINIRT_OBJECTS_SRC          = object camera ray\

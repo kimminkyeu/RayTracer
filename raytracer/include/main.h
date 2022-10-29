@@ -21,6 +21,16 @@
 # include "camera.h"
 # include "texture.h"
 
+extern void copy_pixel_buffer_to_screen_image(t_device *device);
+
+extern void *thread_update(void *arg);
+
+extern void create_thread_and_update_each(t_device *device);
+
+extern bool is_high_resolution_mode(t_device *device);
+
+extern void fill_low_resolution_pixel(t_device *device, int x, int y, int argb);
+
 extern int	update(t_device *device);
 
 #endif /* MAIN_H */
