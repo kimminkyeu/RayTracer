@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:44:22 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/24 23:38:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/29 21:42:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_camera {
 	t_vec3	right_direction;
 	t_vec3  projection_screen_center;
 	float   camera_length;
+	t_vec2	rotation_delta;
 }	t_camera;
 
 void	update_camera_geometry(t_device *device);
