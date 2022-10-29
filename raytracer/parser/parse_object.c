@@ -105,6 +105,7 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 		{
 			str = ft_strjoin(IMAGE_FILE_LOACATION, split[0]);
 			object->diffuse_texture = new_texture(device, str);
+			free(str);
 		}
 		if (get_strs_count(split) == 2)
 		{
