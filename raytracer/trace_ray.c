@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 22:57:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 12:07:52 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/30 12:54:35 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +221,10 @@ t_vec3	calcalate_specular(const t_ray *ray, t_hit hit, t_light *light, t_vec3 hi
 t_vec3 calculate_phong(t_device *device, const t_ray *ray, t_hit hit, t_light *light)
 {
 	const t_vec3	hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(light->pos, hit.point));
-	const t_vec		ambient_color = calcuate_ambient(device, hit);
-	t_vec			diffuse_color;
-	t_vec			specular_color;
-	t_vec			phong_color;
+	const t_vec3		ambient_color = calcuate_ambient(device, hit);
+	t_vec3		diffuse_color;
+	t_vec3			specular_color;
+	t_vec3			phong_color;
 
 	phong_color = gl_vec3_1f(0.0f);
 	if (!is_in_shadow(device, hit, light, hit_point_to_light))
