@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 22:57:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 12:54:35 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/30 14:14:47 by kyeu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,35 @@ bool is_in_shadow(t_device *device, t_hit hit, t_light *light, const t_vec3 hit_
 		return (true);
 }
 
+/* Test code */
+t_vec3	calculate_diffuse_2(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
+{
+	const float	_diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f) * light->brightness_ratio;
+	t_vec3		diffuse_final;
+	t_vec3		sample_diffuse;
+
+	diffuse_final = gl_vec3_multiply_scalar(light->color, _diff);
+	if (hit.obj->diffuse_texture != NULL)
+	{
+		if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
+			sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, false);
+		else
+			sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, false);
+		diffuse_final.r *= sample_diffuse.r;
+		diffuse_final.g *= sample_diffuse.g;
+		diffuse_final.b *= sample_diffuse.b;
+	}
+	else
+	{
+		const t_vec3 diffuse = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+		diffuse_final.r *= diffuse.r / 255.0f;
+		diffuse_final.g *= diffuse.g / 255.0f;
+		diffuse_final.b *= diffuse.b / 255.0f;
+
+	}
+	return (diffuse_final);
+}
+
 /** Calculate Diffuse color */
 t_vec3	calculate_diffuse(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
 {
@@ -229,7 +258,11 @@ t_vec3 calculate_phong(t_device *device, const t_ray *ray, t_hit hit, t_light *l
 	phong_color = gl_vec3_1f(0.0f);
 	if (!is_in_shadow(device, hit, light, hit_point_to_light))
 	{	
-		diffuse_color = calculate_diffuse(hit, light, hit_point_to_light);
+		/** diffuse_color = calculate_diffuse(hit, light, hit_point_to_light); */
+
+		diffuse_color = calculate_diffuse_2(hit, light, hit_point_to_light);
+
+
 		specular_color = calcalate_specular(ray, hit, light, hit_point_to_light);
 		phong_color = gl_vec3_add_vector(diffuse_color, ambient_color);
 		phong_color = gl_vec3_multiply_scalar(phong_color, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
