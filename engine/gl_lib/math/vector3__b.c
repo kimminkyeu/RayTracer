@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 12:19:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 12:19:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 21:32:25 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ t_vec3	gl_vec3_subtract_vector(t_vec3 v1, t_vec3 v2)
 t_vec3	gl_vec3_multiply_scalar(t_vec3 v, float scalar)
 {
 	return (gl_vec3_3f(v.x * scalar, v.y * scalar, v.z * scalar));
+}
+
+t_vec3 gl_vec3_multiply_vector(t_vec3 v1,t_vec3 v2)
+{
+	return (gl_vec3_3f(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
 }
 
 /** helper function for gl_clamp */

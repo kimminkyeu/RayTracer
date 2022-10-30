@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 22:57:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 14:14:47 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/30 22:21:26 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ t_vec3 super_sampling_anti_aliasing(t_image *img, t_vec3 pixel_pos_world, const 
 		return (do_recur_super_sampling(img, pixel_pos_world, sub_dx, super_sampling_recursive_level));
 }
 
-/** (1) Calcaultate Ambient texture 
+/** (1) Calcaultate Ambient texture
  *		: used bilinear interpolation for texture sampling. */
 t_vec3	calcuate_ambient(t_device *device, t_hit hit)
 {
@@ -149,9 +149,7 @@ t_vec3	calcuate_ambient(t_device *device, t_hit hit)
 			sample_ambient = sample_point(hit.obj->diffuse_texture, hit.uv, false);
 		else
 			sample_ambient = sample_linear(hit.obj->diffuse_texture, hit.uv, false);
-		ambient_color.r *= sample_ambient.b;
-		ambient_color.g *= sample_ambient.g;
-		ambient_color.b *= sample_ambient.r;
+		return (gl_vec3_multiply_vector(ambient_color, sample_ambient));
 	}
 	else
 	{
@@ -178,12 +176,13 @@ bool is_in_shadow(t_device *device, t_hit hit, t_light *light, const t_vec3 hit_
 		return (true);
 }
 
-/* Test code */
-t_vec3	calculate_diffuse_2(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
+/** Calculate Diffuse color */
+t_vec3	calculate_diffuse(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
 {
 	const float	_diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f) * light->brightness_ratio;
 	t_vec3		diffuse_final;
 	t_vec3		sample_diffuse;
+	t_vec3		diffuse;
 
 	diffuse_final = gl_vec3_multiply_scalar(light->color, _diff);
 	if (hit.obj->diffuse_texture != NULL)
@@ -192,13 +191,11 @@ t_vec3	calculate_diffuse_2(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
 			sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, false);
 		else
 			sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, false);
-		diffuse_final.r *= sample_diffuse.r;
-		diffuse_final.g *= sample_diffuse.g;
-		diffuse_final.b *= sample_diffuse.b;
+		return (gl_vec3_multiply_vector(diffuse_final, sample_diffuse));
 	}
 	else
 	{
-		const t_vec3 diffuse = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
+		diffuse = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
 		diffuse_final.r *= diffuse.r / 255.0f;
 		diffuse_final.g *= diffuse.g / 255.0f;
 		diffuse_final.b *= diffuse.b / 255.0f;
@@ -207,38 +204,12 @@ t_vec3	calculate_diffuse_2(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
 	return (diffuse_final);
 }
 
-/** Calculate Diffuse color */
-t_vec3	calculate_diffuse(t_hit hit, t_light *light, t_vec3 hit_point_to_light)
-{
-	const float	_diff = max_float(gl_vec3_dot(hit.normal, hit_point_to_light), 0.0f) * light->brightness_ratio;
-	t_vec3		diffuse_final;
-	t_vec3		sample_diffuse;
-
-	diffuse_final = gl_vec3_1f(0.0f);
-	if (hit.obj->diffuse_texture != NULL)
-	{
-		if (hit.obj->diffuse_texture->type == TEXTURE_CHECKER)
-			sample_diffuse = sample_point(hit.obj->diffuse_texture, hit.uv, true);
-		else
-			sample_diffuse = sample_linear(hit.obj->diffuse_texture, hit.uv, true);
-		diffuse_final.r = _diff * sample_diffuse.b;
-		diffuse_final.g = _diff * sample_diffuse.g;
-		diffuse_final.b = _diff * sample_diffuse.r;
-	}
-	else
-	{
-		diffuse_final = gl_vec3_multiply_scalar(hit.obj->material.diffuse, _diff);
-		diffuse_final = gl_vec3_add_vector(diffuse_final, gl_vec3_multiply_scalar(light->color, _diff));
-	}
-	return (diffuse_final);
-}
-
-/** (4-1) Calculate Specular [ 2 * (N . L)N - L ] */
+/** Calculate Specular [ 2 * (N . L)N - L ] */
 t_vec3	calcalate_specular(const t_ray *ray, t_hit hit, t_light *light, t_vec3 hit_point_to_light)
 {
 	const t_vec3	spec_reflection_dir = gl_vec3_subtract_vector(gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(hit_point_to_light, hit.normal)), 2.0f), hit_point_to_light);
 	const float		_spec = powf(max_float(gl_vec3_dot(gl_vec3_reverse(ray->direction), spec_reflection_dir), 0.0f), hit.obj->material.alpha * light->brightness_ratio);
-	const t_vec3	specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.obj->material.specular, _spec), hit.obj->material.ks);
+	const t_vec3	specular_final = gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(light->color, _spec), hit.obj->material.ks);
 
 	return (gl_vec3_multiply_scalar(specular_final, light->brightness_ratio));
 }
@@ -250,29 +221,25 @@ t_vec3	calcalate_specular(const t_ray *ray, t_hit hit, t_light *light, t_vec3 hi
 t_vec3 calculate_phong(t_device *device, const t_ray *ray, t_hit hit, t_light *light)
 {
 	const t_vec3	hit_point_to_light = gl_vec3_normalize(gl_vec3_subtract_vector(light->pos, hit.point));
-	const t_vec3		ambient_color = calcuate_ambient(device, hit);
-	t_vec3		diffuse_color;
+	t_vec3			diffuse_color;
 	t_vec3			specular_color;
 	t_vec3			phong_color;
 
-	phong_color = gl_vec3_1f(0.0f);
+	phong_color = calcuate_ambient(device, hit);
 	if (!is_in_shadow(device, hit, light, hit_point_to_light))
-	{	
-		/** diffuse_color = calculate_diffuse(hit, light, hit_point_to_light); */
-
-		diffuse_color = calculate_diffuse_2(hit, light, hit_point_to_light);
-
-
+	{
+		diffuse_color = calculate_diffuse(hit, light, hit_point_to_light);
+		phong_color = gl_vec3_add_vector(diffuse_color, phong_color);
 		specular_color = calcalate_specular(ray, hit, light, hit_point_to_light);
-		phong_color = gl_vec3_add_vector(diffuse_color, ambient_color);
 		phong_color = gl_vec3_multiply_scalar(phong_color, 1.0f - hit.obj->material.reflection - hit.obj->material.transparency);
 		phong_color = gl_vec3_add_vector(phong_color, specular_color);
 	}
 	return (phong_color);
 }
 
-// d - 2( n . d )n
-// move ray slightly to it's direction to avoid early hit.
+/** Reflected ray dir : [ d - 2( n . d )n ]
+ *  move ray slightly to it's direction to avoid early hit.
+ * */
 t_vec3 calculate_reflection(t_device *device, const t_ray *ray, t_hit hit, const int reflection_recursive_level)
 {
 	const t_vec3	reflected_ray_dir = gl_vec3_subtract_vector(ray->direction, (gl_vec3_multiply_scalar(gl_vec3_multiply_scalar(hit.normal, gl_vec3_dot(ray->direction, hit.normal)), 2.0f)));
@@ -282,55 +249,62 @@ t_vec3 calculate_reflection(t_device *device, const t_ray *ray, t_hit hit, const
 	return (gl_vec3_multiply_scalar(reflected_color, hit.obj->material.reflection));
 }
 
+/** TODO:  Understand Math here! */
+t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
+{
+	const float cosTheta1 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
+	const float sinTheta1 = sqrtf(1.0f - cosTheta1 * cosTheta1);
+	const float sinTheta2 = sinTheta1 / eta ;
+	const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
+
+	const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
+	const t_vec3 m_1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction);
+	const t_vec3 m = gl_vec3_normalize(m_1);
+
+	const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
+	const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
+	return (gl_vec3_normalize(gl_vec3_add_vector(A, B)));
+}
+
 /** [ How to Calcaute Refraction ]
- * ------------------------------------------------------------------------
+ * 	Check photo of real transparent object later!
+ *
  * (1) https://samdriver.xyz/article/refraction-sphere
  * (2) https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
  * (3) https://web.cse.ohio-state.edu/~shen.94/681/Site/Slides_files/reflection_refraction.pdf
- * (4) https://lifeisforu.tistory.com/384 
+ * (4) https://lifeisforu.tistory.com/384
  * -------------------------------------------------------------------------
- *  use [ cos^2 + sin^2 = 1 ] to calculate refracted direction.
  *
  *  IOR : Index of Refraction (Glass 1.5 | Water 1.3).
  *  eta : sinThera1 / sinTheta2
  *
+ *  Use [ cos^2 + sin^2 = 1 ] to calculate refracted direction.
  *  if ray is going inside the object, then (eta = IOR)
  *  if ray is going outside of the object, then (eta = 1.0f / IOR)
- *  
+ *
+ *  TODO:  Fresenel + Caustics
  */
 t_vec3 calculate_refraction(t_device *device, const t_ray *ray, t_hit hit, const int reflection_recursive_level)
 {
-		const float	ior = 1.5f;
 		float		eta;
 		t_vec3		normal;
+		t_vec3		refracted_direction;
+		t_ray		refracted_ray;
+		t_vec3		refracted_color;
 
 		if (gl_vec3_dot(ray->direction, hit.normal) < 0.0f)
 		{
-			eta = ior;
+			eta = hit.obj->material.ior;
 			normal = hit.normal;
 		}
 		else
 		{
-			eta = 1.0f / ior;
+			eta = 1.0f / hit.obj->material.ior;
 			normal = gl_vec3_reverse(hit.normal);
 		}
-
-		const float cosTheta1 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
-		const float sinTheta1 = sqrtf(1.0f - cosTheta1 * cosTheta1) ; // cos^2 + sin^2 = 1
-		const float sinTheta2 = sinTheta1 / eta ;
-		const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
-
-		const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
-		const t_vec3 m_1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction);
-		const t_vec3 m = gl_vec3_normalize(m_1);
-
-		const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
-		const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
-		const t_vec3 refracted_direction = gl_vec3_normalize(gl_vec3_add_vector(A, B)); // Transmission
-
-		t_vec3 offset = gl_vec3_multiply_scalar(refracted_direction, 0.0001f);
-		t_ray refraction_ray = create_ray(gl_vec3_add_vector(hit.point, offset), refracted_direction);
-		const t_vec3 refracted_color = trace_ray(device, &refraction_ray, reflection_recursive_level - 1);
+		refracted_direction = get_refracted_direction(ray, eta, normal);
+		refracted_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(refracted_direction, 0.0001f)), refracted_direction);
+		refracted_color = trace_ray(device, &refracted_ray, reflection_recursive_level - 1);
 		return (gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
 }
 

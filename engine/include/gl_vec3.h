@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 13:48:41 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:51:59 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 21:33:43 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,10 @@ extern t_vec3	gl_vec3_subtract_vector(t_vec3 v1, t_vec3 v2);
 
 /* returns (v1 * scalar) */
 extern t_vec3	gl_vec3_multiply_scalar(t_vec3 v, float scalar);
+
+/** Multiply each element.
+ * (v1.x * v2.x, v1.y * v2.y, v3.z * v3.z) */
+extern t_vec3 gl_vec3_multiply_vector(t_vec3 v1,t_vec3 v2);
 
 /* Returns min(max(x, minVal), maxVal) for each component
 in x using the floating-point values minVal and maxVal.
