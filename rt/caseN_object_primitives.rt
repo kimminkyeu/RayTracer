@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/31 01:55:14 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/31 02:09:40 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,11 +36,11 @@ A   0.1               255,255,255
 
 #*  [ Camera ]
 #   position          loot_at(dir)       up_dir           FOV(0~180)
-C   0.0,0.0,8.0       0.0,0.0,-1.0       0.0,1.0,0.0      45
+C   0.0,0.0,8.0       0.0,0.0,-1.0       0.0,1.0,0.0      60
 
 #*  [ Light ]
 #   pos               intensity     color
-L   0.0,5.0,2.0       0.9           255,255,255
+L   0.0,4.0,2.0       0.9           255,255,255
 
 #*  [ Sphere ]
 #   center            radius                           +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
@@ -50,10 +50,11 @@ L   0.0,5.0,2.0       0.9           255,255,255
 
 #*  [ Cylinder ]
 #   pos               orientation     radius   height  +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
+cy  -1.5,-2.0,0.0       0.0,1.0,0.0     1.0     2.0       255,0,0            10.0
 
 #*  [ Cone ]
 #   pos               orientation     radius   height  +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
-co  0.0,-2.0,0.0       0.0,1.0,0.0     1.0      2.0        255,0,0            10.0
+co  1.5,-2.0,0.0       0.0,1.0,0.0     1.0      3.0        0,255,0            10.0
 
 #*---------------------------------*
 #*  NOTE:   Vertax Clockwise Order |
