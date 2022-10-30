@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/28 20:58:04 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/30 22:45:13 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,9 +74,10 @@ ENGINE_SRCS = $(addsuffix .c, $(addprefix $(ENGINE_CORE_DIR)/, $(ENGINE_CORE_SRC
 
 # MYAPP-DIRECTORY
 MINIRT_DIR					= raytracer
-MINIRT_SRC					= main helper_1 helper_2 input_helper\
-							  update thread_update\
-							  trace_ray\
+MINIRT_SRC					= main update thread_update\
+
+MINIRT_TRACE_RAY_DIR		= $(MINIRT_DIR)/trace_ray
+MINIRT_TRACE_RAY_SRC		= anti_aliasing trace_ray phong_shading reflection refraction\
 
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
 MINIRT_OBJECTS_SRC          = object camera ray\
@@ -88,10 +89,16 @@ MINIRT_PARSER_DIR		    = $(MINIRT_DIR)/parser
 MINIRT_PARSER_SRC           = ft_atof ft_lscanf ft_lscanf_utils\
                               parse_rt_file_to_device parse_setting parse_object
 
+MINIRT_HELPER_DIR		    = $(MINIRT_DIR)/helper
+MINIRT_HELPER_SRC			= helper_1 helper_2 input_helper\
+
+
 # MYAPP-SOURCE AL
 MINIRT_SRCS  = $(addsuffix .c, $(addprefix $(MINIRT_DIR)/, $(MINIRT_SRC))) \
                $(addsuffix .c, $(addprefix $(MINIRT_PARSER_DIR)/, $(MINIRT_PARSER_SRC))) \
                $(addsuffix .c, $(addprefix $(MINIRT_OBJECTS_DIR)/, $(MINIRT_OBJECTS_SRC))) \
+               $(addsuffix .c, $(addprefix $(MINIRT_HELPER_DIR)/, $(MINIRT_HELPER_SRC))) \
+               $(addsuffix .c, $(addprefix $(MINIRT_TRACE_RAY_DIR)/, $(MINIRT_TRACE_RAY_SRC))) \
 
 SRC = $(ENGINE_SRCS) $(MINIRT_SRCS)
 

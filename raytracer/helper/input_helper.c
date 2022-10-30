@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 20:56:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/29 22:53:46 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 22:28:50 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "gl_matrix.h"
 #include "gl_vec2.h"
 #include "gl_vec4.h"
-#include "include/main.h"
+#include "main.h"
 #include "gl_vec3.h"
 #include "helper.h"
 #include "libft.h"
