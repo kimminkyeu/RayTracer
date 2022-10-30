@@ -6,13 +6,31 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 22:35:45 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 22:35:53 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 01:48:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "trace_ray.h"
 
+t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
+{
+	const float cosTheta1 = gl_vec3_dot(\
+		gl_vec3_reverse(ray->direction), normal);
+	const float sinTheta2 = sqrtf(1.0f - cosTheta1 * cosTheta1) / eta ;
+	const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
+	const t_vec3 A = gl_vec3_multiply_scalar(\
+		gl_vec3_normalize(gl_vec3_add_vector(gl_vec3_multiply_scalar(\
+			normal, gl_vec3_dot(normal, gl_vec3_reverse(\
+				ray->direction))), ray->direction)), sinTheta2);
+	const t_vec3 B = gl_vec3_multiply_scalar(\
+		gl_vec3_reverse(normal), cosTheta2);
+
+	return (gl_vec3_normalize(gl_vec3_add_vector(A, B)));
+}
+
+
 /** TODO:  Understand Math here! */
+/*
 t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
 {
 	const float cosTheta1 = gl_vec3_dot(gl_vec3_reverse(ray->direction), normal);
@@ -28,6 +46,7 @@ t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
 	const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
 	return (gl_vec3_normalize(gl_vec3_add_vector(A, B)));
 }
+*/
 
 /** [ How to Calcaute Refraction ]
  * 	Check photo of real transparent object later!
@@ -47,7 +66,8 @@ t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
  *
  *  TODO:  Fresenel + Caustics
  */
-t_vec3 calculate_refraction(t_device *device, const t_ray *ray, t_hit hit, const int reflection_recursive_level)
+t_vec3 calculate_refraction(t_device *device, const t_ray *ray, \
+							t_hit hit, const int reflection_recursive_level)
 {
 		float		eta;
 		t_vec3		normal;

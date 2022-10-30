@@ -6,10 +6,11 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 16:36:46 by kyeu             ###   ########.fr       */
+/*   Updated: 2022/10/31 01:06:37 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "gl_vec3.h"
 #include "parser.h"
 
 /**       NOTE:  [ Ambient Light ]
@@ -175,6 +176,7 @@ void	parse_plane(t_device *device, char *line)
 
 	if (cnt < 6)
 		print_error_and_exit(device, "parse_plane(): .rt file error\n");
+	pl->normal = gl_vec3_normalize(pl->normal);
 	device->objects->push_back(device->objects, obj);
 }
 
@@ -201,6 +203,7 @@ void	parse_cylinder(t_device *device, char *line)
 
 	if (cnt < 8)
 		print_error_and_exit(device, "parse_cylinder(): .rt file error\n");
+	cy->orientation = gl_vec3_normalize(cy->orientation);
 	device->objects->push_back(device->objects, obj);
 }
 
@@ -227,6 +230,7 @@ void parse_cone(t_device *device, char *line)
 
 	if (cnt < 8)
 		print_error_and_exit(device, "parse_cone(): .rt file error\n");
+	co->orientation = gl_vec3_normalize(co->orientation);
 	device->objects->push_back(device->objects, obj);
 }
 

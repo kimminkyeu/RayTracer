@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 19:09:25 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 01:53:16 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ t_vec3 get_clamped(t_texture *texture, int i, int j)
 	const float r = point.r / 255.0f; // 기존 ambient_color에 나중에 곱해서, 그 값만큼 색을 바꿈. --> 홍정모 코드의 색은 0 ~ 255.0 사이.
 	const float g = point.g / 255.0f;
 	const float b = point.b / 255.0f;
-	return gl_vec3_3f(r, g, b);
+	return gl_vec3_3f(b, g, r);
 }
 
 t_vec3 get_clamped_raw(t_texture *texture, int i, int j)
@@ -127,7 +127,7 @@ t_vec3 get_clamped_raw(t_texture *texture, int i, int j)
 	const float r = point.r; // 기존 ambient_color에 나중에 곱해서, 그 값만큼 색을 바꿈. --> 홍정모 코드의 색은 0 ~ 255.0 사이.
 	const float g = point.g;
 	const float b = point.b;
-	return gl_vec3_3f(r, g, b);
+	return gl_vec3_3f(b, g, r);
 }
 
 t_vec3 sample_point(t_texture *texture, const t_vec2 uv, int is_raw)
@@ -170,7 +170,7 @@ t_vec3 get_wrapped(t_texture *texture, int i, int j)
 	const float g = point.g / 255.0f;
 	const float b = point.b / 255.0f;
 
-	return gl_vec3_3f(r, g, b);
+	return gl_vec3_3f(b, g, r);
 }
 
 t_vec3 get_wrapped_raw(t_texture *texture, int i, int j)
@@ -187,7 +187,7 @@ t_vec3 get_wrapped_raw(t_texture *texture, int i, int j)
 	const float r = point.r;
 	const float g = point.g;
 	const float b = point.b;
-	return gl_vec3_3f(r, g, b);
+	return gl_vec3_3f(b, g, r);
 }
 
 /* Used in sample_linear(). linear를 두번 반복하면, bilinear가 된다.*/
