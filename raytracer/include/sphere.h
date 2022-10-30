@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 14:55:47 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/19 02:51:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 23:11:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct s_sphere {
 	float	radius;
 }	t_sphere;
 
-extern t_hit	sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere);
+extern t_hit	sphere_intersect_ray_collision(const t_ray *ray, \
+												t_sphere *sphere);
 
 #endif /** sphere.h */

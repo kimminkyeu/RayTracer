@@ -6,15 +6,15 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:42:24 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 15:24:00 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 23:11:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAY_H
 # define RAY_H
 
-#include "gl_vec3.h"
-#include "hit.h"
+# include "gl_vec3.h"
+# include "hit.h"
 
 typedef struct s_ray {
 	t_vec3	origin;

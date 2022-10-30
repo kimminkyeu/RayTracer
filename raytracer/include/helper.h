@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:11:16 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/14 16:01:04 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 23:03:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ float	min_float(float f1, float f2);
 float	max_float(float f1, float f2);
 float	abs_float(float f);
 
-int 	clamp_int(int i, int min, int max);
+int		clamp_int(int i, int min, int max);
 
 /** helper function. */
 void	print_error_and_exit(t_device *device, char *str);

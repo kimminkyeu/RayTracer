@@ -1,33 +1,45 @@
-#ifndef OBJECT_H
-# define OBJECT_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   objects.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/30 23:03:53 by minkyeki          #+#    #+#             */
+/*   Updated: 2022/10/30 23:05:42 by minkyeki         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "libft.h"
-#include "gl_vec3.h"
-#include "gl_vec2.h"
+#ifndef OBJECTS_H
+# define OBJECTS_H
 
-#include "triangle.h"
-#include "square.h"
-#include "plane.h"
+# include "libft.h"
+# include "gl_vec3.h"
+# include "gl_vec2.h"
 
-#include "sphere.h"
-#include "cone.h"
-#include "cylinder.h"
+# include "triangle.h"
+# include "square.h"
+# include "plane.h"
 
-#include "lights.h"
-#include "camera.h"
+# include "sphere.h"
+# include "cone.h"
+# include "cylinder.h"
 
-typedef struct s_texture t_texture;
+# include "lights.h"
+# include "camera.h"
+
+typedef struct s_texture	t_texture;
 
 /* ---------------------------------
 		Objects type-definition
    --------------------------------- */
-#define TYPE_NO_HIT		(0)
-#define TYPE_SPHERE		(1)
-#define TYPE_PLANE		(2)
-#define TYPE_CYLINDER	(3)
-#define TYPE_CONE		(4)
-#define TYPE_TRIANGLE   (5)
-#define TYPE_SQUARE   	(6)
+# define TYPE_NO_HIT		(0)
+# define TYPE_SPHERE		(1)
+# define TYPE_PLANE			(2)
+# define TYPE_CYLINDER		(3)
+# define TYPE_CONE			(4)
+# define TYPE_TRIANGLE		(5)
+# define TYPE_SQUARE   		(6)
 
 typedef struct s_material {
 	t_vec3	diffuse;
@@ -36,11 +48,10 @@ typedef struct s_material {
 	float	alpha;
 	float	reflection;
 	float	transparency;
-	float 	ior;
+	float	ior;
 }	t_material;
 
 typedef struct s_object {
-
 	t_material	material;
 	int			type;
 	void		*obj_data;
@@ -48,7 +59,7 @@ typedef struct s_object {
 	t_texture	*normal_texture;
 }	t_object;
 
-extern t_object *custom_allocator_for_object(int obj_type);
+extern t_object	*custom_allocator_for_object(int obj_type);
 
 extern void		custom_deallocator_for_object(void *data);
 

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 20:56:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 22:28:50 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 23:01:40 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,16 @@ bool	is_key_pressed_2(t_device *device, t_camera *const camera)
  */
 t_mat4x4	get_rotation_matrix(t_camera *const camera, t_vec2 delta)
 {
-	t_mat4x4	y_axis_rotation;
-	t_mat4x4	x_axis_rotation;
-	t_mat4x4	to_origin;
-	t_mat4x4	to_origin_reverse;
-	t_mat4x4	rotation_matrix;
+	const t_mat4x4	y_axis_rotation = gl_mat4x4_rotate_y_axis(delta.x);
+	const t_mat4x4	x_axis_rotation = gl_mat4x4_rotate_x_axis(-delta.y);
+	t_mat4x4		to_origin;
+	t_mat4x4		to_origin_reverse;
+	t_mat4x4		rotation_matrix;
 
-    y_axis_rotation = gl_mat4x4_rotate_y_axis(delta.x);
-    x_axis_rotation = gl_mat4x4_rotate_x_axis(-delta.y);
 	to_origin = gl_mat4x4_rotate_y_axis(-(camera->rotation_delta.x));
 	to_origin_reverse = gl_mat4x4_rotate_y_axis(camera->rotation_delta.x);
 	rotation_matrix = gl_mat4x4_multiply(y_axis_rotation, x_axis_rotation);
-    rotation_matrix = gl_mat4x4_multiply(rotation_matrix, to_origin);
+	rotation_matrix = gl_mat4x4_multiply(rotation_matrix, to_origin);
 	rotation_matrix = gl_mat4x4_multiply(to_origin_reverse, rotation_matrix);
 	return (rotation_matrix);
 }

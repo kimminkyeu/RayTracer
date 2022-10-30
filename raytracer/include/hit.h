@@ -6,17 +6,17 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 18:32:46 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/17 22:00:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 23:06:58 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HIT_H
 # define HIT_H
 
-#include "gl_vec3.h"
-#include "gl_vec2.h"
+# include "gl_vec3.h"
+# include "gl_vec2.h"
 
-typedef struct s_object t_object;
+typedef struct s_object	t_object;
 
 typedef struct s_hit {
 	float		distance;
@@ -28,6 +28,6 @@ typedef struct s_hit {
 
 }	t_hit;
 
-extern t_hit create_hit(float distance, t_vec3 normal, t_vec3 point);
+extern t_hit	create_hit(float distance, t_vec3 normal, t_vec3 point);
 
 #endif /** hit.h */

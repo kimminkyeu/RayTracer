@@ -6,26 +6,26 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:28:24 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 15:40:13 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/30 23:07:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSER_H
 # define PARSER_H
 
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <fcntl.h>
 
-#include "libft.h"
-#include "mlx_linux.h"
-#include "vector.h"
-#include "gl_device.h"
-#include "gl_engine.h"
-#include "main.h"
-#include "texture.h"
+# include "libft.h"
+# include "mlx_linux.h"
+# include "vector.h"
+# include "gl_device.h"
+# include "gl_engine.h"
+# include "main.h"
+# include "texture.h"
 
-#define IMAGE_FILE_LOACATION ("./raytracer/image/")
+# define IMAGE_FILE_LOACATION ("./raytracer/image/")
 
 /** scanf function by sungjpar */
 extern int	ft_lscanf(char *line, char *format, ...);
