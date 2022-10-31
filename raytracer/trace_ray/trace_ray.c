@@ -6,12 +6,13 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 22:57:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 22:57:24 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/11/01 02:40:51 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "trace_ray.h"
 #include "gl_vec3.h"
+#include "texture.h"
 
 /* ---------------------------------------
  * |  NOTE:  Main Ray-tracing Algorithm  |

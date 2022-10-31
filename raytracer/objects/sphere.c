@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 21:58:44 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/11/01 02:40:19 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 #define PI (3.141592)
 
-static t_vec3	calculate_determinant_d1_d2(
+static t_vec3	calculate_determinant_d1_d2(\
 		const t_ray *ray, t_sphere *sphere)
 {
 	float			d[3];
@@ -36,6 +36,12 @@ static t_vec3	calculate_determinant_d1_d2(
 	d[2] = (-b + sqrtf(determinant)) / 2.0f;
 	return (vec3_3f(d[0], d[1], d[2]));
 }
+
+/** [ Sphere Intersection ]
+ * --------------------------------------------------------
+ * http://raytracerchallenge.com/bonus/texture-mapping.html
+ * --------------------------------------------------------
+ */
 
 t_hit	sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere)
 {

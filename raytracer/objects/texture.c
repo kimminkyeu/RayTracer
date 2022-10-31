@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 17:56:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/11/01 02:42:18 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,19 @@ t_p4	p4(t_vec3 c00, t_vec3 c01, t_vec3 c10, t_vec3 c11)
 }
 
 t_vec3	interpolate_bilinear(
-		const float dx,
-		const float dy,
+		const float dx, \
+		const float dy, \
 		const t_p4 p4)
 {
 	const t_vec3	color_x0
-		= add3(mult3_scalar(p4.c00, 1.0f - dx), mult3_scalar(p4.c10, dx));
+		= add3(mult3_scalar(p4.c00, 1.0f - dx), \
+			mult3_scalar(p4.c10, dx));
 	const t_vec3	color_x1
-		= add3(mult3_scalar(p4.c01, 1.0f - dx), mult3_scalar(p4.c11, dx));
+		= add3(mult3_scalar(p4.c01, 1.0f - dx), \
+			mult3_scalar(p4.c11, dx));
 	const t_vec3	color_y
-		= add3(mult3_scalar(color_x0, 1.0f - dy), mult3_scalar(color_x1, dy));
+		= add3(mult3_scalar(color_x0, 1.0f - dy), \
+			mult3_scalar(color_x1, dy));
 
 	return (color_y);
 }
@@ -78,26 +81,25 @@ t_vec3	sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 					get_wrapped_raw(texture, i + 1, j + 1))));
 }
 
+/** https://learnopengl.com/Advanced-Lighting/Normal-Mapping */
 t_vec3	sample_normal_map(const t_hit *hit)
 {
 	const t_vec3	rgb = sample_point(hit->obj->normal_texture, \
 		hit->uv, false);
 	t_vec3			derivative;
-	t_vec3			bitangent_result;
-	t_vec3			normal_result;
-	t_vec3			final_normal;
+	t_vec3			b_normal_result;
+	t_vec3			g_bitangent_result;
+	t_vec3			r_tangent_result;
 
-	derivative.r = (rgb.r - 0.5f) * 2.0f;
-	derivative.g = (rgb.g - 0.5f) * 2.0f;
-	derivative.b = (rgb.b - 0.5f) * 2.0f;
-	bitangent_result = \
-		mult3_scalar(cross3(hit->normal, hit->tangent), derivative.x);
-	normal_result = mult3_scalar(hit->normal, derivative.z);
-	final_normal = add3(normal_result, \
-		mult3_scalar(hit->tangent, derivative.y));
-	final_normal = add3(final_normal, bitangent_result);
-	final_normal = normal3(add3(final_normal, bitangent_result));
-	return (final_normal);
+	derivative.b = rgb.b * 2.0f - 1.0f;
+	derivative.g = rgb.g * 2.0f - 1.0f;
+	derivative.r = rgb.r * 2.0f - 1.0f;
+	b_normal_result = mult3_scalar(hit->normal, derivative.b);
+	g_bitangent_result = mult3_scalar(cross3(hit->normal, hit->tangent), \
+										derivative.g);
+	r_tangent_result = mult3_scalar(hit->tangent, derivative.r);
+	return (normal3(add3(add3(b_normal_result, g_bitangent_result), \
+										r_tangent_result)));
 }
 
 t_vec3	sample_point(t_texture *texture, const t_vec2 uv, int is_raw)

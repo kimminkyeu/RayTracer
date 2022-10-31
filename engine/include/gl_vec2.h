@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 14:23:51 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 11:54:15 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/11/01 00:03:22 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ extern t_vec2	add2_f(t_vec2 v, float f);
 /* returns (v1 - v2) */
 extern t_vec2	sub2(t_vec2 v1, t_vec2 v2);
 
-/* returns (v.x + f, v.y + f).
-    - add each component with the given float */
+/* returns (v.x - f, v.y - f).
+    - subtract each component with the given float */
 extern t_vec2	sub2_f(t_vec2 v1, float f);
 
 /* returns (v1 * scalar) */

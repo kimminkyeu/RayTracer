@@ -6,11 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 21:51:18 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 23:34:46 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "gl_vec3.h"
+#include "helper.h"
 #include "objects.h"
 #include "parser.h"
 
@@ -93,7 +94,7 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 	char	**split;
 
 	str = ft_strchr(line, '|');
-	if (str++ == NULL)
+	if (str == NULL)
 		return ;
 	str++;
 	str = ft_strtrim(str, "\n");
@@ -108,7 +109,7 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 		else
 			object->diffuse_texture = load_texture_file(device, split[0]);
 		if (get_strs_count(split) == 2)
-			object->diffuse_texture = load_texture_file(device, split[1]);
+			object->normal_texture = load_texture_file(device, split[1]);
 	}
 	free_split_char(split);
 }

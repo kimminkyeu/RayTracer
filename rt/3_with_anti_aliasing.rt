@@ -1,0 +1,81 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    case2_with_anti_aliasing.rt                        :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
+#    Updated: 2022/10/31 22:06:03 by minkyeki         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+#  TODO:   Cube-map 구현.
+#  TODO:   텍스쳐링 uv 수정.
+#  TODO:   Low_res에서 반사랑 Specular랑 그림자 투명 끄기.
+#  TODO:   R버튼 렌더모드 글자 추가.
+
+#*---------------------------------------------------------------------------*
+# * W   : Screen width                                                       |
+# * H   : height                                                             |
+# * RR  : Resolution_Ratio [ low 0.0 < RR <= 1.0 (maximum Resolution) ]      |
+# * TH  : Number Of Threads [ default:1, max:24 ]                            |
+# * AA  : AntialiasingLevel [ default:0, max:3 ]                             |
+# * RF  : ReflectionLevel [ default:5, 0 if no reflection ]                  |
+# * SKY : Background Color                                                   |
+#*---------------------------------------------------------------------------*
+Setting W:1200 H:800 RR:0.1 | TH:24 | AA:0 RF:5 | SKY:255,255,255
+
+
+
+#*---------------------------------------------------------------------------*
+#*   NOTE:  Forward direction is -1 [ Right Hand Rule - OpenGL ]             |
+#*---------------------------------------------------------------------------*
+
+#*  [ Ambient Light ]
+#   intensity	      color
+A   0.1               255,255,255
+
+#*  [ Camera ]
+#   position          loot_at(dir)       up_dir           FOV(0~180)
+C   0.0,0.0,8.0       0.0,0.0,-1.0       0.0,1.0,0.0      45
+
+#*  [ Light ]
+#   pos               intensity     color
+L   0.0,5.0,2.0       0.9           255,255,255
+
+#*  [ Sphere ]
+#   center            radius                           +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
+sp   0.0,0.0,-2.0      3.0                                 0,250,0             30.0     0.0         0.0            1.5                      |  checker
+
+
+#*  [ Plain ]
+#   xyzCoord          FaceNormal                       +  diffuseColor(rgb)   alpha    reflection  transparency  IOR(glass=1.5|water=1.3)   |  [X]
+
+#*  [ Cylinder ]
+#   pos               orientation     radius   height  +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
+
+#*  [ Cone ]
+#   pos               orientation     radius   height  +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
+
+#*---------------------------------*
+#*  NOTE:   Vertax Clockwise Order |
+#*---------------------------------*
+#*                                 |
+#*        v1            v2         |
+#*	       *------------*          |
+#*	       |          . |          |
+#*	       |   p   .    |          |
+#*	       |    .       |          |
+#*	       | .          |          |
+#*	       *------------*          |
+#*	      v0            v3         |
+#*                                 |
+#*---------------------------------*
+
+#*  [ Triangle ]
+#   vertex_0           vertax_1         vertax_2       +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM                       normalM
+
+#*  [ Square ]
+#   vertex_0           vertax_1         vertax_2          vertax_3          +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM                       normalM
+

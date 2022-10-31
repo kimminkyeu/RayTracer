@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 17:06:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 17:36:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 23:30:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "gl_draw.h"
 #include "gl_vec2.h"
 #include "gl_vec3.h"
+#include "mlx_linux.h"
 #include "texture.h"
 #include "main.h"
 
@@ -43,9 +44,9 @@ t_texture	*new_texture_checkerboard(t_device *device, int width, int height)
 {
 	t_texture	*texture;
 
-	texture = ft_calloc(1, sizeof(*texture));
-	if (device == NULL || texture == NULL)
+	if (device == NULL)
 		return (NULL);
+	texture = ft_calloc(1, sizeof(*texture));
 	texture->image.img_ptr = mlx_new_image(device->mlx, width, height);
 	texture->image.mlx_ptr = device->mlx;
 	if (texture->image.img_ptr == NULL)
@@ -84,15 +85,15 @@ t_texture	*new_texture(t_device *device, char *filename)
 	int			width;
 	int			height;
 
-	texture = ft_calloc(1, sizeof(*texture));
-	if (device == NULL || filename == NULL || texture == NULL)
+	printf("Loading file %s\n", filename);
+	if (device == NULL || filename == NULL)
 		return (NULL);
+	texture = ft_calloc(1, sizeof(*texture));
 	texture->type = TEXTURE_FILE;
 	filename_without_newline = ft_strtrim(filename, "\n");
 	texture->image.img_ptr
 		= mlx_xpm_file_to_image(device->mlx,
 			filename_without_newline, &width, &height);
-	texture->image.mlx_ptr = device->mlx;
 	free(filename_without_newline);
 	if (texture->image.img_ptr == NULL)
 	{
@@ -100,6 +101,7 @@ t_texture	*new_texture(t_device *device, char *filename)
 		free(texture);
 		return (NULL);
 	}
+	texture->image.mlx_ptr = device->mlx;
 	init_texture(texture, width, height);
 	return (texture);
 }

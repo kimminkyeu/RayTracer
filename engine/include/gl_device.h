@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 16:13:40 by kyeu              #+#    #+#             */
-/*   Updated: 2022/10/30 22:56:19 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:08:08 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_setting {
 	int		num_of_threads;
 	int		antialiasing_level;
 	int		reflection_level;
+	t_vec3	sky_color;
 }	t_setting;
 
 typedef struct s_device {

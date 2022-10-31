@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/31 17:45:11 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/31 21:52:00 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,7 +87,7 @@ MINIRT_OBJECTS_SRC          = object camera ray\
 
 MINIRT_PARSER_DIR		    = $(MINIRT_DIR)/parser
 MINIRT_PARSER_SRC           = ft_atof ft_lscanf ft_lscanf_utils\
-                              parse_rt_file_to_device parse_setting parse_object
+                              parse_rt_file_to_device parse_setting parse_object_a parse_object_b
 
 MINIRT_HELPER_DIR		    = $(MINIRT_DIR)/helper
 MINIRT_HELPER_SRC			= helper_1 helper_2 input_helper\
