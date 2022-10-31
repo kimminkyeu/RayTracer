@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 16:43:34 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 19:38:15 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 16:49:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,9 @@ float	get_area(t_vec3 vec1, t_vec3 vec2)
 
 t_vec3	get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point)
 {
-	const float		area0 = get_area(sub3(point, v2), \
-                                        sub3(v1, v2));
-	const float		area1 = get_area(sub3(point, v0), \
-                                        sub3(v2, v0));
-	const float		area2 = get_area(sub3(v1, v0), \
-                                        sub3(point, v0));
+	const float		area0 = get_area(sub3(point, v2), sub3(v1, v2));
+	const float		area1 = get_area(sub3(point, v0), sub3(v2, v0));
+	const float		area2 = get_area(sub3(v1, v0), sub3(point, v0));
 	const float		w0 = area0 / (area0 + area1 + area2);
 	const float		w1 = area1 / (area0 + area1 + area2);
 
