@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 14:35:05 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 15:30:12 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 16:54:28 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,19 @@ void	parse_rt_file_to_device(t_device *device, char *file)
 	char	*pa_line;
 
 	printf("File Name : %s\n", file);
-	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL && file[ft_strlen(file) - 3] == '.')
-		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
+	if (ft_strnstr(file, ".rt", ft_strlen(file)) == NULL \
+		&& file[ft_strlen(file) - 3] == '.')
+		print_error_and_exit(device, \
+		"parse_rt_file_to_device: .rt format error\n");
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		print_error_and_exit(device, "parse_rt_file_to_device: .rt format error\n");
+		print_error_and_exit(device, \
+		"parse_rt_file_to_device: .rt format error\n");
 	pa_line = get_next_line(fd);
 	while (pa_line != NULL)
 	{
-		if (pa_line[0] == '#' || (ft_strlen(pa_line) == 1 && pa_line[0] == '\n'))
+		if (pa_line[0] == '#' || (ft_strlen(pa_line) == 1 \
+			&& pa_line[0] == '\n'))
 		{
 			free(pa_line);
 			pa_line = get_next_line(fd);
