@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/13 15:06:16 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 17:36:35 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:59:23 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,17 @@ extern t_texture	*new_texture(t_device *device, char *filename);
 extern t_texture	*new_texture_checkerboard(t_device *device, int width, \
 												int height);
 
-void	fill_checker_board(t_texture *texture);
+extern void			fill_checker_board(t_texture *texture);
 
-void	init_texture(t_texture *texture, int width, int height);
+extern void			init_texture(t_texture *texture, int width, int height);
 
-t_vec3	get_clamped(t_texture *texture, int i, int j);
+extern t_vec3		get_clamped(t_texture *texture, int i, int j);
 
-t_vec3	get_clamped_raw(t_texture *texture, int i, int j);
+extern t_vec3		get_clamped_raw(t_texture *texture, int i, int j);
 
-t_vec3	get_wrapped(t_texture *texture, int i, int j);
+extern t_vec3		get_wrapped(t_texture *texture, int i, int j);
 
-t_vec3	get_wrapped_raw(t_texture *texture, int i, int j);
+extern t_vec3		get_wrapped_raw(t_texture *texture, int i, int j);
 
 /* Normal Mapping */
 extern t_vec3		sample_normal_map(const t_hit *hit);

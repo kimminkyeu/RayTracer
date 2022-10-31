@@ -6,10 +6,11 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 22:37:25 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 16:34:55 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 23:01:04 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "gl_vec3.h"
 #include "trace_ray.h"
 
 /** (1) Calcaultate Ambient texture
@@ -29,7 +30,7 @@ t_vec3	calcuate_ambient(t_device *device, t_hit hit)
 		else
 			sample_ambient = sample_linear(hit.obj->diffuse_texture, \
 											hit.uv, false);
-		return (mult3(ambient_color, sample_ambient));
+		ambient_color = mult3(ambient_color, sample_ambient);
 	}
 	else
 	{
@@ -37,7 +38,8 @@ t_vec3	calcuate_ambient(t_device *device, t_hit hit)
 		ambient_color.g *= (hit.obj->material.diffuse.g / 255.0f);
 		ambient_color.b *= (hit.obj->material.diffuse.b / 255.0f);
 	}
-	return (ambient_color);
+	return (mult3_scalar(ambient_color, \
+		1.0f - hit.obj->material.reflection - hit.obj->material.transparency));
 }
 
 /** check if hit_point is inside the shadow area. */

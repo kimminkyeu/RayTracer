@@ -6,11 +6,12 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 22:57:12 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 16:46:34 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:57:24 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "trace_ray.h"
+#include "gl_vec3.h"
 
 /* ---------------------------------------
  * |  NOTE:  Main Ray-tracing Algorithm  |
@@ -26,12 +27,10 @@ t_vec3	trace_ray(t_device *device, const t_ray *ray, \
 		return (vec3_1f(0.0f));
 	hit = find_closet_collision(device, ray);
 	if (hit.distance >= 0.0f)
-	{
 		return (calculate_pixel_color(device, ray, hit, \
 						reflection_recursive_level));
-	}
 	else
-		return (vec3_1f(0.0f));
+		return (device->renderer_settings.sky_color);
 }
 
 t_hit	find_closet_collision(t_device *device, const t_ray *ray)

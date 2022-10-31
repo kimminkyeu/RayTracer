@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:28:24 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 17:48:12 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:29:08 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ extern int	ft_lscanf(char *line, char *format, ...);
 extern void	parse_rt_file_to_device(t_device *device, char *file);
 
 /* parser for each object */
+extern void	parse_each(t_device *device, char *line);
 extern void	parse_renderer_setting(t_device *device, char *line);
 extern void	parse_ambient_light(t_device *device, char *line);
 extern void	parse_camera(t_device *device, char *line);
