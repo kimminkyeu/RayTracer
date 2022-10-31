@@ -36,7 +36,7 @@ A   0.1               255,255,255
 
 #*  [ Camera ]
 #   position          loot_at(dir)       up_dir           FOV(0~180)
-C   0.0,0.0,8.0       0.0,0.0,-1.0       0.0,1.0,0.0      45
+C   0.0,0.0,3.0       0.0,0.0,-1.0       0.0,1.0,0.0      45
 
 #*  [ Light ]
 #   pos               intensity     color

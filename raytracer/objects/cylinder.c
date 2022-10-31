@@ -20,17 +20,18 @@
 /** ------------------------------ *
  *  |     Plain hit detection      |
  *  ------------------------------ *
- * http://www.illusioncatalyst.com/notes_files/mathematics/line_cylinder_intersection.php
+ * http://www.illusioncatalyst.com/notes_files/mathematics/
+ * line_cylinder_intersection.php
  *
  * */
 
 #define PI	(3.141592)
 
-t_hit	cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
-{
-	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
 
-	cylinder->orientation = gl_vec3_normalize(cylinder->orientation);
+/** Redturn determinant, d1, d2 */
+static t_vec3	calculate_determinant_d1_d2(const t_ray *ray, t_cylinder *cylinder)
+{
+	float	d[4];
 	const t_vec3 bottom_center = cylinder->pos;
 	const t_vec3 omc = gl_vec3_subtract_vector(ray->origin, bottom_center);
 	const float a = 1.0f - powf(gl_vec3_dot(ray->direction, cylinder->orientation), 2.0f);
@@ -40,6 +41,31 @@ t_hit	cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
 	const float b = 2.0f * (b0 - (b1 * b2));
 	const float c = gl_vec3_dot(omc, omc) - b2 * b2 - cylinder->radius;
 	const float determinant = b * b - (4.0f * a * c);
+
+
+
+}
+
+t_hit	cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
+{
+	t_hit	hit;
+	t_vec3	cal_v[4];
+
+	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+	cal_v = calculate_determinant_d1_d2(ray, cylinder);
+	/*
+	const t_vec3 bottom_center = cylinder->pos;
+	const t_vec3 omc = gl_vec3_subtract_vector(ray->origin, bottom_center);
+	const float a = 1.0f - powf(gl_vec3_dot(ray->direction, cylinder->orientation), 2.0f);
+	const float b0 = gl_vec3_dot(ray->direction, omc);
+	const float b1 = gl_vec3_dot(ray->direction, cylinder->orientation);
+	const float b2 = gl_vec3_dot(omc, cylinder->orientation);
+	const float b = 2.0f * (b0 - (b1 * b2));
+	const float c = gl_vec3_dot(omc, omc) - b2 * b2 - cylinder->radius;
+	const float determinant = b * b - (4.0f * a * c);
+	*/
+
+
 
 	if (determinant >= 0.0f)
 	{
