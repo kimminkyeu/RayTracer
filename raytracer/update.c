@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/03 23:30:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 21:31:20 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 16:49:52 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,6 @@ int	update(t_device *device)
 			engine_push_image_to_window(device, device->screen_image, 0, 0);
 	}
 	draw_render_time(device, get_time_ms() - render_start_time, \
-                    vec2_2f(30, 30), WHITE);
+		vec2_2f(30, 30), WHITE);
 	return (0);
 }

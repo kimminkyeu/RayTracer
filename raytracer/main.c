@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 20:13:57 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 21:00:31 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 16:49:40 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	input_handler(t_device *device)
 	t_camera *const	camera = device->camera;
 	const t_vec2	mouse_pos = input_get_mouse_pos(device);
 	const t_vec2	delta = mult2_scalar((\
-    sub2(mouse_pos, device->input.last_mouse_pos)), 0.1f);
+		sub2(mouse_pos, device->input.last_mouse_pos)), 0.1f);
 
 	device->input.last_mouse_pos = mouse_pos;
 	if (device->is_high_resolution_render_mode == false \
