@@ -36,14 +36,11 @@ void	update_camera_geometry(t_device *device)
 
 	camera->look_at = normal3(camera->look_at);
 	camera->up_direction = normal3((camera->up_direction));
-	camera->right_direction = cross3(camera->look_at, \
-                                                camera->up_direction);
-	camera->camera_length \
-		= 1.0f / tanf(gl_get_radian(camera->fov / 2.0f));
+	camera->right_direction = cross3(camera->look_at, camera->up_direction);
+	camera->camera_length = 1.0f / tanf(gl_get_radian(camera->fov / 2.0f));
 	camera->projection_screen_center \
-		= add3(camera->pos, \
-            mult3_scalar(camera->look_at, \
-                camera->camera_length));
+		= add3(camera->pos,
+			mult3_scalar(camera->look_at, camera->camera_length));
 }
 
 /**
@@ -64,14 +61,10 @@ void	update_camera_geometry(t_device *device)
 static t_vec3	calculate_camera_world_coord(t_camera *camera, \
 												float dx, float dy)
 {
-	const t_vec3	u_len = \
-        mult3_scalar(camera->right_direction, dx);
-	const t_vec3	v_len = \
-        mult3_scalar(camera->up_direction, dy);
-	const t_vec3	world_1 = \
-        add3(camera->projection_screen_center, u_len);
-	const t_vec3	world_coord_final = \
-        add3(world_1, v_len);
+	const t_vec3	u_len = mult3_scalar(camera->right_direction, dx);
+	const t_vec3	v_len = mult3_scalar(camera->up_direction, dy);
+	const t_vec3	world_1 = add3(camera->projection_screen_center, u_len);
+	const t_vec3	world_coord_final = add3(world_1, v_len);
 
 	return (world_coord_final);
 }
@@ -81,8 +74,8 @@ t_vec3	transform_screen_to_camera_world(t_camera *camera, t_image *img, \
 {
 	const float	x_scale = 2.0f / img->img_size.width;
 	const float	y_scale = 2.0f / img->img_size.height;
-	const float	aspect_ratio = \
-		(float)img->img_size.width / img->img_size.height;
+	const float	aspect_ratio
+		= (float)img->img_size.width / img->img_size.height;
 	const float	dx = (pos_screen.x * x_scale - 1.0f) * aspect_ratio;
 	const float	dy = -pos_screen.y * y_scale + 1.0f;
 

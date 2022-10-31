@@ -13,15 +13,16 @@
 #include "main.h"
 #include "hit.h"
 
-t_ray create_ray(t_vec3 origin, t_vec3 direction)
+t_ray	create_ray(t_vec3 origin, t_vec3 direction)
 {
-	t_ray ray;
+	t_ray	ray;
+
 	ray.origin = origin;
 	ray.direction = direction;
 	return (ray);
 }
 
-t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
+t_hit	create_hit(float distance, t_vec3 normal, t_vec3 point)
 {
 	t_hit	hit;
 
@@ -32,7 +33,7 @@ t_hit create_hit(float distance, t_vec3 normal, t_vec3 point)
 }
 
 // 물체의 타입에 따라 다르게 체크.
-t_hit check_ray_collision(const t_ray *ray, t_object *obj)
+t_hit	check_ray_collision(const t_ray *ray, t_object *obj)
 {
 	if (obj->type == TYPE_SPHERE)
 		return (sphere_intersect_ray_collision(ray, obj->obj_data));

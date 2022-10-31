@@ -14,12 +14,10 @@
 #include "gl_engine.h"
 
 typedef struct s_texture {
-
-	int 		width;
-	int 		height;
-	t_image		image; // texture image.
-	int			type; // type of texture.  --> 나중에 체커는 sample_point로 하기 위함.
-
+	int			width;
+	int			height;
+	t_image		image;
+	int			type;
 }	t_texture;
 
 void	set_default_material(t_material *m)
@@ -33,9 +31,9 @@ void	set_default_material(t_material *m)
 	m->ior = 1.5f;
 }
 
-t_object *custom_allocator_for_object(int obj_type)
+t_object	*custom_allocator_for_object(int obj_type)
 {
-	t_object *new_obj;
+	t_object	*new_obj;
 
 	new_obj = ft_calloc(1, sizeof(*new_obj));
 	set_default_material(&new_obj->material);
@@ -60,7 +58,8 @@ t_object *custom_allocator_for_object(int obj_type)
 // delete texture image
 void	custom_deallocator_for_object(void *data)
 {
-	t_object *obj_ptr = data;
+	t_object *const	obj_ptr = data;
+
 	if (obj_ptr->obj_data != NULL)
 		free(obj_ptr->obj_data);
 	if (obj_ptr->diffuse_texture != NULL)

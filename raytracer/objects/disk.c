@@ -44,11 +44,9 @@ t_hit	disk_intersect_ray_collision(const t_ray *ray, t_disk *disk)
 	if (t < 0.0f)
 		return (hit);
 	hit.distance = t;
-	hit.point = add3(ray->origin, \
-        mult3_scalar(ray->direction, t));
+	hit.point = add3(ray->origin, mult3_scalar(ray->direction, t));
 	hit.normal = disk->orientation;
-	hit_to_center = abs_float(len3(\
-                sub3(hit.point, disk->center)));
+	hit_to_center = abs_float(len3(sub3(hit.point, disk->center)));
 	if (hit_to_center < disk->radius)
 		return (hit);
 	else

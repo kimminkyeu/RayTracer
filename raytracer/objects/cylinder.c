@@ -28,19 +28,21 @@
 #define PI	(3.141592)
 
 /** Redturn determinant, d1, d2 */
-static t_vec3	calculate_determinant_d1_d2(const t_ray *ray, \
-											t_cylinder *cylinder)
+static t_vec3	calculate_determinant_d1_d2(
+		const t_ray *ray, t_cylinder *cylinder)
 {
-	const t_vec3	omc = sub3(ray->origin, cylinder->pos);
-	const float		a = 1.0f - powf(dot3(ray->direction, \
-                                        cylinder->orientation), 2.0f);
-	const float		b2 = dot3(omc, cylinder->orientation);
-	const float		b = 2.0f * (dot3(ray->direction, omc) \
- - (dot3(ray->direction, cylinder->orientation) * b2));
+	const t_vec3	omc
+		= sub3(ray->origin, cylinder->pos);
+	const float		a
+		= 1.0f - powf(dot3(ray->direction, cylinder->orientation), 2.0f);
+	const float		b2
+		= dot3(omc, cylinder->orientation);
+	const float		b
+		= 2.0f * (dot3(ray->direction, omc)
+			- (dot3(ray->direction, cylinder->orientation) * b2));
 	float			d[3];
 
-	d[0] = b * b - (4.0f * a * (dot3(omc, omc) - b2 * b2 \
- - cylinder->radius));
+	d[0] = b * b - (4.0f * a * (dot3(omc, omc) - b2 * b2 - cylinder->radius));
 	d[1] = (-b - sqrtf(d[0])) / (2.0f * a);
 	d[2] = (-b + sqrtf(d[0])) / (2.0f * a);
 	return (vec3_3f(d[0], d[1], d[2]));

@@ -16,9 +16,9 @@ t_vec3	vec3_3f(float _x, float _y, float _z)
 {
 	t_vec3	pos3;
 
-	pos3.x = _x_b;
-	pos3.y = _y_g;
-	pos3.z = _z_r;
+	pos3.x = _x;
+	pos3.y = _y;
+	pos3.z = _z;
 	return (pos3);
 }
 

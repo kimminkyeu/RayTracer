@@ -16,10 +16,10 @@ t_vec4	vec4_4f(float _x, float _y, float _z, float _w)
 {
 	t_vec4	pos4;
 
-	pos4.x = x_or_b;
-	pos4.y = y_or_g;
-	pos4.z = z_or_r;
-	pos4.w = w_or_a;
+	pos4.x = _x;
+	pos4.y = _y;
+	pos4.z = _z;
+	pos4.w = _w;
 	return (pos4);
 }
 

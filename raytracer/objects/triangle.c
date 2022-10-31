@@ -10,13 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 # include <stdio.h>
 # include "gl_vec3.h"
 # include "helper.h"
 # include "objects.h"
 # include "ray.h"
-
+// TODO : 안씀
 t_triangle create_triangle(t_vec3 v0, t_vec3 v1, t_vec3 v2)
 {
 	t_triangle t;
