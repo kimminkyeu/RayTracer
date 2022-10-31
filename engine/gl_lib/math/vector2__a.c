@@ -12,7 +12,7 @@
 
 #include "gl_vec2.h"
 
-t_vec2	gl_vec2_2f(float _x, float _y)
+t_vec2	vec2_2f(float _x, float _y)
 {
 	t_vec2	vec2;
 
@@ -21,22 +21,22 @@ t_vec2	gl_vec2_2f(float _x, float _y)
 	return (vec2);
 }
 
-t_vec2	gl_vec2_1f(float _k)
+t_vec2	vec2_1f(float _k)
 {
-	return (gl_vec2_2f(_k, _k));
+	return (vec2_2f(_k, _k));
 }
 
-t_vec2	gl_vec2_reverse(t_vec2 v)
+t_vec2	vec2_reverse(t_vec2 v)
 {
-	return (gl_vec2_2f(-v.x, -v.y));
+	return (vec2_2f(-v.x, -v.y));
 }
 
-t_vec2	gl_vec2_add_vector(t_vec2 v1, t_vec2 v2)
+t_vec2	add2(t_vec2 v1, t_vec2 v2)
 {
-	return (gl_vec2_2f(v1.x + v2.x, v1.y + v2.y));
+	return (vec2_2f(v1.x + v2.x, v1.y + v2.y));
 }
 
-t_vec2	gl_vec2_add_float(t_vec2 v1, float f)
+t_vec2	add2_f(t_vec2 v, float f)
 {
-	return (gl_vec2_2f(v1.x + f, v1.y + f));
+	return (vec2_2f(v.x + f, v.y + f));
 }

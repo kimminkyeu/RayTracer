@@ -102,6 +102,6 @@ int	update(t_device *device)
 			engine_push_image_to_window(device, device->screen_image, 0, 0);
 	}
 	draw_render_time(device, get_time_ms() - render_start_time, \
-					gl_vec2_2f(30, 30), WHITE);
+                    vec2_2f(30, 30), WHITE);
 	return (0);
 }

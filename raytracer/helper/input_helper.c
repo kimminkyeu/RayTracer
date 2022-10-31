@@ -29,26 +29,26 @@ bool	is_key_pressed_1(t_device *device, t_camera *const camera)
 {
 	if (input_is_key_down(device, KEY_W))
 	{
-		camera->pos = gl_vec3_add_vector(camera->pos, \
-			gl_vec3_multiply_scalar(camera->look_at, SPEED));
+		camera->pos = add3(camera->pos, \
+            mult3_scalar(camera->look_at, SPEED));
 		return (true);
 	}
 	else if (input_is_key_down(device, KEY_S))
 	{
-		camera->pos = gl_vec3_subtract_vector(camera->pos, \
-			gl_vec3_multiply_scalar(camera->look_at, SPEED));
+		camera->pos = sub3(camera->pos, \
+            mult3_scalar(camera->look_at, SPEED));
 		return (true);
 	}
 	else if (input_is_key_down(device, KEY_A))
 	{
-		camera->pos = gl_vec3_subtract_vector(camera->pos, \
-			gl_vec3_multiply_scalar(camera->right_direction, SPEED));
+		camera->pos = sub3(camera->pos, \
+            mult3_scalar(camera->right_direction, SPEED));
 		return (true);
 	}
 	else if (input_is_key_down(device, KEY_D))
 	{
-		camera->pos = gl_vec3_add_vector(camera->pos, \
-			gl_vec3_multiply_scalar(camera->right_direction, SPEED));
+		camera->pos = add3(camera->pos, \
+            mult3_scalar(camera->right_direction, SPEED));
 		return (true);
 	}
 	return (false);
@@ -58,14 +58,14 @@ bool	is_key_pressed_2(t_device *device, t_camera *const camera)
 {
 	if (input_is_key_down(device, KEY_Q))
 	{
-		camera->pos = gl_vec3_subtract_vector(camera->pos, \
-			gl_vec3_multiply_scalar(camera->up_direction, SPEED));
+		camera->pos = sub3(camera->pos, \
+            mult3_scalar(camera->up_direction, SPEED));
 		return (true);
 	}
 	else if (input_is_key_down(device, KEY_E))
 	{
-		camera->pos = gl_vec3_add_vector(camera->pos, \
-			gl_vec3_multiply_scalar(camera->up_direction, SPEED));
+		camera->pos = add3(camera->pos, \
+            mult3_scalar(camera->up_direction, SPEED));
 		return (true);
 	}
 	else if (input_is_key_down(device, KEY_1) \
@@ -108,15 +108,15 @@ bool	is_mouse_moved(t_camera *const camera, t_vec2 delta)
 	if (delta.x != 0.0f || delta.y != 0.0f)
 	{
 		rotation_matrix = get_rotation_matrix(camera, delta);
-		cam_look_at = gl_vec4_4f(camera->look_at.x, camera->look_at.y, \
-									camera->look_at.z, 0.0f);
+		cam_look_at = vec4_4f(camera->look_at.x, camera->look_at.y, \
+                                    camera->look_at.z, 0.0f);
 		cam_look_at = gl_vec4_multiply_matrix(rotation_matrix, cam_look_at);
-		camera->look_at = gl_vec3_3f(cam_look_at.x, cam_look_at.y, \
-										cam_look_at.z);
-		cam_up = gl_vec4_4f(camera->up_direction.x, camera->up_direction.y, \
-								camera->up_direction.z, 0.0f);
+		camera->look_at = vec3_3f(cam_look_at.x, cam_look_at.y, \
+                                        cam_look_at.z);
+		cam_up = vec4_4f(camera->up_direction.x, camera->up_direction.y, \
+                                camera->up_direction.z, 0.0f);
 		cam_up = gl_vec4_multiply_matrix(rotation_matrix, cam_up);
-		camera->up_direction = gl_vec3_3f(cam_up.x, cam_up.y, cam_up.z);
+		camera->up_direction = vec3_3f(cam_up.x, cam_up.y, cam_up.z);
 		camera->rotation_delta.x += delta.x;
 		camera->rotation_delta.y -= delta.y;
 		return (true);

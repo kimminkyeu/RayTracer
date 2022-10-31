@@ -114,7 +114,7 @@ t_vec3 get_clamped(t_texture *texture, int i, int j)
 	const float r = point.r / 255.0f; // 기존 ambient_color에 나중에 곱해서, 그 값만큼 색을 바꿈. --> 홍정모 코드의 색은 0 ~ 255.0 사이.
 	const float g = point.g / 255.0f;
 	const float b = point.b / 255.0f;
-	return gl_vec3_3f(b, g, r);
+	return vec3_3f(b, g, r);
 }
 
 t_vec3 get_clamped_raw(t_texture *texture, int i, int j)
@@ -127,7 +127,7 @@ t_vec3 get_clamped_raw(t_texture *texture, int i, int j)
 	const float r = point.r; // 기존 ambient_color에 나중에 곱해서, 그 값만큼 색을 바꿈. --> 홍정모 코드의 색은 0 ~ 255.0 사이.
 	const float g = point.g;
 	const float b = point.b;
-	return gl_vec3_3f(b, g, r);
+	return vec3_3f(b, g, r);
 }
 
 t_vec3 sample_point(t_texture *texture, const t_vec2 uv, int is_raw)
@@ -139,10 +139,11 @@ t_vec3 sample_point(t_texture *texture, const t_vec2 uv, int is_raw)
 	// 배열 인덱스의 정수 범위 ij [0, width-1] x [0, height - 1]
 
 	// (1) uv 좌표를 그대로 width/height로 일단 변환하면...
-	t_vec2 xy = gl_vec2_2f(uv.x * (float)texture->width, uv.y * (float)texture->height);
+	t_vec2 xy = vec2_2f(uv.x * (float) texture->width,
+						uv.y * (float) texture->height);
 
 	// (2) 시작 위치 동일하게 맞추기 (-0.5f) // WARN:  But why...?
-	xy = gl_vec2_add_float(xy, -0.5f);
+	xy = add2_f(xy, -0.5f);
 
 	// (3) x y로 부터 2차원 인덱스 구하기
 	int i = (int)round(xy.x);
@@ -170,7 +171,7 @@ t_vec3 get_wrapped(t_texture *texture, int i, int j)
 	const float g = point.g / 255.0f;
 	const float b = point.b / 255.0f;
 
-	return gl_vec3_3f(b, g, r);
+	return vec3_3f(b, g, r);
 }
 
 t_vec3 get_wrapped_raw(t_texture *texture, int i, int j)
@@ -187,7 +188,7 @@ t_vec3 get_wrapped_raw(t_texture *texture, int i, int j)
 	const float r = point.r;
 	const float g = point.g;
 	const float b = point.b;
-	return gl_vec3_3f(b, g, r);
+	return vec3_3f(b, g, r);
 }
 
 /* Used in sample_linear(). linear를 두번 반복하면, bilinear가 된다.*/
@@ -199,9 +200,12 @@ t_vec3 interpolate_bilinear(
 		const t_vec3 c01,
 		const t_vec3 c11)
 {
-	const t_vec3 color_x0 = gl_vec3_add_vector(gl_vec3_multiply_scalar(c00, 1.0f - dx), gl_vec3_multiply_scalar(c10, dx));
-	const t_vec3 color_x1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(c01, 1.0f - dx), gl_vec3_multiply_scalar(c11, dx));
-	const t_vec3 color_y = gl_vec3_add_vector(gl_vec3_multiply_scalar(color_x0, 1.0f - dy), gl_vec3_multiply_scalar(color_x1, dy));
+	const t_vec3 color_x0 = add3(mult3_scalar(c00, 1.0f - dx),
+								 mult3_scalar(c10, dx));
+	const t_vec3 color_x1 = add3(mult3_scalar(c01, 1.0f - dx),
+								 mult3_scalar(c11, dx));
+	const t_vec3 color_y = add3(mult3_scalar(color_x0, 1.0f - dy),
+								mult3_scalar(color_x1, dy));
 	return (color_y);
 }
 
@@ -213,8 +217,9 @@ t_vec3 sample_linear(t_texture *texture, const t_vec2 uv, int is_raw)
 	// 이미지 좌표의 범위 xy [-0.5, width - 1 + 0.5] x [-0.5, height - 1 + 0.5]
 	// std::cout << floor(-0.3f) << " " << int(-0.3f) << std::endl; // -1 0
 
-	t_vec2 xy = gl_vec2_2f(uv.x * (float)texture->width, uv.y * (float)texture->height);
-	xy = gl_vec2_add_float(xy, -0.5f);
+	t_vec2 xy = vec2_2f(uv.x * (float) texture->width,
+						uv.y * (float) texture->height);
+	xy = add2_f(xy, -0.5f);
 
 	const int i = (int)floor(xy.x);
 	const int j = (int)floor(xy.y);
@@ -246,17 +251,17 @@ t_vec3	sample_normal_map(const t_hit *hit)
 	// (2) get 3 vectors (x, y, z direction. hit.normal is always z.)
 	t_vec3 normal = hit->normal;
 	t_vec3 tangent = hit->tangent; // TODO:  calculate tangent vector!
-	t_vec3 bitangent = gl_vec3_cross(normal, tangent);     // use cross product of z and y.
+	t_vec3 bitangent = cross3(normal, tangent);     // use cross product of z and y.
 
 	// (3) multiply each derivatives with derivative.
-	t_vec3 bitangent_result = gl_vec3_multiply_scalar(bitangent, derivative.x);
-	t_vec3 tangent_result = gl_vec3_multiply_scalar(tangent, derivative.y);
-	t_vec3 normal_result = gl_vec3_multiply_scalar(normal, derivative.z);
+	t_vec3 bitangent_result = mult3_scalar(bitangent, derivative.x);
+	t_vec3 tangent_result = mult3_scalar(tangent, derivative.y);
+	t_vec3 normal_result = mult3_scalar(normal, derivative.z);
 
 	// (4) lastly, Sum all.
-	t_vec3 final_normal = gl_vec3_add_vector(normal_result, tangent_result);
-	final_normal = gl_vec3_add_vector(final_normal, bitangent_result);
-	final_normal = gl_vec3_normalize(gl_vec3_add_vector(final_normal, bitangent_result));
+	t_vec3 final_normal = add3(normal_result, tangent_result);
+	final_normal = add3(final_normal, bitangent_result);
+	final_normal = normal3(add3(final_normal, bitangent_result));
 
 	return (final_normal);
 }

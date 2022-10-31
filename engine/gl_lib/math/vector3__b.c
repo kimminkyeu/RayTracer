@@ -12,19 +12,19 @@
 
 #include "gl_vec3.h"
 
-t_vec3	gl_vec3_subtract_vector(t_vec3 v1, t_vec3 v2)
+t_vec3	sub3(t_vec3 v1, t_vec3 v2)
 {
-	return (gl_vec3_3f(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z));
+	return (vec3_3f(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z));
 }
 
-t_vec3	gl_vec3_multiply_scalar(t_vec3 v, float scalar)
+t_vec3	mult3_scalar(t_vec3 v, float scalar)
 {
-	return (gl_vec3_3f(v.x * scalar, v.y * scalar, v.z * scalar));
+	return (vec3_3f(v.x * scalar, v.y * scalar, v.z * scalar));
 }
 
-t_vec3	gl_vec3_multiply_vector(t_vec3 v1, t_vec3 v2)
+t_vec3	mult3(t_vec3 v1, t_vec3 v2)
 {
-	return (gl_vec3_3f(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
+	return (vec3_3f(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z));
 }
 
 /** helper function for gl_clamp */
@@ -38,7 +38,7 @@ static float	compare_for_clamp(float x, float min_val, float max_val)
 		return (x);
 }
 
-t_vec3	gl_vec3_clamp(t_vec3 v, t_vec3 min, t_vec3 max)
+t_vec3	clamp3(t_vec3 v, t_vec3 min, t_vec3 max)
 {
 	float	x;
 	float	y;
@@ -47,5 +47,5 @@ t_vec3	gl_vec3_clamp(t_vec3 v, t_vec3 min, t_vec3 max)
 	x = compare_for_clamp(v.x, min.x, max.x);
 	y = compare_for_clamp(v.y, min.y, max.y);
 	z = compare_for_clamp(v.z, min.z, max.z);
-	return (gl_vec3_3f(x, y, z));
+	return (vec3_3f(x, y, z));
 }

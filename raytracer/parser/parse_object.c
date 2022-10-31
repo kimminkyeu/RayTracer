@@ -51,8 +51,8 @@ void	parse_camera(t_device *device, char *line)
 	if (!(p->has_camera == false && cnt == 10))
 		print_error_and_exit(device, "parse_camera(): .rt file error\n");
 	p->has_camera = true;
-	p->look_at = gl_vec3_normalize(p->look_at);
-	p->up_direction = gl_vec3_normalize(p->up_direction);
+	p->look_at = normal3(p->look_at);
+	p->up_direction = normal3(p->up_direction);
 	update_camera_geometry(device);
 }
 
@@ -176,7 +176,7 @@ void	parse_plane(t_device *device, char *line)
 
 	if (cnt < 6)
 		print_error_and_exit(device, "parse_plane(): .rt file error\n");
-	pl->normal = gl_vec3_normalize(pl->normal);
+	pl->normal = normal3(pl->normal);
 	device->objects->push_back(device->objects, obj);
 }
 
@@ -203,7 +203,7 @@ void	parse_cylinder(t_device *device, char *line)
 
 	if (cnt < 8)
 		print_error_and_exit(device, "parse_cylinder(): .rt file error\n");
-	cy->orientation = gl_vec3_normalize(cy->orientation);
+	cy->orientation = normal3(cy->orientation);
 	device->objects->push_back(device->objects, obj);
 }
 
@@ -230,7 +230,7 @@ void parse_cone(t_device *device, char *line)
 
 	if (cnt < 8)
 		print_error_and_exit(device, "parse_cone(): .rt file error\n");
-	co->orientation = gl_vec3_normalize(co->orientation);
+	co->orientation = normal3(co->orientation);
 	device->objects->push_back(device->objects, obj);
 }
 
@@ -258,9 +258,9 @@ void	parse_triangle(t_device *device, char *line)
 	if (cnt < 9 || mat->transparency + mat->reflection > 1.0f)
 		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
 
-	tr->uv0 = gl_vec2_2f(1.0f, 0.0f);
-	tr->uv1 = gl_vec2_2f(0.0f, 1.0f);
-	tr->uv2 = gl_vec2_2f(0.0f, 0.0f);
+	tr->uv0 = vec2_2f(1.0f, 0.0f);
+	tr->uv1 = vec2_2f(0.0f, 1.0f);
+	tr->uv2 = vec2_2f(0.0f, 0.0f);
 
 	parse_texture(device, obj, line);
 	device->objects->push_back(device->objects, obj);
@@ -293,13 +293,13 @@ void	parse_square(t_device *device, char *line)
 		print_error_and_exit(device, "parse_square(): .rt file error\n");
 
 	sq->tri_1 = create_triangle(v[0], v[1], v[2]);
-	sq->tri_1.uv0 = gl_vec2_2f(1.0f, 0.0f);
-	sq->tri_1.uv1 = gl_vec2_2f(0.0f, 1.0f);
-	sq->tri_1.uv2 = gl_vec2_2f(0.0f, 0.0f);
+	sq->tri_1.uv0 = vec2_2f(1.0f, 0.0f);
+	sq->tri_1.uv1 = vec2_2f(0.0f, 1.0f);
+	sq->tri_1.uv2 = vec2_2f(0.0f, 0.0f);
 	sq->tri_2 = create_triangle(v[0], v[2], v[3]);
-	sq->tri_2.uv1 = gl_vec2_2f(0.0f, 1.0f);
-	sq->tri_2.uv0 = gl_vec2_2f(1.0f, 1.0f);
-	sq->tri_2.uv2 = gl_vec2_2f(1.0f, 0.0f);
+	sq->tri_2.uv1 = vec2_2f(0.0f, 1.0f);
+	sq->tri_2.uv0 = vec2_2f(1.0f, 1.0f);
+	sq->tri_2.uv2 = vec2_2f(1.0f, 0.0f);
 	parse_texture(device, obj, line);
 	device->objects->push_back(device->objects, obj);
 }

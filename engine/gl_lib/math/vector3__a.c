@@ -12,32 +12,32 @@
 
 #include "gl_vec3.h"
 
-t_vec3	gl_vec3_3f(float _x, float _y, float _z)
+t_vec3	vec3_3f(float _x, float _y, float _z)
 {
 	t_vec3	pos3;
 
-	pos3.x = _x;
-	pos3.y = _y;
-	pos3.z = _z;
+	pos3.x = _x_b;
+	pos3.y = _y_g;
+	pos3.z = _z_r;
 	return (pos3);
 }
 
-t_vec3	gl_vec3_1f(float _k)
+t_vec3	vec3_1f(float _k)
 {
-	return (gl_vec3_3f(_k, _k, _k));
+	return (vec3_3f(_k, _k, _k));
 }
 
-t_vec3	gl_vec3_reverse(t_vec3 v)
+t_vec3	vec3_reverse(t_vec3 v)
 {
-	return (gl_vec3_3f(-v.x, -v.y, -v.z));
+	return (vec3_3f(-v.x, -v.y, -v.z));
 }
 
-t_vec3	gl_vec3_add_vector(t_vec3 v1, t_vec3 v2)
+t_vec3	add3(t_vec3 v1, t_vec3 v2)
 {
-	return (gl_vec3_3f(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z));
+	return (vec3_3f(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z));
 }
 
-t_vec3	gl_vec3_add_float(t_vec3 v, float f)
+t_vec3	add3_f(t_vec3 v, float f)
 {
-	return (gl_vec3_3f(v.x + f, v.y + f, v.z + f));
+	return (vec3_3f(v.x + f, v.y + f, v.z + f));
 }

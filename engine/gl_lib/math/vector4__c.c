@@ -12,26 +12,26 @@
 
 #include "gl_vec4.h"
 
-t_vec4	gl_vec4_normalize(t_vec4 v)
+t_vec4	normal4(t_vec4 v)
 {
 	float	len;
 
-	len = gl_vec4_get_magnitude(v);
-	return (gl_vec4_4f(v.x / len, v.y / len, v.z / len, v.w));
+	len = len4(v);
+	return (vec4_4f(v.x / len, v.y / len, v.z / len, v.w));
 }
 
-float	gl_vec4_dot(t_vec4 dst, t_vec4 src)
+float	dot4(t_vec4 v1, t_vec4 v2)
 {
-	return (dst.x * src.x + dst.y * src.y + dst.z * src.z + dst.w * src.w);
+	return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w);
 }
 
-float	gl_vec4_get_magnitude(t_vec4 v)
+float	len4(t_vec4 v)
 {
 	return (sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z) + (v.w * v.w)));
 }
 
 /** FIX: check if cross-product code is valid!  */
-t_vec4	gl_vec4_cross(t_vec4 v1, t_vec4 v2)
+t_vec4	cross4(t_vec4 v1, t_vec4 v2)
 {
 	float	x;
 	float	y;
@@ -40,7 +40,7 @@ t_vec4	gl_vec4_cross(t_vec4 v1, t_vec4 v2)
 	x = v1.y * v2.z - v2.y * v1.z;
 	y = v1.z * v2.x - v2.z * v1.x;
 	z = v1.x * v2.y - v2.x * v1.y;
-	return (gl_vec4_4f(x, y, z, 1.0f));
+	return (vec4_4f(x, y, z, 1.0f));
 }
 
 /** NOTE : because float 0.0f is not exactly 0, use epsilon. */
@@ -65,5 +65,5 @@ t_vec4	gl_vec4_multiply_matrix(t_mat4x4 m, t_vec4 v)
 		o.y /= o.w;
 		o.z /= o.w;
 	}
-	return (gl_vec4_4f(o.x, o.y, o.z, 1.0f));
+	return (vec4_4f(o.x, o.y, o.z, 1.0f));
 }

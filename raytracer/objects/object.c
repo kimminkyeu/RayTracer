@@ -24,8 +24,8 @@ typedef struct s_texture {
 
 void	set_default_material(t_material *m)
 {
-	m->diffuse = gl_vec3_1f(255.0f);
-	m->specular = gl_vec3_1f(255.0f);
+	m->diffuse = vec3_1f(255.0f);
+	m->specular = vec3_1f(255.0f);
 	m->alpha = 20.0f;
 	m->ks = 0.5f;
 	m->transparency = 0.0f;

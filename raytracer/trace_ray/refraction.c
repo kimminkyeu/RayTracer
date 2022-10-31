@@ -14,18 +14,18 @@
 
 t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
 {
-	const float cosTheta1 = gl_vec3_dot(\
-		gl_vec3_reverse(ray->direction), normal);
+	const float cosTheta1 = dot3(\
+        vec3_reverse(ray->direction), normal);
 	const float sinTheta2 = sqrtf(1.0f - cosTheta1 * cosTheta1) / eta ;
 	const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
-	const t_vec3 A = gl_vec3_multiply_scalar(\
-		gl_vec3_normalize(gl_vec3_add_vector(gl_vec3_multiply_scalar(\
-			normal, gl_vec3_dot(normal, gl_vec3_reverse(\
-				ray->direction))), ray->direction)), sinTheta2);
-	const t_vec3 B = gl_vec3_multiply_scalar(\
-		gl_vec3_reverse(normal), cosTheta2);
+	const t_vec3 A = mult3_scalar(\
+        normal3(add3(mult3_scalar(\
+            normal, dot3(normal, vec3_reverse(\
+                ray->direction))), ray->direction)), sinTheta2);
+	const t_vec3 B = mult3_scalar(\
+        vec3_reverse(normal), cosTheta2);
 
-	return (gl_vec3_normalize(gl_vec3_add_vector(A, B)));
+	return (normal3(add3(A, B)));
 }
 
 
@@ -38,13 +38,13 @@ t_vec3 get_refracted_direction(const t_ray *ray, float eta, t_vec3 normal)
 	const float sinTheta2 = sinTheta1 / eta ;
 	const float cosTheta2 = sqrtf(1.0f - sinTheta2 * sinTheta2);
 
-	const float m_0 = gl_vec3_dot(normal, gl_vec3_reverse(ray->direction));
+	const float m_0 = dot3(normal, gl_vec3_reverse(ray->direction));
 	const t_vec3 m_1 = gl_vec3_add_vector(gl_vec3_multiply_scalar(normal, m_0), ray->direction);
 	const t_vec3 m = gl_vec3_normalize(m_1);
 
 	const t_vec3 A = gl_vec3_multiply_scalar(m, sinTheta2);
-	const t_vec3 B = gl_vec3_multiply_scalar(gl_vec3_reverse(normal), cosTheta2);
-	return (gl_vec3_normalize(gl_vec3_add_vector(A, B)));
+	const t_vec3 B = mult3_scalar(vec3_reverse(normal), cosTheta2);
+	return (normal3(add3(A, B)));
 }
 */
 
@@ -75,7 +75,7 @@ t_vec3 calculate_refraction(t_device *device, const t_ray *ray, \
 		t_ray		refracted_ray;
 		t_vec3		refracted_color;
 
-		if (gl_vec3_dot(ray->direction, hit.normal) < 0.0f)
+		if (dot3(ray->direction, hit.normal) < 0.0f)
 		{
 			eta = hit.obj->material.ior;
 			normal = hit.normal;
@@ -83,10 +83,13 @@ t_vec3 calculate_refraction(t_device *device, const t_ray *ray, \
 		else
 		{
 			eta = 1.0f / hit.obj->material.ior;
-			normal = gl_vec3_reverse(hit.normal);
+			normal = vec3_reverse(hit.normal);
 		}
 		refracted_direction = get_refracted_direction(ray, eta, normal);
-		refracted_ray = create_ray(gl_vec3_add_vector(hit.point, gl_vec3_multiply_scalar(refracted_direction, 0.0001f)), refracted_direction);
+		refracted_ray = create_ray(add3(hit.point,
+										mult3_scalar(
+												refracted_direction,
+												0.0001f)), refracted_direction);
 		refracted_color = trace_ray(device, &refracted_ray, reflection_recursive_level - 1);
-		return (gl_vec3_multiply_scalar(refracted_color, hit.obj->material.transparency));
+		return (mult3_scalar(refracted_color, hit.obj->material.transparency));
 }

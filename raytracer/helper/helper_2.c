@@ -20,22 +20,22 @@ float	get_area(t_vec3 vec1, t_vec3 vec2)
 {
 	t_vec3	cross;
 
-	cross = gl_vec3_cross(vec1, vec2);
-	return (gl_vec3_get_magnitude(cross) * 0.5f);
+	cross = cross3(vec1, vec2);
+	return (len3(cross) * 0.5f);
 }
 
 t_vec3	get_barycentric_coord(t_vec3 v0, t_vec3 v1, t_vec3 v2, t_vec3 point)
 {
-	const float		area0 = get_area(gl_vec3_subtract_vector(point, v2), \
-										gl_vec3_subtract_vector(v1, v2));
-	const float		area1 = get_area(gl_vec3_subtract_vector(point, v0), \
-										gl_vec3_subtract_vector(v2, v0));
-	const float		area2 = get_area(gl_vec3_subtract_vector(v1, v0), \
-										gl_vec3_subtract_vector(point, v0));
+	const float		area0 = get_area(sub3(point, v2), \
+                                        sub3(v1, v2));
+	const float		area1 = get_area(sub3(point, v0), \
+                                        sub3(v2, v0));
+	const float		area2 = get_area(sub3(v1, v0), \
+                                        sub3(point, v0));
 	const float		w0 = area0 / (area0 + area1 + area2);
 	const float		w1 = area1 / (area0 + area1 + area2);
 
-	return (gl_vec3_3f(w0, w1, 1.0f - w0 - w1));
+	return (vec3_3f(w0, w1, 1.0f - w0 - w1));
 }
 
 /** helper function. (min) */

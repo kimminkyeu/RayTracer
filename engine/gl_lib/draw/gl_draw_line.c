@@ -19,8 +19,8 @@ void	gl_draw_line(t_image *image, t_vec2 p1, t_vec2 p2, int _argb)
 	float			offset;
 	t_vec2			p;
 
-	p = gl_vec2_2f(p2.x - p1.x, p2.y - p1.y);
-	ndots = gl_vec2_get_magnitude(p);
+	p = vec2_2f(p2.x - p1.x, p2.y - p1.y);
+	ndots = len2(p);
 	t = 0;
 	while (t < ndots)
 	{

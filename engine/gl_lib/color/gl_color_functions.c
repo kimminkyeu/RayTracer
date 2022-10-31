@@ -27,7 +27,7 @@ t_vec4	gl_color_set_brightness(t_vec4 _color, double brightness_factor)
 	color.g = _color.g * brightness_factor;
 	color.b = _color.b * brightness_factor;
 	color.a = _color.a;
-	color = gl_vec4_clamp(color, gl_vec4_1f(0.0f), gl_vec4_1f(255.0f));
+	color = clamp4(color, vec4_1f(0.0f), vec4_1f(255.0f));
 	return (color);
 }
 

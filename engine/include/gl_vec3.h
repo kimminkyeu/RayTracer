@@ -31,49 +31,49 @@ typedef union s_vec3 {
 }	t_vec3;
 
 /* Create r-value vec3 and Return. */
-extern t_vec3	gl_vec3_3f(float _x_b, float _y_g, float _z_r);
+extern t_vec3	vec3_3f(float _x_b, float _y_g, float _z_r);
 
 /* Create and Return R-value from single float argument.
 - : functions sets every value to (float _k) */
-extern t_vec3	gl_vec3_1f(float _k);
+extern t_vec3	vec3_1f(float _k);
 
 /* returns -v1 (reversed direction) */
-extern t_vec3	gl_vec3_reverse(t_vec3 v);
+extern t_vec3	vec3_reverse(t_vec3 v);
 
 /* returns (v1 + v2) */
-extern t_vec3	gl_vec3_add_vector(t_vec3 v1, t_vec3 v2);
+extern t_vec3	add3(t_vec3 v1, t_vec3 v2);
 
 /* returns (v.x + f, v.y + f, v.z + f).
     - add each component with the given float */
-extern t_vec3	gl_vec3_add_float(t_vec3 v, float f);
+extern t_vec3	add3_f(t_vec3 v, float f);
 
 /* returns (v1 - v2) */
-extern t_vec3	gl_vec3_subtract_vector(t_vec3 v1, t_vec3 v2);
+extern t_vec3	sub3(t_vec3 v1, t_vec3 v2);
 
 /* returns (v1 * scalar) */
-extern t_vec3	gl_vec3_multiply_scalar(t_vec3 v, float scalar);
+extern t_vec3	mult3_scalar(t_vec3 v, float scalar);
 
 /** Multiply each element.
  * (v1.x * v2.x, v1.y * v2.y, v3.z * v3.z) */
-extern t_vec3	gl_vec3_multiply_vector(t_vec3 v1, t_vec3 v2);
+extern t_vec3	mult3(t_vec3 v1, t_vec3 v2);
 
 /* Returns min(max(x, minVal), maxVal) for each component
 in x using the floating-point values minVal and maxVal.
 * [clamping is used to restrict a value to a given range]
 */
-extern t_vec3	gl_vec3_clamp(t_vec3 v, t_vec3 min, t_vec3 max);
+extern t_vec3	clamp3(t_vec3 v, t_vec3 min, t_vec3 max);
 
 /* Create Normal Vector */
-extern t_vec3	gl_vec3_normalize(t_vec3 v);
+extern t_vec3	normal3(t_vec3 v);
 
 /* Returns dot-product result */
-extern float	gl_vec3_dot(t_vec3 v1, t_vec3 v2);
+extern float	dot3(t_vec3 v1, t_vec3 v2);
 
 /* Returns cross-product result
  * FIX: check if cross product code is valid !!! */
-extern t_vec3	gl_vec3_cross(t_vec3 v1, t_vec3 v2);
+extern t_vec3	cross3(t_vec3 v1, t_vec3 v2);
 
 /* Returns magnitude result [v.v] */
-extern float	gl_vec3_get_magnitude(t_vec3 v);
+extern float	len3(t_vec3 v);
 
 #endif /* VECTOR3_H */

@@ -28,8 +28,8 @@ int	input_handler(t_device *device)
 {
 	t_camera *const	camera = device->camera;
 	const t_vec2	mouse_pos = input_get_mouse_pos(device);
-	const t_vec2	delta = gl_vec2_multiply_scalar((\
-	gl_vec2_subtract_vector(mouse_pos, device->input.last_mouse_pos)), 0.1f);
+	const t_vec2	delta = mult2_scalar((\
+    sub2(mouse_pos, device->input.last_mouse_pos)), 0.1f);
 
 	device->input.last_mouse_pos = mouse_pos;
 	if (device->is_high_resolution_render_mode == false \

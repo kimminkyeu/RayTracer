@@ -52,8 +52,8 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	/* 1. 삼각형이 놓여 있는 평면의 수직 벡터 계산 (glm::cross) */
 
 	// WARN:  이때 cross_product의 결과 벡터 방향은 음수, 즉 나를 향해 튀어나오는 경우이다.
-	const t_vec3 v1v0 = gl_vec3_subtract_vector(v1, v0);
-	const t_vec3 v2v0 = gl_vec3_subtract_vector(v2, v0);
+	const t_vec3 v1v0 = sub3(v1, v0);
+	const t_vec3 v2v0 = sub3(v2, v0);
 
 /*
 	#*        v1             v2
@@ -76,7 +76,7 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 
 */
 
-	*face_normal = gl_vec3_normalize(gl_vec3_cross(v2v0, v1v0));
+	*face_normal = normal3(cross3(v2v0, v1v0));
 
 	// printf("tr : v0(%f,%f,%f), v1(%f,%f,%f), v2(%f,%f,%f)\n", v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 	// printf("v2v0 : x(%f) y(%f) z(%f)\n", v2v0.x, v2v0.y, v2v0.z);
@@ -86,19 +86,20 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 	//  WARN:  주의! 삼각형의 넓이가 0일 경우에는 계산할 수 없음 (normalize에서 0으로 나누는 에러 발생)
 
 	// 삼각형 뒷면을 그리고 싶지 않은 경우 (Backface bulling)
-	if (gl_vec3_dot(gl_vec3_reverse(ray_dir), *face_normal) < 0.0f) return false;
+	if (dot3(vec3_reverse(ray_dir), *face_normal) < 0.0f) return false;
 
 	// 평면과 광선이 수평에 매우 가깝다면 충돌하지 못하는 것으로 판단
-	if (abs_float(gl_vec3_dot(ray_dir, *face_normal)) < 1e-2f) return false; // t 계산시 0으로 나누기 방지
+	if (abs_float(dot3(ray_dir, *face_normal)) < 1e-2f) return false; // t 계산시 0으로 나누기 방지
 
 	/* 2. 광선과 (무한히 넓은) 평면의 충돌 위치 계산 */
-	*t = (gl_vec3_dot(v0, *face_normal) - gl_vec3_dot(ray_origin, *face_normal)) / gl_vec3_dot(ray_dir, *face_normal);
+	*t = (dot3(v0, *face_normal) - dot3(ray_origin, *face_normal)) /
+		 dot3(ray_dir, *face_normal);
 
 	// 광선의 시작점 이전에 충돌한다면 렌더링할 필요 없음
 	if (*t < 0.0f) return false;
 
 	// 충돌 지점 계산
-	*point = gl_vec3_add_vector(ray_origin, gl_vec3_multiply_scalar(ray_dir, *t));
+	*point = add3(ray_origin, mult3_scalar(ray_dir, *t));
 
 	/* 3. 그 충돌 위치가 삼각형 안에 들어 있는 지 확인 */
 	/*
@@ -118,19 +119,22 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 #*---------------------------------*
 	*/
 
-	const t_vec3 cross0 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v0), gl_vec3_subtract_vector(v1, v0));
-	const t_vec3 cross1 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v1), gl_vec3_subtract_vector(v2, v1));
-	const t_vec3 cross2 = gl_vec3_cross(gl_vec3_subtract_vector(*point, v2), gl_vec3_subtract_vector(v0, v2));
+	const t_vec3 cross0 = cross3(sub3(*point, v0),
+								 sub3(v1, v0));
+	const t_vec3 cross1 = cross3(sub3(*point, v1),
+								 sub3(v2, v1));
+	const t_vec3 cross2 = cross3(sub3(*point, v2),
+								 sub3(v0, v2));
 
 	// 방향만 확인하면 되기 때문에 normalize() 생략 가능
 	// 아래에서 cross product의 절대값으로 작은 삼각형들의 넓이 계산
-	if (gl_vec3_dot(cross0, *face_normal) < 0.0f) return false;
-	if (gl_vec3_dot(cross1, *face_normal) < 0.0f) return false;
-	if (gl_vec3_dot(cross2, *face_normal) < 0.0f) return false;
+	if (dot3(cross0, *face_normal) < 0.0f) return false;
+	if (dot3(cross1, *face_normal) < 0.0f) return false;
+	if (dot3(cross2, *face_normal) < 0.0f) return false;
 
-	const float area0 = gl_vec3_get_magnitude(cross0) * 0.5f;
-	const float area1 = gl_vec3_get_magnitude(cross1) * 0.5f;
-	const float area2 = gl_vec3_get_magnitude(cross2) * 0.5f;
+	const float area0 = len3(cross0) * 0.5f;
+	const float area1 = len3(cross1) * 0.5f;
+	const float area2 = len3(cross2) * 0.5f;
 
 	const float area_sum = area0 + area1 + area2;
 	*w0 = area0 / area_sum;
@@ -143,7 +147,7 @@ bool intersect_ray_triangle(t_vec3 ray_origin, t_vec3 ray_dir,
 // (uv0 * w0 + uv1 * w1 + uv2 * (1.0f - w0 - w1))
 t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 {
-	t_hit	hit = create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f));
+	t_hit	hit = create_hit(-1.0f, vec3_1f(0.0f), vec3_1f(0.0f));
 
 	t_vec3 point, face_normal;
 	float t, w0, w1;
@@ -156,14 +160,15 @@ t_hit triangle_intersect_ray_collision(const t_ray *ray, t_triangle *triangle)
 		hit.point = point; // ray.start + ray.dir * t;
 		hit.normal = face_normal;
 
-		hit.uv = gl_vec2_multiply_scalar(triangle->uv0, w0);
-		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv1, w1), hit.uv);
-		hit.uv = gl_vec2_add_vector(gl_vec2_multiply_scalar(triangle->uv2, (1.0f - w0 - w1)), hit.uv);
+		hit.uv = mult2_scalar(triangle->uv0, w0);
+		hit.uv = add2(mult2_scalar(triangle->uv1, w1), hit.uv);
+		hit.uv = add2(mult2_scalar(triangle->uv2, (1.0f - w0 - w1)),
+					  hit.uv);
 
 		// t1 과 t2의 tangent가 서로 반대방향인 문제가 발생함.
 		// * .  FIX:    아래 부분 반드시 고치기!
-		const t_vec3 t0 = gl_vec3_subtract_vector(triangle->v1, triangle->v0);
-		hit.tangent = gl_vec3_normalize(gl_vec3_cross(hit.normal,t0));
+		const t_vec3 t0 = sub3(triangle->v1, triangle->v0);
+		hit.tangent = normal3(cross3(hit.normal, t0));
 	}
 
 	return (hit);
