@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    transparent.rt                                     :+:      :+:    :+:    #
+#    caseN_transparent_material.rt                      :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/30 22:08:28 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/31 15:39:04 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@
 # * AA : AntialiasingLevel [ default:0, max:3 ]                              |
 # * RF : ReflectionLevel [ default:5, 0 if no reflection ]                   |
 #*---------------------------------------------------------------------------*
-Setting W:1200 H:800 RR:0.1 | TH:24 | AA:0 RF:5
+Setting W:1200 H:800 RR:0.1 | TH:24 | AA:2 RF:5
 
 
 #*---------------------------------------------------------------------------*
@@ -46,7 +46,7 @@ L   0.0,5.0,2.0       0.9           255,255,255
 
 #*  [ Sphere ]
 #   center            radius                           +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM   normalM
-sp  0.0,0.0,0.0       0.8                                  0,0,0              50.0     0.0         1.0            1.5
+sp  0.0,0.0,0.0       0.8                                  0,0,0              50.0     0.0         1.0            1.3
 
 #*  [ Plain ]
 #   xyzCoord          FaceNormal                       +  diffuseColor(rgb)   alpha    reflection  transparency  IOR(glass=1.5|water=1.3)   |  [X]

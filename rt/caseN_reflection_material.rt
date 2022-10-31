@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    bump_map_3_sphere.rt                               :+:      :+:    :+:    #
+#    caseN_reflection_material.rt                       :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/26 13:48:10 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/30 00:05:45 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/31 15:30:16 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,4 +78,3 @@ sp   2.0,0.0,-2.0      1.0                                 0,250,0             1
 
 #*  [ Square ]
 #   vertex_0           vertax_1         vertax_2          vertax_3          +  diffuseColor(rgb)   alpha    reflection  transparency   IOR(glass=1.5|water=1.3)  |  textureM                       normalM
-

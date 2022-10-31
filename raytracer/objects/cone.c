@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 23:28:13 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 01:41:01 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 15:16:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ static t_vec3	calculate_determinant_d1_d2(const t_ray *ray, t_cone *cone)
  *       R
 */
 
-t_vec3	calculate_cone_normal(t_hit hit, t_cone *cone, t_vec3 q)
+static void	calculate_cone_normal(t_hit *hit, t_cone *cone, t_vec3 q)
 {
 	const t_vec3	y_dir = cone->orientation;
 	const t_vec3	x_dir = gl_vec3_normalize(\
-		gl_vec3_subtract_vector(hit.point, q));
+		gl_vec3_subtract_vector(hit->point, q));
 	const t_vec3	x_vec = gl_vec3_multiply_scalar(\
 		x_dir, cone->height);
 	const t_vec3	y_vec = gl_vec3_multiply_scalar(\
@@ -68,10 +68,10 @@ t_vec3	calculate_cone_normal(t_hit hit, t_cone *cone, t_vec3 q)
 	const t_vec3	normal = gl_vec3_normalize(\
 		gl_vec3_add_vector(x_vec, y_vec));
 
-	return (normal);
+	hit->normal = normal;
 }
 
-t_hit	check_bottom_disk(const t_ray *ray, t_cone *cone)
+static t_hit	check_bottom_disk(const t_ray *ray, t_cone *cone)
 {
 	t_disk	bottom_disk;
 
@@ -81,6 +81,7 @@ t_hit	check_bottom_disk(const t_ray *ray, t_cone *cone)
 	return (disk_intersect_ray_collision(ray, &bottom_disk));
 }
 
+/** Problem : if camera or light ray is at top of the cone... */
 t_hit	cone_intersect_ray_collision(const t_ray *ray, t_cone *cone)
 {
 	t_hit	hit;
@@ -106,6 +107,6 @@ t_hit	cone_intersect_ray_collision(const t_ray *ray, t_cone *cone)
 	else if (c_to_q >= cone->height)
 		return (create_hit(-1.0f, gl_vec3_1f(0.0f), gl_vec3_1f(0.0f)));
 	else
-		hit.normal = calculate_cone_normal(hit, cone, q);
+		calculate_cone_normal(&hit, cone, q);
 	return (hit);
 }
