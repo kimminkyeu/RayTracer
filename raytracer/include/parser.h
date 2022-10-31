@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:28:24 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 23:07:38 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:48:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,5 @@ extern void	parse_sphere(t_device *device, char *line);
 extern void	parse_plane(t_device *device, char *line);
 extern void	parse_cylinder(t_device *device, char *line);
 extern void	parse_cone(t_device *device, char *line);
-extern void	parse_triangle(t_device *device, char *line);
-extern void	parse_square(t_device *device, char *line);
 
 #endif /** Parser.h */

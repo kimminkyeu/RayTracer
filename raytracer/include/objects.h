@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/30 23:03:53 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 23:05:42 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:42:38 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 # include "gl_vec3.h"
 # include "gl_vec2.h"
 
-# include "triangle.h"
-# include "square.h"
 # include "plane.h"
 
 # include "sphere.h"

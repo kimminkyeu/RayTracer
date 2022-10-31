@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 21:11:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 17:30:11 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:46:03 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@ t_object	*custom_allocator_for_object(int obj_type)
 	new_obj->type = obj_type;
 	if (obj_type == TYPE_SPHERE)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_sphere));
-	else if (obj_type == TYPE_TRIANGLE)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_triangle));
-	else if (obj_type == TYPE_SQUARE)
-		new_obj->obj_data = ft_calloc(1, sizeof(t_square));
 	else if (obj_type == TYPE_PLANE)
 		new_obj->obj_data = ft_calloc(1, sizeof(t_plane));
 	else if (obj_type == TYPE_CYLINDER)
@@ -55,7 +51,6 @@ t_object	*custom_allocator_for_object(int obj_type)
 	return (new_obj);
 }
 
-// delete texture image
 void	custom_deallocator_for_object(void *data)
 {
 	t_object *const	obj_ptr = data;
@@ -64,12 +59,14 @@ void	custom_deallocator_for_object(void *data)
 		free(obj_ptr->obj_data);
 	if (obj_ptr->diffuse_texture != NULL)
 	{
-		mlx_destroy_image(obj_ptr->diffuse_texture->image.mlx_ptr, obj_ptr->diffuse_texture->image.img_ptr);
+		mlx_destroy_image(obj_ptr->diffuse_texture->image.mlx_ptr, \
+			obj_ptr->diffuse_texture->image.img_ptr);
 		free(obj_ptr->diffuse_texture);
 	}
 	if (obj_ptr->normal_texture != NULL)
 	{
-		mlx_destroy_image(obj_ptr->normal_texture->image.mlx_ptr, obj_ptr->normal_texture->image.img_ptr);
+		mlx_destroy_image(obj_ptr->normal_texture->image.mlx_ptr, \
+			obj_ptr->normal_texture->image.img_ptr);
 		free(obj_ptr->normal_texture);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 01:14:11 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 15:33:58 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:43:13 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ t_hit	disk_intersect_ray_collision(const t_ray *ray, t_disk *disk)
 	if (is_backface(ray, disk) || is_ray_horizontal_to_surface(ray, disk))
 		return (hit);
 	t = (dot3(disk->center, disk->orientation) \
- - dot3(ray->origin, disk->orientation)) \
- / dot3(ray->direction, disk->orientation);
+		- dot3(ray->origin, disk->orientation)) \
+		/ dot3(ray->direction, disk->orientation);
 	if (t < 0.0f)
 		return (hit);
 	hit.distance = t;

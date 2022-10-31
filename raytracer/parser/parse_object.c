@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 19:26:03 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 01:06:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:39:35 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	parse_ambient_light(t_device *device, char *line)
 	int				cnt;
 
 	p = device->ambient_light;
-	cnt = ft_lscanf(line, "A%w%f%w%f,%f,%f\n", &p->brightness_ratio, &p->color.r, &p->color.g, &p->color.b);
+	cnt = ft_lscanf(line, "A%w%f%w%f,%f,%f\n", \
+		&p->brightness_ratio, &p->color.r, &p->color.g, &p->color.b);
 	printf("Parsing ambient light %d\n", cnt);
-
 	if (!(p->has_ambient_light == false && cnt == 4))
 		print_error_and_exit(device, "parse_ambient_light(): .rt file error\n");
 	p->has_ambient_light = true;
@@ -42,12 +42,11 @@ void	parse_camera(t_device *device, char *line)
 
 	printf("Parsing carmera\n");
 	p = device->camera;
-	cnt = ft_lscanf(line, "C%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f\n",\
-					&p->pos.x, &p->pos.y, &p->pos.z,\
-					&p->look_at.x, &p->look_at.y, &p->look_at.z,\
-					&p->up_direction.x, &p->up_direction.y, &p->up_direction.z,\
+	cnt = ft_lscanf(line, "C%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f\n", \
+					&p->pos.x, &p->pos.y, &p->pos.z, \
+					&p->look_at.x, &p->look_at.y, &p->look_at.z, \
+					&p->up_direction.x, &p->up_direction.y, &p->up_direction.z, \
 					&p->fov);
-
 	if (!(p->has_camera == false && cnt == 10))
 		print_error_and_exit(device, "parse_camera(): .rt file error\n");
 	p->has_camera = true;
@@ -66,11 +65,10 @@ void	parse_light(t_device *device, char *line)
 	int		cnt;
 
 	p = ft_calloc(1, sizeof(*p));
-	cnt = ft_lscanf(line, "L%w%f,%f,%f%w%f%w%f,%f,%f\n",\
-					&p->pos.x, &p->pos.y, &p->pos.z,\
-					&p->brightness_ratio,\
+	cnt = ft_lscanf(line, "L%w%f,%f,%f%w%f%w%f,%f,%f\n", \
+					&p->pos.x, &p->pos.y, &p->pos.z, \
+					&p->brightness_ratio, \
 					&p->color.r, &p->color.g, &p->color.b);
-
 	printf("Parsing light %d\n", cnt);
 	if (cnt != 7)
 		print_error_and_exit(device, "parse_light(): .rt file error\n");
@@ -86,20 +84,13 @@ void	parse_texture(t_device *device, t_object *object, char *line)
 	if (str == NULL)
 		return ;
 	str++;
-
-	printf("Before ft_strtrim : %s\n", str);
-	// Fix :  here. double free!
 	str = ft_strtrim(str, "\n");
 	if (str == NULL)
 		return ;
-
-	printf("After ft_strtrim : %s\n", str);
 	split = ft_split(str, ' ');
-
 	free(str);
 	if (get_strs_count(split) > 0)
 	{
-		printf("Loading Texture...\n");
 		if (ft_strncmp("checker", split[0], 7) == 0)
 			object->diffuse_texture = new_texture_checkerboard(device, 32, 32);
 		else
@@ -231,75 +222,5 @@ void parse_cone(t_device *device, char *line)
 	if (cnt < 8)
 		print_error_and_exit(device, "parse_cone(): .rt file error\n");
 	co->orientation = normal3(co->orientation);
-	device->objects->push_back(device->objects, obj);
-}
-
-void	parse_triangle(t_device *device, char *line)
-{
-	t_object	*obj;
-	t_material	*mat;
-	t_triangle	*tr;
-	int			cnt;
-
-	printf("Parsing triangle\n");
-	obj = custom_allocator_for_object(TYPE_TRIANGLE);
-	tr = obj->obj_data;
-	mat = &(obj->material);
-	cnt = ft_lscanf(line, "tr%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
-					&tr->v0.x, &tr->v0.y, &tr->v0.z,\
-					&tr->v1.x, &tr->v1.y, &tr->v1.z,\
-					&tr->v2.x, &tr->v2.y, &tr->v2.z,\
-					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
-					&mat->alpha,\
-					&mat->reflection,\
-					&mat->transparency,\
-					&mat->ior);
-
-	if (cnt < 9 || mat->transparency + mat->reflection > 1.0f)
-		print_error_and_exit(device, "parse_triangle(): .rt file error\n");
-
-	tr->uv0 = vec2_2f(1.0f, 0.0f);
-	tr->uv1 = vec2_2f(0.0f, 1.0f);
-	tr->uv2 = vec2_2f(0.0f, 0.0f);
-
-	parse_texture(device, obj, line);
-	device->objects->push_back(device->objects, obj);
-}
-
-void	parse_square(t_device *device, char *line)
-{
-	t_object	*obj;
-	t_material	*mat;
-	t_square	*sq;
-	t_vec3		v[4];
-	int			cnt;
-
-	printf("Parsing square\n");
-	obj = custom_allocator_for_object(TYPE_SQUARE);
-	sq = obj->obj_data;
-	mat = &(obj->material);
-	cnt = ft_lscanf(line, "sq%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f,%f,%f%w%f%w%f%w%f%w%f\n",\
-					&v[0].x, &v[0].y, &v[0].z,\
-					&v[1].x, &v[1].y, &v[1].z,\
-					&v[2].x, &v[2].y, &v[2].z,\
-					&v[3].x, &v[3].y, &v[3].z,\
-					&mat->diffuse.r, &mat->diffuse.g, &mat->diffuse.b,\
-					&mat->alpha,\
-					&mat->reflection,\
-					&mat->transparency,\
-					&mat->ior);
-
-	if (cnt < 12 || mat->transparency + mat->reflection > 1.0f)
-		print_error_and_exit(device, "parse_square(): .rt file error\n");
-
-	sq->tri_1 = create_triangle(v[0], v[1], v[2]);
-	sq->tri_1.uv0 = vec2_2f(1.0f, 0.0f);
-	sq->tri_1.uv1 = vec2_2f(0.0f, 1.0f);
-	sq->tri_1.uv2 = vec2_2f(0.0f, 0.0f);
-	sq->tri_2 = create_triangle(v[0], v[2], v[3]);
-	sq->tri_2.uv1 = vec2_2f(0.0f, 1.0f);
-	sq->tri_2.uv0 = vec2_2f(1.0f, 1.0f);
-	sq->tri_2.uv2 = vec2_2f(1.0f, 0.0f);
-	parse_texture(device, obj, line);
 	device->objects->push_back(device->objects, obj);
 }

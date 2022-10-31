@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/24 23:18:58 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/30 23:27:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:42:57 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	update_camera_geometry(t_device *device)
 	camera->right_direction = cross3(camera->look_at, camera->up_direction);
 	camera->camera_length = 1.0f / tanf(gl_get_radian(camera->fov / 2.0f));
 	camera->projection_screen_center \
-		= add3(camera->pos,
-			mult3_scalar(camera->look_at, camera->camera_length));
+		= add3(camera->pos, \
+		mult3_scalar(camera->look_at, camera->camera_length));
 }
 
 /**

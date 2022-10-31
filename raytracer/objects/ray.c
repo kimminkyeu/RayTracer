@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray_hit.c                                          :+:      :+:    :+:   */
+/*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/10 19:12:52 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/26 17:01:37 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:46:16 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,8 @@ t_hit	check_ray_collision(const t_ray *ray, t_object *obj)
 {
 	if (obj->type == TYPE_SPHERE)
 		return (sphere_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_TRIANGLE)
-		return (triangle_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_PLANE)
 		return (plane_intersect_ray_collision(ray, obj->obj_data));
-	else if (obj->type == TYPE_SQUARE)
-		return (square_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_CYLINDER)
 		return (cylinder_intersect_ray_collision(ray, obj->obj_data));
 	else if (obj->type == TYPE_CONE)

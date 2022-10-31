@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 01:23:31 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/31 15:32:45 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:43:50 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static t_hit	check_bottom_disk(const t_ray *ray, t_cylinder *cylinder)
 static t_hit	check_top_disk(const t_ray *ray, t_cylinder *cylinder)
 {
 	const t_vec3	top_center = add3(cylinder->pos, \
-            mult3_scalar(cylinder->orientation, cylinder->height));
+		mult3_scalar(cylinder->orientation, cylinder->height));
 	t_disk			top_disk;
 
 	top_disk.center = top_center;
@@ -75,7 +75,7 @@ static void	calculate_cylinder_normal(const t_ray *ray, t_hit *hit, \
 										t_cylinder *cylinder, float c_to_q)
 {
 	const t_vec3	q = add3(cylinder->pos, \
-                mult3_scalar(cylinder->orientation, c_to_q));
+		mult3_scalar(cylinder->orientation, c_to_q));
 	const t_vec3	d = vec3_reverse(hit->normal);
 
 	hit->normal = normal3(sub3(hit->point, q));
@@ -98,9 +98,8 @@ t_hit	cylinder_intersect_ray_collision(const t_ray *ray, t_cylinder *cylinder)
 		if (hit.distance < 0.0f)
 			hit.distance = max_float(cal_v.v[1], cal_v.v[2]);
 		hit.point = add3(ray->origin, \
-            mult3_scalar(ray->direction, hit.distance));
-		c_to_q = dot3(cylinder->orientation, \
-            sub3(hit.point, cylinder->pos));
+			mult3_scalar(ray->direction, hit.distance));
+		c_to_q = dot3(cylinder->orientation, sub3(hit.point, cylinder->pos));
 		if (c_to_q <= 0)
 			return (check_bottom_disk(ray, cylinder));
 		else if (c_to_q >= cylinder->height)

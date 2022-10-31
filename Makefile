@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/30 22:45:13 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/10/31 17:45:11 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,9 +81,9 @@ MINIRT_TRACE_RAY_SRC		= anti_aliasing trace_ray phong_shading reflection refract
 
 MINIRT_OBJECTS_DIR		    = $(MINIRT_DIR)/objects
 MINIRT_OBJECTS_SRC          = object camera ray\
-                              texture\
+                              texture texture_utils texture_helper\
                               disk\
-							  triangle square plane sphere cone cylinder\
+							  plane sphere cone cylinder\
 
 MINIRT_PARSER_DIR		    = $(MINIRT_DIR)/parser
 MINIRT_PARSER_SRC           = ft_atof ft_lscanf ft_lscanf_utils\

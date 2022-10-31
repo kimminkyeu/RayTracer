@@ -6,7 +6,7 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:16:30 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/28 19:19:14 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:23:33 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,14 @@ t_device	*engine_init(char *title, char *rt_file)
 	if (device->win == NULL)
 		engine_exit(device, ERROR);
 	device->screen_image = engine_new_image(device, \
-        vec2_2f(device->renderer_settings.win_width, \
-                    device->renderer_settings.win_height), vec2_2f(0, 0));
+		vec2_2f(device->renderer_settings.win_width, \
+		device->renderer_settings.win_height), vec2_2f(0, 0));
 	device->pixel_image = engine_new_image(device, \
-        vec2_2f(device->renderer_settings.win_width \
- * device->renderer_settings.resolution_ratio, \
-                    device->renderer_settings.win_height \
- * device->renderer_settings.resolution_ratio), \
-                        vec2_2f(0, 0));
+		vec2_2f(device->renderer_settings.win_width \
+					* device->renderer_settings.resolution_ratio, \
+					device->renderer_settings.win_height \
+					* device->renderer_settings.resolution_ratio), \
+					vec2_2f(0, 0));
 	engine_set_key_event(device, handle_key_press, handle_key_release);
 	engine_set_mouse_event(device, handle_mouse_press, handle_mouse_release);
 	return (device);

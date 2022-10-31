@@ -6,20 +6,19 @@
 /*   By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 15:08:17 by minkyeki          #+#    #+#             */
-/*   Updated: 2022/10/29 22:12:22 by minkyeki         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:44:12 by minkyeki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "objects.h"
-# include "ray.h"
-# include "helper.h"
+#include "objects.h"
+#include "ray.h"
+#include "helper.h"
 
 /** ------------------------------ *
  *  |     Sphere hit detection     |
  *  ------------------------------ */
 
 #define PI (3.141592)
-// TODO: NORMINETTE    !!
 
 t_hit	sphere_intersect_ray_collision(const t_ray *ray, t_sphere *sphere)
 {
