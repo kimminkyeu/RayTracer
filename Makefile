@@ -6,7 +6,7 @@
 #    By: minkyeki <minkyeki@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/19 12:57:40 by minkyeki          #+#    #+#              #
-#    Updated: 2022/10/31 21:52:00 by minkyeki         ###   ########.fr        #
+#    Updated: 2022/11/14 14:47:51 by minkyeki         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -118,8 +118,8 @@ WHITE = \033[0;97m
 # NOTE: Makefile General
 NAME			= minirt
 CC				= cc
-# CCFLAGS		= -Werror -Wextra -Wall
-CCFLAGS			= -Werror -Wextra -Wall -g3 -fsanitize=address
+CCFLAGS		= -Werror -Wextra -Wall
+# CCFLAGS			= -Werror -Wextra -Wall -g3 -fsanitize=address
 RM				= rm -f
 
 MLX_MACOS_COMPILE_FLAGS = -L$(LIBRARY_DIR)/mms -lmlx -framework Cocoa -framework Metal -framework MetalKit -framework QuartzCore
