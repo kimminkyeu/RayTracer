@@ -1,0 +1,2 @@
+# miniRayTracer
+mini raytracing program.
