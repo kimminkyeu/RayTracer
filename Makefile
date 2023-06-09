@@ -123,7 +123,12 @@ CCFLAGS		= -Werror -Wextra -Wall
 RM				= rm -f
 
 MLX_MACOS_COMPILE_FLAGS = -L$(LIBRARY_DIR)/mms -lmlx -framework Cocoa -framework Metal -framework MetalKit -framework QuartzCore
-MLX_LINUX_COMPILE_FLAGS = -L$(LIBRARY_DIR)/mlx -lmlx_Linux -L/usr/lib -I$(LIBRARY_DIR)/mlx -lXext -lX11 -lm -lz
+
+# Window 10 Wsl2
+# MLX_LINUX_COMPILE_FLAGS = -L$(LIBRARY_DIR)/mlx -lmlx_Linux -L/usr/lib -I$(LIBRARY_DIR)/mlx -lXext -lX11 -lm -lz
+
+# changed to Window 11 Wsl2
+MLX_LINUX_COMPILE_FLAGS = -L$(LIBRARY_DIR)/mlx -lmlx_Linux -L/usr/lib -I$(LIBRARY_DIR)/mlx -lXext -lX11 -lm
 
 
 
