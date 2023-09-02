@@ -24,5 +24,7 @@ make
 
 ---
 ## To do List
+Global illumination
+Mimmap : 고해상도 텍스쳐 샘플링시 우글거림 해결 필요
 
 ---
