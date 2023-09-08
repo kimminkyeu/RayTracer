@@ -1,4 +1,6 @@
 # mini raytracing program
+### [Youtube Demo](https://youtu.be/XQrXe9Lo69E)
+
 ![image](https://github.com/kimminkyeu/RayTracer/assets/60287070/110d4c03-6a4b-4db1-aa1d-c3ae24ee840c)
 
 ## Compile & Run
