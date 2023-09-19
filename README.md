@@ -4,7 +4,7 @@
 ![image](https://github.com/kimminkyeu/RayTracer/assets/60287070/110d4c03-6a4b-4db1-aa1d-c3ae24ee840c)
 
 ## How to use
-1. move your camera with mouse and WASD keys.
+1. to move your camera, press mouse right button + move / WASD keys.
 2. press 'r' to render high quality image
 
 ## Compile & Run
