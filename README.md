@@ -1,6 +1,6 @@
 # mini raytracing program
 ### [Youtube Demo](https://youtu.be/XQrXe9Lo69E)
-### [프로젝트 상세 설명](https://kyeu.notion.site/1667fc3ad2e080a1b9bbc79ce1c09048?pvs=4)
+### [프로젝트 상세 설명 (구현, 알고리즘 소개) ](https://kyeu.notion.site/1667fc3ad2e080a1b9bbc79ce1c09048?pvs=4)
 
 ![image](https://github.com/kimminkyeu/RayTracer/assets/60287070/110d4c03-6a4b-4db1-aa1d-c3ae24ee840c)
 
